@@ -7,7 +7,68 @@
 
 ##
 
-
+### 22.05.05 : Swift String
+> 문자열의 인덱스가 문자열 길이를 초과하면 에러가 발생된다.
+> ```swift
+> let str = "abc"
+> var idx = str.startIndex
+> while (idx < str.endIndex) {
+> 	idx = str.index(idx, offsetBy: 2)  // Error
+> }
+> ```
+> 인덱스 함수에 `limitedBy` 인자를 넘겨서 문제를 해결할 수 있다. 이때는 함수가 `String.Index?` 을 반환하기 때문에 옵셔널을 처리해주어야 한다.
+> ```swift
+> while (idx < str.endIndex) {
+> 	idx = str.index(idx, offsetBy: 2, limitedBy: str.endIndex) ?? str.endIndex
+> }
+> ```
+> [swift String.Index](https://developer.apple.com/documentation/swift/string/1784601-index)
+>
+> 문자열 split  
+> 특정 문자나 문자열을 기준으로 문자열을 분해하여 배열로 반환하는 함수이다.
+> ```swift
+>func split(separator: Character, maxSplits: Int = Int.max, omittingEmptySubsequences: Bool = true) -> [Substring]
+> ```
+> ```swift
+> let str = "a b c"
+> 
+> str.split(separator: " ")
+> // ["a", "b", "c"]  
+> 
+> str.split(separator: " ", maxSplits: 1)
+> // ["a", "b c"]
+> ```
+> [Swift split](https://developer.apple.com/documentation/swift/string/2894564-split)  
+>
+> 문자열을 특정 길이로 나누는 함수를 `index` 함수로 구현할 수 있다.
+> ```swift
+> extension String {
+>	 func split_len(_ len:Int) -> [String] {
+> 		var result: [String] = []
+>		var start = self.startIndex
+>	
+>		while (start < self.endIndex) {
+>			let end = self.index(start, offsetBy: len, limitedBy: self.endIndex) ?? self.endIndex
+>			result.append(String(self[start..<end]))
+>			start = end
+>		}
+>		return result
+>	}
+> }
+> 
+> ```
+>  
+> 문자열 join  
+> 배열의 문자열들을 하나의 문자열로 합하여 반환한다. 만약에 문자열 사이에 구분자를 넣고 싶다면 `separator` 인자를 넘겨주면 된다. 
+> ```swift
+> ["a", "b", "c"].joined()
+> // "abc"
+>
+> ["a", "b", "c"].joined(separator: ", ")
+> // "a, b, c"
+> ```
+> [Swift join](https://developer.apple.com/documentation/swift/sequence/1641243-joined) 
+>
 
 ### 22.05.04 : Swift String
 
