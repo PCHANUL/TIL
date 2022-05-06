@@ -7,6 +7,60 @@
 
 ##
 
+### 22.05.06 : Swift Array, JavaScript String
+> 배열 선언
+> ```swift
+> let numbers = [1, 2, 3, 4, 5]
+> let strings = ["a", "b", "c", "d"]
+> ```
+> 배열 생성
+> ```swift
+> var doubles: [Double] = [] 
+> 
+> // 반복되는 문자가 포함된 배열 생성
+> var digits = Array(repeating: 0, count: 10)
+> print(digits) // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+> ```
+> 배열 추가
+> ```swift
+> var strings = ["a"]
+> ```
+> ```swift
+> strings.append("b")
+> strings.append(contentsOf: ["c", "d"])
+> // ["a", "b", "c", "d"]
+> string.insert("z", at: 2)
+> // ["a", "b", "z", "c", "d"]
+> ```
+> [Swift Array](https://developer.apple.com/documentation/swift/array)
+> <hr />
+>
+> ## JavaScript  
+> 정수를 문자열로 변환하는 함수
+> ```javaScript
+> // toString()
+> // toString(radix)
+> 
+> let num = 10
+> 
+> console.log(num.toString())  // '10'
+> console.log(num.toString(2)) // '1010'
+> ```
+> [JavaScript number toString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString)  
+>
+>
+> 문자열을 정수로 변환하는 함수
+> ```javaScript
+> // parseInt(string)
+> // parseInt(string, radix)
+> 
+> let str = '321'
+> 
+> console.log(parseInt(str))     // 321
+> console.log(parseInt(str, 16)) // 801
+> ```
+> [JavaScript string parseInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt)
+
 ### 22.05.05 : Swift String
 > 문자열의 인덱스가 문자열 길이를 초과하면 에러가 발생된다.
 > ```swift
