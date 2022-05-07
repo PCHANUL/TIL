@@ -7,6 +7,55 @@
 
 ##
 
+### 22.05.07 : JavaScript 반복문
+> ### 반복문
+> ```javascript
+> // 배열
+> let array = [1, 2, 3, 4, 5]
+> 
+> for (ele of array) {
+> 	console.log(ele)	// 배열의 요소를 하나씩 출력
+> }
+> 
+> // 객체
+> let object = { a: 10, b: 20, c: 30 }
+> 
+> for (key in object) {
+> 	console.log(key)	// 객체의 키를 하나씩 출력
+> }
+> ```
+> [JavaScript 반복문](https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Loops_and_iteration#for...of_%EB%AC%B8)
+> <hr/>
+> 
+> ### 함수 인자 전달
+> 함수에 전달되는 인자는 값이 복사되거나 주소가 복사되어 전달된다. JS에서 원시 데이터는 값이 복사되어 전달되고, 객체는 주소가 복사되어 전달된다. 배열도 객체이기 때문에 주소가 복사된다.
+> ```javascript
+> // 값의 복사
+> function swap(a, b) {
+> 	let tmp = a
+> 	a = b
+> 	b = tmp
+> }
+> 
+> let a = 10
+> let b = 20
+> swap(a, b)
+> console.log(a, b)	// 10, 20 (변경되지 않음)
+>
+> // 주소의 복사
+> function swap_obj(c, d) {
+> 	let tmp = c.val
+> 	c.val = d.val
+> 	d.val = tmp
+> }
+> 
+> let c = { val: 10 }
+> let d = { val: 20 }
+> swap_obj(c, d)
+> console.log(c.val, d.val)	// 20, 10 (변경됨)
+> ```
+> [JavaScript 함수 인자](https://lamarr.dev/javascript/2020/04/08/04.html)
+
 ### 22.05.06 : Swift Array, JavaScript String
 > 배열 선언
 > ```swift
