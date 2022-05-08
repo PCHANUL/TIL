@@ -7,6 +7,45 @@
 
 ##
 
+### 22.05.08 : JavaScript Set
+> ### 객체 Set
+> Set 생성자를 사용하면 원시 값이나 객체 참조의 고유한 값을 저장하는 개체를 만들 수 있다. 
+> ```javascript
+> let obj = new Set([0])
+>
+> // 값 확인
+> obj.has(0)	// true
+> obj.has(2)	// false
+> obj.size	// 1
+>
+> // 값 추가
+> obj.add(1)	// [0, 1]
+> obj.add(2)	// [0, 1, 2]
+> obj.add(2)	// [0, 1, 2]
+> 
+> // 값 제거
+> obj.delete(0)	// [1, 2]
+> obj.has(0)	// false
+> obj.has(1)	// true
+> 
+> ```
+> Set 객체의 모든 값을 확인하는 방법
+> ```javascript
+> let obj = new Set([1, 2, 3])
+>
+> obj.forEach(ele => {
+> 	console.log(ele)
+> })
+> // 1, 2, 3
+> 
+> let iterator = obj.values()
+> console.log(iterator.next().value)	// 1
+> console.log(iterator.next().value)	// 2
+> console.log(iterator.next().value)	// 3
+> console.log(iterator.next().value)	// undefined
+> ```
+> [JavaScript Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/values#try_it)
+
 ### 22.05.07 : JavaScript 반복문
 > ### 반복문
 > ```javascript
