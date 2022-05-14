@@ -3,12 +3,62 @@
 [![Gitbook](https://img.shields.io/badge/Gitbook-chanul.gitbook.io/til-blue.svg?style=for-the-badge\&logo=gitbook)](https://chanul.gitbook.io/til/)
 
 * 매일 배우고 기록한다.
-* 새로운 개발 지식을 찾았다면 부담없이 쌓아둔다.
-* 쌓아둔 개발 지식을 정리하는 경우에는 읽기 쉽게 작성한다.
-* 정리한 개발 지식의 목적이 다른 사람에게 설명하는데 있기 때문이다.
+* 새로운 개발 지식을 찾았다면 쌓아둔다.
+* 쌓아둔 개발 지식은 이해하기 쉽게 정리한다.
 
+<hr>
 
-##
+## 
+
+### 22.05.14 : Swift Unit Test
+>
+>Unit Test는 소스 코드에서 특정 모듈이 의도대로 정확하게 작동하는지 테스트하는 과정이다. 함수와 메소드에 대한 테스트 케이스를 작성하면 변경된 코드에서 발생한 문제를 빠르게 파악할 수 있다. 테스크 케이스는 서로 분리되어야 한다. 이를 위해 가짜 객체(Mock object)를 생성하는 것도 좋은 방법이다.
+>
+>한마디로 Unit Test는 "의도대로 정확히 동작하는지 확인하는 절차"이다.
+>
+>Xcode에서는 프로젝트를 생성하며 Unit Test를 포함시킬 수 있다.
+>![unit test](src/unitTest01.png)
+>
+>기존 프로젝트에 테스트를 추가할 수 있다. Navigator View의 탭에서 New Unit Test Target을 클릭하면 생성된다.
+>![unit test](src/uniTest02.png)
+>
+>Unit Test 파일을 생성하면 다음과 같은 코드를 볼 수 있다. 가장 먼저 테스트를 진행할 프로젝트를 포함시켜준다. `@testable` 구문을 통해 프로젝트의 코드에 접근하여 사용할 수 있다. 테스트 클래스에 `setUpWithError`와 `tearDownWithError` 메서드를 볼 수 있다. 이 메서드들은 테스트 동작의 시작과 마지막에 실행되어 테스트 환경을 만들어 준다.
+>
+>```swift
+>import XCTest
+>@testable import ProjectName	// 테스트할 프로젝트를 포함시켜준다.
+>
+>class ProjectTests: XCTestCase {
+>	override func setUpWithError() throws {
+>		// 이 메서드는 클래스의 각 테스트 메서드를 호출하기 전에 호출된다.
+>	}
+>	
+>	override func tearDownWithError() throws {
+>		// 이 메서드는 클래스의 각 테스트 메서드를 호출한 후에 호출된다.
+>	}
+>}
+>```
+>
+>테스트 메소드 이름은 테스트로 인식되기 위해서 반드시 test로 시작해야한다. 테스트는 given - when - then 구조로 작성하는 것이 좋다. 
+>
+>```swift
+>func testAddTwoNums() {
+>	// given - 필요한 값을 설정
+>	let a = 10
+>	let b = 20
+>	
+>	// when - 테스트 코드 실행
+>	let result = addTwoNums(a, b)
+>	
+>	// then - 실행 결과 확인
+>	XCTAssertEqual(result, 30, "Wrong calc")
+>}
+>```
+>
+>Unit Test를 실제 프로젝트에 도입하려면 모듈 분리 등 기존 코드에 많은 수정이 필요하고, 테스트 코드를 작성하는 데에도 원래 코드를 작성하는만큼의 시간이 소요될 수 있다.
+>
+>[Unit Test란?](https://silver-g-0114.tistory.com/142)  
+>[UnitTest의 사용법](https://zeddios.tistory.com/48)
 
 ### 22.05.12 : 사용자 스토리
 >
