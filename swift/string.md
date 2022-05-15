@@ -7,14 +7,13 @@
 	- [Substrings](#substrings)
 
 
-
 ## String Indices
 Swift에서는 문자열의 인덱스를 표현하기 위해 `String.Index` 라는 타입을 사용한다. 문자들이 저장하는 메모리 양이 다를 수 있으며, 어떤 `Character` 가 특정 위치에 있는지 결정하기 위해서 시작이나 끝으로 각 유니코드 스칼라를 반복한다. 그러므로 Swift 문자열은 정수형 값으로 인덱스될 수 없다.
  ```swift
  let str = "abc"
  
- print(str[str.startIndex]) 	// "a"
- print(str[0]) 				// Error
+ print(str[str.startIndex])	// "a"
+ print(str[0])	// Error
  ```
 
  - 문자열의 첫번째 위치와 마지막 위치에 접근하기 위해 `startIndex`와 `endIndex`를 사용한다.  
@@ -25,13 +24,13 @@ Swift에서는 문자열의 인덱스를 표현하기 위해 `String.Index` 라�
  ```swift
  let str = "Hello world"
  
- print(str.startIndex)					// "H"
- print(str.index(after: str.startIndex))	// "e"
+ print(str.startIndex)	// "H"
+ print(str.endIndex)	// "d"
  
- print(str.endIndex)						// "d"
+ print(str.index(after: str.startIndex)	// "e"
  print(str.index(after: str.endIndex))	// "l"
  
- print(str.index(str.startIndex, offsetBy: 6)) // "w"
+ print(str.index(str.startIndex, offsetBy: 6))	// "w"
  ```
 
 ## Substrings
