@@ -5,3 +5,4 @@
   * [String](swift/string.md)
 * [devLog](devLog/README.md)
   * [Gridot](devLog/Gridot.md)
+  * [Philosophers](devLog/Philosophers.md)
