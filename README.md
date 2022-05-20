@@ -8,6 +8,55 @@
 
 <hr>
 
+### 22.05.20 : thread와 process의 종료
+>
+>철학자 과제에서 모든 스레드의 종료를 위한 방법을 생각해본다.  
+>철학자 스레드들이 있고 이를 관찰하고 있는 옵저버 스레드가 있는 경우에 두가지 방법이 있다. 
+>	1. 옵저버 스레드가 종료 플래그를 올리면, 철학자들은 동작을 멈추고 종료
+>		- 종료를 알린 시점에서 철학자들은 각기 다른 동작을 하고 있음에도 종료가 되었음을 알아야한다.  
+>   	- 이때에 모든 동작에서 종료되었음을 확인하는 방법을 사용할 수 있지만 복잡해진다.  
+>2. 옵저버 스레드가 프로그램을 종료시킨다.
+>   	- 실행되고 있는 스레드와 상관없이 프로그램을 종료하여도 문제가 발생하지 않는다면 사용할 수 있다.
+>   	- 스레드가 어느 상황에 있더라도 상관없다.
+>
+>두번째 방법이 가능한지 확인해본다.  
+>아래의 코드를 실행해보면 `thread_func`의 메시지가 출력되지 않는다. `thread_func`가 `main`이 종료되자마자 정리된다. 만약에 `pthread_detach`를 `pthread_join`으로 변경한다면 메시지가 출력되는 것을 볼 수 있다. 
+>
+>```c
+>#include <stdio.h>
+>#include <unistd.h>
+>#include <pthread.h>
+>
+>void	*thread_func(void *param)
+>{
+>	(void)param;
+>	
+>	usleep(1000);
+>	printf("Inside thread function");
+>	return (0);
+>}
+>
+>int main(int argc, char *argv[]) 
+>{ 
+>	(void)argc;
+>	(void)argv;
+>
+>	pthread_t	thread;
+>	pthread_create(&thread, NULL, thread_func, NULL);
+>	pthread_detach(thread);
+>
+>	return (0);
+>}
+>```
+>
+>Posix thread에는 non-detached(joinable)과 detach의 상태가 있다.  
+>- non-detached로 스레드를 생성한 경우에는 `pthread_join`으로 스레드의 자원을 해제해야 한다.  
+>- detached로 스레드를 생성한 경우에는 스레드의 자원이 종료와 함께 해제된다.  
+>
+>[main이 종료되면 분리된 스레드는 어떻게 되는가?](https://qa.apthow.com/archives/2168)  
+>[posix 스레드에 join, detach 차이점](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=shlee7708&logNo=120113380564)  
+>  
+>
 
 ### 22.05.19 : Context Switching
 >
