@@ -8,6 +8,93 @@
 
 <hr>
 
+### 22.05.22 : Swift 반복문, Set 타입
+> 
+> 반복문은 제어 구문으로써 특정 부분을 반복해서 실행합니다.
+> 
+> ## for
+> for문은 초기식에 따라서 조건식을 판단하여 실행하고 변환식을 계산합니다.  
+> ```swift
+> let arr: [Int] = ["a", "b", "c"]
+> 
+> for ele in arr {
+> 	print(ele)
+> }
+> // a
+> // b
+> // c
+> 
+> for idx in 0..<arr.count {
+> 	print(idx)
+> }
+> // 0
+> // 1
+> // 2
+> ```
+> 
+> ## while
+> while문은 조건식이 거짓이 될 때까지 명령문을 실행한다.  
+> ```swift
+> let arr: [Int] = ["a", "b", "c"]
+> var idx: Int = 0
+> 
+> while idx < arr.count {
+> 	print(idx, arr[idx])
+> 	idx += 1
+> }
+> // 0, a
+> // 1, b
+> // 2, c
+> ```
+> 
+> ## Set
+> Set 타입은 순서가 없으며, 요소가 중복되지 않는다. Set은 `Set<SomeType>`으로 작성된다.
+> ```swift
+> var strs = Set<String>()
+> strs = []	// 빈 객체로 만들기
+> ```
+> 
+> ```swift
+> strs = Set(["a", "b", "c"])	// 값을 넣어서 초기화
+> 
+> strs.insert("d")	// 추가
+> strs.remove("a")	// 제거
+> strs.contains("a")	// 확인
+> 
+> // set 확인
+> strs.isEmpty
+> strs.count
+> ```
+> 
+> ## Set 연산 작업
+> 집합처럼 두 개의 Set을 연산하여 새로운 Set을 생성한다.  
+> ```swift
+> let a: Set = [1, 2, 3]
+> let b: Set = [2, 3, 4]
+> 
+> // 합집합
+> a.union(b)	// [1, 2, 3, 4]
+> 
+> // 차집합
+> a.subtract(b)	// [1]
+> 
+> // 교집합
+> a.intersect(b)	// [2, 3]
+> 
+> // 배타적 논리합 (XOR)
+> a.exclusiveOr(b)	// [1, 4]
+> 
+> // a가 b에 포함인지
+> a.isSubsetOf(b)
+> 
+> // a에 b가 포함되는지
+> a.isSupersetOf(b)
+> 
+> // a와 b가 일치하지 않는지
+> a.isDisjointWith(b)
+> ```
+>   
+
 ### 22.05.20 : thread와 process의 종료
 >
 >철학자 과제에서 모든 스레드의 종료를 위한 방법을 생각해본다.  
@@ -15,7 +102,7 @@
 >	1. 옵저버 스레드가 종료 플래그를 올리면, 철학자들은 동작을 멈추고 종료
 >		- 종료를 알린 시점에서 철학자들은 각기 다른 동작을 하고 있음에도 종료가 되었음을 알아야한다.  
 >   	- 이때에 모든 동작에서 종료되었음을 확인하는 방법을 사용할 수 있지만 복잡해진다.  
->2. 옵저버 스레드가 프로그램을 종료시킨다.
+>	2. 옵저버 스레드가 프로그램을 종료시킨다.
 >   	- 실행되고 있는 스레드와 상관없이 프로그램을 종료하여도 문제가 발생하지 않는다면 사용할 수 있다.
 >   	- 스레드가 어느 상황에 있더라도 상관없다.
 >
@@ -50,8 +137,8 @@
 >```
 >
 >Posix thread에는 non-detached(joinable)과 detach의 상태가 있다.  
->- non-detached로 스레드를 생성한 경우에는 `pthread_join`으로 스레드의 자원을 해제해야 한다.  
->- detached로 스레드를 생성한 경우에는 스레드의 자원이 종료와 함께 해제된다.  
+>	- non-detached로 스레드를 생성한 경우에는 `pthread_join`으로 스레드의 자원을 해제해야 한다.  
+>	- detached로 스레드를 생성한 경우에는 스레드의 자원이 종료와 함께 해제된다.  
 >
 >[main이 종료되면 분리된 스레드는 어떻게 되는가?](https://qa.apthow.com/archives/2168)  
 >[posix 스레드에 join, detach 차이점](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=shlee7708&logNo=120113380564)  
