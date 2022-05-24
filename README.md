@@ -8,6 +8,69 @@
 
 <hr>
 
+### 22.05.24 : destroy mutex while locked
+> 
+> mutex가 잠긴 상태에서 mutex_destroy함수를 실행시키면 어떻게 되는가?  
+> 다음 예시에는 생성된 스레드가 mutex를 잠근 후에 메인에서 mutex_destroy를 실행한다. 이 경우에는 mutex_destroy함수가 에러 코드를 반환하며 mutex가 제거되지 않는다. 그러므로 메인은 다음 줄에서 mutex 잠금을 획득하기 위해 대기한다.
+> ```c
+> #include <stdio.h>
+> #include <pthread.h>
+> #include <sys/time.h>
+> 
+> int	count = 0;
+> 
+> void	*do_loop(void *param)
+> {
+> 	pthread_mutex_lock((pthread_mutex_t *)param);
+> 	while (1)
+> 	{
+> 		count += 1;
+> 		sleep(1);
+> 	}
+> }
+> 
+> int	main(void)
+> {
+> 	pthread_mutex_t	mtx;
+> 	pthread_t		thread;
+> 
+> 	pthread_mutex_init(&mtx, NULL);
+> 	pthread_create(&thread, NULL, do_loop, (void *)&mtx);
+> 	usleep(1);
+> 	pthread_mutex_destroy(&mtx);	// return 16
+> 	pthread_mutex_lock(&mtx);
+> 	while (1)
+> 	{
+> 		printf("count: %d\n", count);
+> 		sleep(1);
+> 	}
+> 	return (0);
+> }
+> ```
+> 
+> 메인에 unlock함수를 추가하였다. mutex 잠금을 해제하고 mutex_destroy를 실행하면 mutex가 제거되어 잠기지 않는다. 즉, 임계 구역이 보호받지 못하고 아무나 들어갈 수 있게 된다.
+> 
+> ```c
+> int	main(void)
+> {
+> 	pthread_mutex_t	mtx;
+> 	pthread_t		thread;
+> 
+> 	pthread_mutex_init(&mtx, NULL);
+> 	pthread_create(&thread, NULL, do_loop, (void *)&mtx);
+> 	usleep(1);
+> 	pthread_mutex_unlock(&mtx);	// unlock mtx
+> 	pthread_mutex_destroy(&mtx);	// return 0
+> 	pthread_mutex_lock(&mtx);	
+> 	while (1)
+> 	{
+> 		printf("count: %d\n", count);
+> 		sleep(1);
+> 	}
+> 	return (0);
+> }
+> ```
+
 ### 22.05.23 : usleep 정확도, 멀티코어 프로그래밍 메모리 문제
 >
 >## 지나치게 많은 스레드
@@ -145,11 +208,8 @@
 >	return (0);
 >}
 >
->int main(int argc, char *argv[]) 
+>int main(void) 
 >{ 
->	(void)argc;
->	(void)argv;
->
 >	pthread_t	thread;
 >	pthread_create(&thread, NULL, thread_func, NULL);
 >	pthread_detach(thread);
