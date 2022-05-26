@@ -16,11 +16,18 @@
 
 모든 철학자가 최소 식사 횟수만큼 밥을 먹었다면 시뮬레이션이 종료됩니다. 만약에 해당 값이 없다면 철학자가 한 명이라도 사망할 때까지 계속된다.
 
+![전체 구조](../src/philo_01.jpeg)
+![스레드 구조](../src/philo_02.jpeg)
+![식사 구조](../src/philo_03.jpeg)
+![new_sleep](../src/philo_04.jpeg)
+
 컨텍스트 스위칭에 소요되는 시간으로 인해서 시간이 늘어간다.
 
 스레드를 non-detached로 생성한 경우에는 pthread_join으로 자원을 메모리에서 해제해주어야 한다. 메인 스레드에서 pthread_join을 호출하면 인자로 넘긴 스레드가 종료될 때까지 기다린다.
 스레드를 detached로 생성한 경우에는 join을 호출할 필요없이 스레드가 종료될때 자원이 자동으로 반환된다.  
 [join과 detach의 차이점](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=shlee7708&logNo=120113380564)
+
+
 
 
 
