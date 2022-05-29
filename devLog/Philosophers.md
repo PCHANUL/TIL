@@ -36,69 +36,267 @@
 
 # 식사하는 철학자 구현
 
-원탁에 앉아있는 철학자와 포크를 구현하기 위해 프로그램에서 철학자는 스레드로 구현되고, 포크는 한 사람씩 사용해야하기 때문에 뮤텍스로 보호한다. 
+## 과제 규칙
+- 원탁에 앉아있는 각 철학자는 스레드로 구현되어야 하고, 철학자가 포크를 복제하는 것을 막기 위해서 뮤텍스를 이용해야한다.  
+  - [스레드(Thread)](../Thread.md)
+  - [뮤텍스(Mutex)](../Mutex.md)
+- 한 명 이상의 철학자가 둥근 테이블에 앉아 다음과 같은 세 행동 중 하나를 취한다. (식사, 생각, 수면)  
+- 철학자는 식사를 마치면 포크를 내려놓고 잠자기 시작한다. 잠을 다 잤으면 생각하기 시작한다.  
+- 철학자는 반드시 2개의 포크를 사용하여 식사를 해야한다.
+- 프로그램은 다음의 인자를 순서대로 받는다.  
+  - 철학자의 수  
+  - 철학자의 수명  
+  - 식사하는 데 걸리는 시간  
+  - 수면하는 데 걸리는 시간  
+  - [철학자의 최소 식사 횟수]  
+- 모든 철학자가 최소 식사 횟수만큼 밥을 먹었다면 시뮬레이션이 종료되고, 최소 식사 횟수가 명시되지 않았다면 철학자가 한 명이라도 사망하기 전까지 계속된다.
 
-## 스레드 (thread)
-
-![스레드](../src/philo_07.png)  
-
-스레드는 프로세스의 실행 단위이다. 스레드는 프로세스에 할당된 메모리, 자원을 공유하며 여러 실행 흐름을 동시에 진행시킨다. 응용 프로그램을 실행하면 코드는 코드 데이터 영역, 전역 변수는 데이터 영역, 지역 변수는 스택, 동적 할당은 힙 영역으로 나뉘어 메모리에 저장된다. 만약에 여러 흐름으로 작업을 수행해야하는 상황에서 별도의 프로세스를 이용하면, 메모리와 이외의 것들을 개별 공간에 가지게 되므로 높은 비용이 들며 자원을 공유하기 어렵다. 그러므로 프로세스의 메모리를 공유하여 사용해야하는 경우에 스레드를 생성하여 작업을 수행한다. 
-
-기본 데이터  
-  - 고유한 스레드 ID, 프로그램 카운터, 레지스터 집합, 스택
-  - 코드, 데이터, 파일 등 기타 자원은 프로세스 내의 다른 스레드와 공유한다.  
-
-특정 데이터  
-  - 하나의 스레드에만 연관된 데이터로 개별 스레드만의 자료 공간이 필요하다.
-  - 특별한 경우에 사용하는 개별 스레드만의 자료 공간
-
-## 스레드의 종류
-- 사용자 레벨 스레드
-  - 사용자 레벨의 라이브러리를 통해 구현된다.
-  - 스레드가 중단되면 나머지 모든 스레드가 중단된다.
-- 커널 레벨 스레드
-  - 운영체제가 지원하는 스레드 기능으로 구현된다.
-  - 스레드가 도중에 중단되어도 커널은 다른 스레드를 중단시키지 않고 계속 실행시켜준다.
-
-## 스레드의 동기화
-
-- 임계 구역
-  - 병렬 컴퓨팅에서 둘 이상의 스레드가 동시에 접근해서는 안되는 공유 자원을 접근하는 코드의 일부를 말한다. 어떤 스레드가 임계 구역에 들어가고자 한다면 대기해야 할 수도 있다. 스레드가 공유자원의 사용을 보장받기 위해서 임계 구역에 들어가거나 나올때 동기화 매커니즘이 사용된다.
-
-- 스레드 동기화 방법
-  - mutex (locking 매커니즘)
-    - 스레드의 동시 접근을 허용하지 않고, 뮤텍스를 가지고 있어야 임계영역에 들어갈 수 있다.
-    - 임계역역에 들어간 스레드가 뮤텍스를 이용하여 본인이 나오기 전까지 다른 스레드가 들어오지 못하게 잠근다.
-    - wait를 호출한 스레드만이 signal을 호출할 수 있다.
-  - semaphore (signaling 매커니즘)
-    - 뮤텍스와 비슷하지만 동시 접근 동기화가 아닌 접근 순서 동기화에 관련있다.
-    - 세마포어 카운터를 사용하며, wait를 호출하면 카운터를 1만큼 줄인다.
-    - 카운터가 0보다 작거나 같아질 경우에 락이 실행된다.
-    - 만약에 카운터를 1로 설정하면 mutex처럼 사용할 수 있다.
-
-프로그램은 다음의 인자를 순서대로 받는다.  
-
-- 철학자의 수  
-- 철학자의 수명  
-- 식사하는 데 걸리는 시간  
-- 수면하는 데 걸리는 시간  
-- [철학자의 최소 식사 횟수]  
-
-모든 철학자가 최소 식사 횟수만큼 밥을 먹었다면 시뮬레이션이 종료되고, 최소 식사 횟수가 명시되지 않았다면 철학자가 한 명이라도 사망하기 전까지 계속된다.
+## 사용 함수
+> 
+> <details>
+> <summary>usleep - 마이크로 초 동안 대기한다.</summary>
+> 
+> ```c
+> #include <unistd.h>
+> 
+> void usleep(unsigned long useconds);
+> 
+> // 성공시 0을 반환한다.
+> // 실패시 -1를 반환한다.
+> ```
+> 
+> </details>
+> 
+> <details>
+> <summary>gettimeofday - 마이크로 단위의 시간을 반환한다.</summary>
+> 
+> - 1970-01-01 00:00 부터 호출된 시간까지의 ms값을 반환한다.
+>     
+> ```c
+> #include <sys/time.h>
+> 
+> int gettimeofday(struct timeval *tv, struct timezone *tz);
+> 
+> struct timeval
+> {
+> 		time_t       tv_sec;  // 초
+> 		suseconds_t  tv_usec; // 마이크로 초
+> }
+> ```
+> 
+> ```c
+> // 예시
+> int main()
+> {
+>     struct timeval startTime, endTime;
+>     double diffTime;
+> 
+>     gettimeofday(&startTime, NULL);
+>       // 특정 작업 수행
+>       sleep(1);
+>     gettimeofday(&endTime, NULL);
+>     diffTime = ( endTime.tv_sec - startTime.tv_sec ) + (( endTime.tv_usec - startTime.tv_usec ) / 1000000);
+>     printf("%f s\n", diffTime);
+>     return 0;
+> }
+> ```
+> </details>
+> 
+> <details>
+> <summary>pthread_create - 스레드를 생성한다.</summary>
+> 
+> ```c
+> #include <pthread.h>
+> 
+> int pthread_create(pthread_t *thread,
+> 										const pthread_attr_t *attr,
+> 										void *(*start_routine)(void *),
+> 										void *arg);
+> 
+> /* 
+> thread - 생성된 쓰레드를 식별하기 위해서 사용되는 쓰레드 식별자
+> attr - 쓰레드 특성을 지정하기 위해서 사용하고, 기본 특성을 사용한다면 null
+> start_routine - 분기시켜서 실행할 쓰레드 함수
+> arg - start_routine 함수의 매개변수로 넘겨진다.
+> 
+> 성공인 경우 0을 반환
+> */
+> ```
+> </details>
+> 
+> <details>
+> <summary>pthread_join - 스레드의 종료를 기다리다가 종료되면 스레드의 자원을 해제한다.</summary>
+>     
+> ```c
+> #include <pthread.h>
+> 
+> int pthread_join(pthread_t th, void **thread_return);
+> 
+> /*
+> th - 기다릴 쓰레드의 식별자
+> thread_return - 쓰레드의 리턴값. 
+> 
+> 성공하면 0, 실패하면 에러코드
+> */
+> ```
+> </details>
+> 
+> <details>
+> <summary>pthread_mutex_init - mutex 객체를 초기화한다.</summary>
+> 
+> ```c
+> int pthread_mutex_init(pthread_mutex_t *mutex, 
+> 												const pthread_mutex_attr *attr);
+> 
+> /*
+> mutex - 초기화할 mutex 객체
+> attr - mutex 특성을 변경, 기본 특성을 사용한다면 null
+> 	mutex 특성에는 fast, recurisev, error checking이 있고, 기본 특성은 “fast”이다.
+> */
+> ```
+> </details>
+> 
+> <details>
+> <summary>pthread_mutex_destory - mutex 객체를 제거한다.</summary>
+> 
+> ```c
+> int pthread_destory(pthread_mutex_t *mutex);
+> 
+> /*
+> mutex - 소멸하고자 하는 참조 값의 주소
+> */
+> ```
+> </details>
+> 
+> <details>
+> <summary>pthread_mutex_lock - 임계 영역의 잠금</summary>
+> 
+> ```c
+> int pthread_mutex_lock(pthread_mutex_t *mutex);
+> ```
+> </details>
+> 
+> <details>
+> <summary>pthread_mutex_unlock - 임계 영역의 해제</summary>
+> 
+> ```c
+> int pthread_mutex_unlock(pthread_mutex_t *mutex);
+> ```
+> </details>
+> 
+## 코드 구조
 
 ![전체 구조](../src/philo_01.png)
+
+프로그램은 초기화, 생성, 잠금, 해제 순서로 실행된다. 입력받은 인자로 데이터 초기화를 마친 후에 스레드를 생성하고, 프로그램의 종료를 기다리다가 프로그램이 종료되면 모든 데이터를 해제하고 프로그램이 종료된다.  
+
+## 스레드 구조
+
 ![스레드 구조](../src/philo_02.png)
-![new_sleep](../src/philo_04.png)
 
-컨텍스트 스위칭에 소요되는 시간으로 인해서 시간이 늘어간다.
+메인 스레드에서 철학자 스레드와 옵저버 스레드를 생성한다. 철학자의 수만큼 스레드가 생성되면 스레드는 철학자의 동작을 반복하여 진행한다. 스레드가 포크를 가져가고, 식사하고, 포크를 내려놓고, 잠을 자는 동작은 프로그램이 종료되기 전까지 반복된다.  
 
-스레드를 non-detached로 생성한 경우에는 pthread_join으로 자원을 메모리에서 해제해주어야 한다. 메인 스레드에서 pthread_join을 호출하면 인자로 넘긴 스레드가 종료될 때까지 기다린다.
-스레드를 detached로 생성한 경우에는 join을 호출할 필요없이 스레드가 종료될때 자원이 자동으로 반환된다.  
-[join과 detach의 차이점](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=shlee7708&logNo=120113380564)
+옵저버 스레드는 프로그램의 종료 조건이 충족되었는지 계속 확인한다. 어떤 철학자의 식사 시간이 넘어가서 굶어 죽었는지, 모든 철학자가 최소 식사 횟수만큼 식사를 했는지 보다가 프로그램을 종료시킨다.  
 
+## 교착 상태 문제
 
-[참조]  
-[식사하는 철학자 문제](https://m.blog.naver.com/hirit808/221788147057)
+![교착 상태 해결](../src/philo_03.png)  
+
+스레드가 교착 상태에 빠지지 않도록 고유한 번호를 할당하고 번호에 따라서 순서를 정하였다. `lock_fork`과 `unlock_fork` 함수에서 스레드의 id 값이 홀수이면 오른쪽 포크를 먼저 집고, 짝수이면 왼쪽 포크를 먼저 집도록 한다. 이로 인해 스레드들이 순서대로 2개의 포크를 가져가게 되었으므로 교착 상태에 빠지지 않게 되었다. 
+
+```c
+// philo.h
+
+typedef struct s_philo
+{
+	int					id;
+	// ...
+	pthread_mutex_t		*fork_left;
+	pthread_mutex_t		*fork_right;
+}	t_philo;
+```
+
+```c
+// thread_philo.c
+
+void	lock_fork(t_philo *philo)
+{
+	if (philo->id % 2)
+	{
+		// 홀수인 경우
+		pthread_mutex_lock(philo->fork_right);
+		print_status(philo, TAKEN);
+		pthread_mutex_lock(philo->fork_left);
+		print_status(philo, TAKEN);
+	}
+	else
+	{
+		// 짝수인 경우
+		pthread_mutex_lock(philo->fork_left);
+		print_status(philo, TAKEN);
+		pthread_mutex_lock(philo->fork_right);
+		print_status(philo, TAKEN);
+	}
+}
+
+void	unlock_fork(t_philo *philo)
+{
+	if (philo->id % 2)
+	{
+		// 홀수인 경우
+		pthread_mutex_unlock(philo->fork_right);
+		pthread_mutex_unlock(philo->fork_left);
+	}
+	else
+	{
+		// 짝수인 경우
+		pthread_mutex_unlock(philo->fork_left);
+		pthread_mutex_unlock(philo->fork_right);
+	}
+}
+```
+
+## usleep 정확도 문제  
+
+![new_sleep](../src/philo_04.png)  
+
+`usleep` 함수를 테스트해보면 정확하지 않음을 확인할 수 있다. ( [usleep 정확도 문제](https://www.notion.so/philosophers-VM-c60be9c836084edfbcd9c07e29b429c4) )  
+usleep man 페이지를 보면 usleep 함수가 받는 인자는 잠을 자는 최소 값이라고 나와있다. 하지만 철학자 과제에서는 정확히 주어진 시간만큼 잠을 자야 하므로 다른 방법을 사용해야 한다.  
+
+해결방법으로 `usleep(10)`을 반복하여 목표 시간만큼 재우는 방법이 있지만 성능 저하를 일으킬 수 있다. 그래서 `usleep(남은 시간의 2/3)`를 목표 시간의 10ms전까지 반복하고, 그 이후부터 `usleep(50)`을 반복하는 방법을 사용했다.
+
+```c
+// 현재 시간 반환 (ms)
+long long	get_time(void)
+{
+	struct timeval	tv;
+	long long		time;
+
+	gettimeofday(&tv, NULL);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return (time);
+}
+
+void	new_sleep(long long time)
+{
+	long long	time_cur;
+	long long	time_tar;
+	long long	time_calc;
+
+	time_cur = get_time();
+	time_tar = time_cur + time;
+	while (time_tar > time_cur)
+	{
+		time_calc = time_tar - time_cur;
+		if (time_calc > 10)
+			usleep((time_calc / 3) * 2000);
+		else
+			usleep(50);
+		time_cur = get_time();
+	}
+}
+```  
+
 
 ## todos
 
