@@ -8,6 +8,174 @@
 
 <hr>
 
+### 22.05.31 : c++ 
+> 
+> ## cout
+> 
+> c++은 iostream 라이브러리에 있는 std::cout 객체를 사용하여 콘솔에 출력할 수 있다.  
+> 
+> ```cpp
+> std:cout << [ 출력할 값 ]
+> ```
+> 
+> 출력하려는 값의 타입에 상관없이 출력 연산자 뒤에 넣어주면 된다.  
+> 데이터 타입을 나타내는 서식문자가 필요없다.
+> 
+> ```cpp
+> #include <iostream>
+> 
+> int main(void)
+> {
+> 	int count = 0;
+> 	
+> 	std::cout << "counts: ";
+> 	std::cout << count;
+> 	return (0);
+> }
+> 
+> // counts: 0
+> ```
+> 
+> 개행을 사용하는 경우에는 개행 문자인 `\n`이나 `std::endl`을 사용하면 된다.
+> 
+> ```cpp
+> #include <iostream>
+> 
+> int main(void)
+> {
+> 	int count = 0;
+> 	
+> 	std::cout << "counts: " << std::endl;
+> 	std::cout << count;
+> 	return (0);
+> }
+> 
+> // counts:
+> // 0
+> ```
+> 
+> ## cin
+> 
+> `std::cin`으로 c++의 입력을 받을 수 있다.
+> 
+> ```cpp
+> std::cin >> [ 입력값을 받을 변수 ]
+> ```
+> 
+> `std::cin`로 `std::cout`과 마찬가지로 데이터 타입을 알려주는 서식이 필요없이 변수만 지정해주면 된다. 값을 받을때 `&`로 주소를 넘겨주지 않아도 된다.
+> 
+> ```cpp
+> #include <iostream>
+> 
+> int main(void)
+> {
+> 	int	num;
+> 	
+> 	std::cout << "num: ";
+> 	std::cin >> num;
+> 	std::cout << "num is " << num << std::endl;
+> }
+> ```
+> 
+> ## namespace
+> 
+> namespace는 함수, 구조체, 클래스, 변수 등을 구분하기 위해 사용된다. 프로그램이 복잡해지고 여러 라이브러리가 포함될수록 충돌될 가능성이 높아진다. 이를 c++에서는 namespace를 사용하여 해결한다.
+> 
+> ```cpp
+> namespace A
+> {
+> 	void print(void)
+> 	{
+> 		std::cout << "Hello" << std::endl;
+> 	}
+> }
+> 
+> void print(void)
+> {
+>   std::cout << "World" << std::endl;
+> }
+> 
+> int main(void)
+> {
+> 	A::print();
+> 	print();
+> 	return (0);
+> }
+> 
+> // Hello
+> // World
+> ```
+> 
+> ## std::string
+> 
+> c++에는 문자열 자료형이 내장되어 있다. 문자열을 사용하기위해 `<string>`을 포함시킨다.
+> 
+> ```cpp
+> #include <string>
+> 
+> std::string	str;
+> ```
+> 
+> 다음과 같이 문자열을 초기화할 수 있다.
+> 
+> ```cpp
+> std::string str("Hello");
+> str = "world";
+> ```
+> 
+> `std:string`을 `std:cin`과 함께 사용하는 경우에는 주의해야 한다. 표준 입력으로 공백이 포함된 문자열을 받는다면 입력된 문자열을 한번에 받지 않고 공백으로 구분하여 하나씩 받는다.
+> 
+> ```cpp
+> #include <iostream>
+> #include <string>
+> 
+> int main(void)
+> {
+> 	std::string	first;
+> 	std::string	last;
+> 
+> 	std::cout << "-> ";
+> 	std::cin >> first;
+> 	std::cout << "-> ";
+> 	std::cin >> last;
+> 
+> 	std::cout << "first: " << first << std::endl;
+> 	std::cout << "last: " << last << std::endl;
+> }
+> 
+> // 공백이 없는 입력
+> // -> nick
+> // -> name
+> // first: nick
+> // last: name
+> 
+> // 공백이 있는 입력
+> // -> nick name
+> // -> first: nick
+> // last: name
+> ```
+> 
+> ## std::getline()
+> 
+> ```cpp
+> #include <string>
+> #include <iostream>
+> 
+> std::getline(input, str, [delim]);
+> 
+> // input - the stream to geet data from
+> // str - the string to put the data into
+> // delim - the delimiter character
+> ```
+> 
+> [cout, cin 참조](https://blockdmask.tistory.com/475)  
+> [namespace 참조](http://www.tcpschool.com/cpp/cpp_scope_namespace)  
+> [string 참조](https://boycoding.tistory.com/178)  
+> [basic string](https://en.cppreference.com/w/cpp/string/basic_string)  
+> [getline 참조](https://en.cppreference.com/w/cpp/string/basic_string/getline)  
+> [learn cpp](https://www.learncpp.com/cpp-tutorial/an-introduction-to-stdstring/)  
+> 
+
 ### 22.05.30 : 리팩토링의 중요성
 > 
 > [마틴 파울러] 리팩토링의 중요성 feat.테스트 코드를 짜는 이유 ( [유튜브](https://www.youtube.com/watch?v=mNPpfB8JSIU) )
