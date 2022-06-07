@@ -8,6 +8,72 @@
 
 <hr>
 
+## 22.06.07 : c++ 함수 포인터
+
+> 함수 포인터는 함수를 가리키는 변수이다.  
+> 
+> ```cpp
+> #include <iostream>
+> 
+> void	say_hello( void )
+> {
+> 	std::cout << "Hello" << std::endl;
+> }
+> 
+> int	main( void )
+> {
+> 	void (*funcPtr)() = say_hello;
+> 	
+> 	say_hello();
+> 	funcPtr();
+> 	reurn (0);
+> }
+> 
+> // Hello
+> // Hello
+> ```
+> 
+> 맴버 함수 포인터를 위한 연산자이다.  
+> 
+> ```cpp
+> #include <iostream>
+> 
+> class Harl
+> {
+> 	
+> public :
+> 	void	say_hello( void );
+> 	void	say_name( void );
+> 	
+> };
+> 
+> void	Harl::say_hello( void )
+> {
+> 	std::cout << "Hello!" << std::endl;
+> }
+> 
+> void	Harl::say_name( void )
+> {
+> 	std::cout << "I'm Harl" << std::endl;
+> }
+> 
+> int	main( void )
+> {
+> 	Harl	harl;
+> 	Harl	*harl_ptr;
+> 	void	(Harl::*fp)( void );
+> 	
+> 	fp = &Harl::say_hello;
+> 	(harl.*fp)();
+> 	
+> 	harl_ptr = new Harl;
+> 	fp = &Harl::say_name;
+> 	(harl_ptr->*fp)();
+> }
+> ```
+> 
+> [맴버 함수 포인터](https://www.joinc.co.kr/w/Site/C/Documents/Using_Member_Function_Pointer)
+
 ## 22.06.06 : 파일 입출력
 > 
 > # fstream

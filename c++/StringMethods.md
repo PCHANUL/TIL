@@ -315,7 +315,7 @@ to be, or not to be: that is the question...
 </details>
 
 <details>
-<summary>insert : 문자열에서 지정하는 위치 앞에 문자를 삽입</summary>
+<summary>erase : 문자열에서 지정하는 위치의 문자를 제거</summary>
 
 ```cpp
 // sequence (1)	
@@ -336,7 +336,7 @@ iterator erase (iterator p);
 </details>
 
 <details>
-<summary>insert : 문자열에서 지정하는 위치 앞에 문자를 삽입</summary>
+<summary>replace : 문자열에서 지정하는 위치의 문자를 다른 문자열로 변경</summary>
 
 ```cpp
 // string (1)	
