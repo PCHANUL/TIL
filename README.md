@@ -8,6 +8,138 @@
 
 <hr>
 
+## 22.06.13 : c++ 상속
+> 
+> c++에서는 클래스가 어떠한 클래스의 속성과 행동을 물려받는 상속이 있다. 클래스를 물려받으면 여러 클래스의 공통된 속성을 효율적으로 관리할 수 있다.  
+> 
+> 클래스를 상속하려면 상속받을 클래스의 이름 옆에 접근 제한자와 상속할 클래스 이름을 붙여주면 된다. 접근 제한자로는 `public`, `private`, > `protected`가 있다.
+> 
+> ```cpp
+> class 부모클래스 
+> {
+> 	// ...
+> }
+> 
+> class 자식클래스 : 접근제한자 부모클래스
+> {
+> 	// ...
+> }
+> ```
+> 
+> ## 맴버 초기화
+> 
+> 자식 클래스의 생성자는 부모 클래스의 맴버 변수까지 초기화해야한다.  
+> 
+> ```cpp
+> #include <iostream>
+> 
+> class ClassName1
+> {
+> 	private :
+> 		int val;
+> 	public :
+> 		ClassName1(int _val) : val(_val) { }
+> 		
+> 		void print_val( void )
+> 		{
+> 			std::cout << val << std::endl;
+> 		}
+> };
+> 
+> class ClassName2 : public ClassName1
+> {
+> 	private :
+> 		int id;
+> 	public :
+> 		ClassName2(int _id, int _val) : ClassName1(_val), id(_id) { }
+> 		
+> 		void print_info( void )
+> 		{
+> 			print_val();
+> 			std::cout << id << std::endl;
+> 		}
+> };
+> ```
+> 
+> ## 상속관계 접근 지정자
+> 
+> 자식 클래스는 상속 접근 지정자에 따라서 부모 클래스에 접근할 수 있는 권한이 정해진다. 부모 클래스에 접근하는 경우는 두가지이다. 자식 클래스의 `정의부`와 > `객체`에서 부모 클래스에 접근을 시도할 수 있으며 경우에 따라 접근 범위가 달라진다.  
+> 
+> | 부모 클래스 | 자식 클래스 정의부 |    자식 클래스 객체    |
+> | :---------: | :----------------: | :--------------------: |
+> |   private   |         X          |           X            |
+> |   public    |         O          | O (public 상속인 경우) |
+> |  protected  |         O          |           X            |
+> 
+> ```cpp
+> class ParentClass
+> {
+> 	private :
+> 		int	a;
+> 	public :
+> 		int	b;
+> 	protected :
+> 		int	c;
+> };
+> 
+> class PublicChild : public ParentClass
+> {
+> 	public :
+> 		PublicChild(int _a, int _b, int _c)
+> 		{
+> 			a = _a;	// error: 'a' is a private member of 'ParentClass'
+> 			b = _b;
+> 			c = _c;
+> 		}
+> };
+> 
+> class PrivateChild : private ParentClass
+> {
+> 	public :
+> 		PrivateChild(int _a, int _b, int _c)
+> 		{
+> 			a = _a;	// error: 'a' is a private member of 'ParentClass'
+> 			b = _b;
+> 			c = _c;
+> 		}
+> };
+> 
+> class ProtectedChild : protected ParentClass
+> {
+> 	public :
+> 		ProtectedChild(int _a, int _b, int _c)
+> 		{
+> 			a = _a;	// error: 'a' is a private member of 'ParentClass'
+> 			b = _b;
+> 			c = _c;
+> 		}
+> };
+> 
+> int	main( void )
+> {
+> 	PublicChild		pub(1, 2, 3);
+> 	PrivateChild	pri(1, 2, 3);
+> 	ProtectedChild	pro(1, 2, 3);
+> 
+> 	pub.a;	// error: 'a' is a private member of 'ParentClass'
+> 	pub.b;
+> 	pub.c;	// error: 'c' is a protected member of 'ParentClass'
+> 	
+> 	pri.a;	// error: 'a' is a private member of 'ParentClass'
+> 	pri.b;	// error: 'b' is a private member of 'ParentClass'
+> 	pri.c;	// error: 'c' is a private member of 'ParentClass'
+> 	
+> 	pro.a;	// error: 'a' is a private member of 'ParentClass'
+> 	pro.b;	// error: 'b' is a protected member of 'ParentClass'
+> 	pro.c;	// error: 'c' is a protected member of 'ParentClass'
+> 	
+> 	return (0);
+> }
+> ```
+> 
+> [상속이란](https://blog.hexabrain.net/173)  
+> [상속 접근 지정자](https://thrillfighter.tistory.com/531)  
+> 
 ## 22.06.11 : const class overloading
 
 >
