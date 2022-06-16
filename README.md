@@ -8,6 +8,197 @@
 
 <hr>
 
+## 22.06.16 : virtual 키워드
+
+> 
+> # virtual 키워드
+> 
+> virtual 키워드를 함수에 붙이면 오버라이딩이 가능해진다.  
+> 오버라이딩을 해야하는 이유는 부모 클래스 포인터가 자식 클래스를 가리키는 경우에 부모가 자식을 원할하게 사용하기 위함이다.  
+> 
+> ```cpp
+> 
+> class A
+> {
+> 	// ...
+> };
+> 
+> class B : public A
+> {
+> 	// ...
+> };
+> 
+> class C : public B
+> {
+> 	// ...
+> }
+> 
+> int	main( void )
+> {
+> 	A *ptr = C();	// 부모 포인터가 자식을 가리키는 경우
+> 	
+> 	return (0);
+> }
+> 
+> ```
+> 
+> 부모가 자식을 가리켜서 새롭게 정의된 자식의 기능을 사용할 수 있다면 불필요함을 줄일 수 있다.  
+> 이를 다형성이라고 하며, 오버라이딩을 성립시켜주는 `virtual` 키워드로 구현된다.  
+> `virtual` 키워드가 붙은 함수는 `동적 바인딩`되기 때문에 오버라이딩된다. 
+> 
+> ## 정적 바인딩과 동적 바인딩
+> 
+> 정적 바인딩은 컴파일 시점에 데이터 타입을 기준으로 실행될 함수를 정하지만  
+> 동적 바인딩은 런타임 시점에 객체 타입을 기준으로 실행될 함수를 정한다.  
+> 
+> 함수는 컴파일 시점에 코드가 메모리에 저장되고, 함수를 호출하는 부분에 함수가 저장된 메모리 주소값이 저장된다.  
+> 바인딩으로 함수를 호출하는 부분에 함수가 위치한 메모리 주소로 연결시켜줄 수 있다.  
+> 
+> ```
+> 프로그램 실행 -> 함수 호출 -> 함수가 저장된 주소로 점프 -> 함수 실행 -> 원래 위치로
+> ```
+> 
+> 정적 바인딩과 반대로 동적 바인딩은 실행 파일을 생성하는 시점에 바인딩하지 않고 보류 상태로 둔다.  
+> 점프할 메모리를 저장하기 위해 따로 메모리 공간을 가지고 있는다.  
+> 
+> [정적 바인딩, 동적 바인딩](https://secretroute.tistory.com/entry/140819)  
+> 
+> ## virtual 소멸자 함수
+> 
+> 부모 클래스의 포인터로 자식 클래스를 호출할 때 가상 함수로 정의되지 않은 자식 클래스의 함수를 호출하면 부모 클래스의 맴버 함수가 호출된다.
+> 소멸자도 자식 클래스의 소멸자가 아닌 부모 클래스의 소멸자가 호출된다.  
+> 가상 함수로 소멸자가 사용되었다면 자식 클래스에서 재정의 될 수 있음을 명시하기 때문에 자식 클래스의 소멸자부터 차례대로 부모 클래스의 소멸자가 호출된다.  
+> 
+> <details>
+> <summary>virtual 키워드가 없는 경우</summary>
+> 
+> ```cpp
+> #include <iostream>
+> 
+> class A
+> {
+> 	public :
+>     	~A( void )
+>     	{
+>     		std::cout << "destroyed A" << std::endl;
+>     	}
+> };
+> 
+> class B : public A
+> {
+> 	public :
+> 		~B( void )
+> 		{
+> 			std::cout << "destroyed B" << std::endl;
+> 		}
+> };
+> 
+> class C : public B
+> {
+> 	public :
+> 		~C( void )
+> 		{
+> 			std::cout << "destroyed C" << std::endl;
+> 		}
+> };
+> 
+> int	main( void )
+> {
+> 	A *a = new C();
+> 	B *b = new C();
+> 	C *c = new C();
+> 	
+> 	delete a;
+> 	std::cout << std::endl;
+> 	delete b;
+> 	std::cout << std::endl;
+> 	delete c;
+> }
+> 
+> /* prints 
+> 
+> destroyed A
+> 
+> destroyed B
+> destroyed A
+> 
+> destroyed C
+> destroyed B
+> destroyed A
+> 
+> */
+> 
+> ```
+> </details>
+> 
+> 
+> <details>
+> <summary>virtual 키워드가 있는 경우</summary>
+> 
+> ```cpp
+> #include <iostream>
+> 
+> class A
+> {
+> 	public :
+>     	virtual ~A( void )
+>     	{
+>     		std::cout << "destroyed A" << std::endl;
+>     	}
+> };
+> 
+> class B : public A
+> {
+> 	public :
+> 		~B( void )
+> 		{
+> 			std::cout << "destroyed B" << std::endl;
+> 		}
+> };
+> 
+> class C : public B
+> {
+> 	public :
+> 		~C( void )
+> 		{
+> 			std::cout << "destroyed C" << std::endl;
+> 		}
+> };
+> 
+> int	main( void )
+> {
+> 	A *a = new C();
+> 	B *b = new C();
+> 	C *c = new C();
+> 	
+> 	delete a;
+> 	std::cout << std::endl;
+> 	delete b;
+> 	std::cout << std::endl;
+> 	delete c;
+> }
+> 
+> /* prints 
+> 
+> destroyed C
+> destroyed B
+> destroyed A
+> 
+> destroyed C
+> destroyed B
+> destroyed A
+> 
+> destroyed C
+> destroyed B
+> destroyed A
+> 
+> */
+> 
+> ```
+> </details>
+> 
+> [부모 클래스 소멸자에 virtual을 사용하는 이유](https://younggwan.tistory.com/45)  
+> 
 ## 22.06.15 : 다중 상속, 가상 상속, 다이아몬드 상속 문제
 > 
 > ## 다중 상속
