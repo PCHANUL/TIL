@@ -8,6 +8,29 @@
 
 <hr>
 
+## 22.06.19 : 순환 참조
+
+> 헤더 파일들이 서로를 include하는 경우에 순환 참조가 발생한다. 이 경우에 전방 선언으로 include없이 포인터로 class를 선언하면 해결된다.  
+> 
+> ```cpp
+> // A.h
+> class B;
+> 
+> class A
+> {
+> 	void	call(B* obj);
+> };
+> 
+> // B.h
+> class A;
+> 
+> class B
+> {
+> 	void	call(A* obj);
+> };
+> ```
+
+
 ## 22.06.17 : CreateML, 인터페이스
 > 
 > # CreateML
