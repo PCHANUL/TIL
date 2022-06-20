@@ -8,6 +8,76 @@
 
 <hr>
 
+## 22.06.20 : 예외 처리
+> 
+> 프로그램 오류는 두가지로 나뉜다. 프로그래밍 실수로 인한 논리 오류와 프로그래머가 제어할 수 없는 런타임 오류이다.  
+> 오류를 명시적으로 처리하지 않으면 프로그램이 경고없이 중단되거나 잘못된 데이터를 사용하여 잘못된 결과를 생성할 수 있기 때문에 예외를 사용하여 오류를 처리해야 한다.  
+> 
+> 예외 처리는 try, throw, catch를 사용한다.  
+> try 내의 코드를 실행하고 throw되면 예외를 받을 catch를 찾는다.  
+> throw 핸들러는 예외 객체와 같은 타입을 받는 catch를 찾으면 예외를 처리하고, 아니라면 terminate 함수가 호출되어 abort가 호출된다.  
+> 
+> ```cpp
+> try 
+> {	// 예외 발생 영역
+> 
+> 	// ...
+> 	throw (예외 객체); // 예외 발생
+> 	
+> } 
+> catch (예외 객체) 
+> {	// 예외 처리 영역
+> 
+> 	// ...
+> 	
+> }
+> ```
+> 
+> [예외 처리](http://www.tcpschool.com/cpp/cpp_exception_intro)  
+> [함수 예외 처리, 스택 풀기](https://blog.hexabrain.net/179)  
+> [terminate 함수](https://underin1365.tistory.com/15)  
+> 
+> ## 예외 처리 클래스 생성
+> 
+> throw로 발생된 예외 객체는 같은 타입의 객체를 받는 catch에서 처리된다.  
+> 클래스를 정의하여 예외 객체로 사용할 수 있다.  
+> 
+> ```cpp
+> class	Exception
+> {
+> 	public :
+> 		virtual void report(void) // 오버라이딩을 위해 가상 함수로 선언
+> 		{
+> 			std::cerr << "Exception" << std::endl;
+> 		}
+> };
+> 
+> class	OtherException : public Exception
+> {
+> 	public :
+> 		void report(void)
+> 		{
+> 			std::cerr << "Other Exception" << std::endl;
+> 		}
+> }
+> 
+> int	main(void)
+> {
+> 	try
+> 	{
+> 		throw Exception();
+> 	}
+> 	catch(Exception &e)
+> 	{
+> 		e.report();
+> 	}
+> }
+> ```  
+> [예외 처리 클래스](https://ansohxxn.github.io/cpp/chapter14-3/)
+> 
+
+
+
 ## 22.06.19 : 순환 참조
 
 > 헤더 파일들이 서로를 include하는 경우에 순환 참조가 발생한다. 이 경우에 전방 선언으로 include없이 포인터로 class를 선언하면 해결된다.  
