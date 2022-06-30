@@ -7,5 +7,6 @@
 * [devLog](devLog/README.md)
   * [Gridot](devLog/Gridot.md)
   * [Philosophers](devLog/Philosophers.md)
+  * [Cpp](devLog/Cpp.md)
 * [Thread](Thread.md)
 * [Mutex](Mutex.md)
