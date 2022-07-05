@@ -1,5 +1,20 @@
 # Cpp
 
+## cpp03 - 클래스의 상속
+
+cpp module 03에서는 클래스 상속을 구현한다. 클래스 상속은 기존 클래스를 속성을 다른 클래스가 받고 의도에 맞게 수정하여 사용하거나 클래스 간의 종속 관계를 형성하여 객체를 조직화한다.  
+
+### ex00
+
+ClapTrap이라는 클래스를 구현한다. 앞으로 구현할 클래스들의 부모 클래스이다.  
+이 클래스는 name, HP, EP, AD 속성을 priavte으로 가지며, attack, takeDamage, beRepaired라는 멤버 함수를 public으로 가진다.  
+
+### ex01, ex02
+
+ClapTrap 클래스를 상속받는 ScavTrap과 FragTrap 클래스를 만든다.  
+상속받는 두 클래스를 구현하다보니 ClapTrap의 속성이 private로 구현되어 접근할 수 없었다. 그래서 getter와 setter를 ClapTrap에 구현하기로 한다. ClapTrap의 속성을 protect로 변경하여 접근을 허용하는 방법도 있다. 하지만 속성의 허용 범위를 두어야 하기 때문에 setter에서 검사 후 적용하는 방법을 사용하기로 한다. getter와 setter는 외부에서 접근하지 못하도록 protected로 설정한다.  
+
+
 ## cpp06 ex00 - Conversion of scalar types
 
 생성자에서 input을 double로 변환하여 저장한다.  
