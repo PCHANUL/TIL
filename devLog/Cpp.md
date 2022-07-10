@@ -48,8 +48,20 @@ Materia가 생성되어 equip된다. 그런데 하나의 Materia가 여러 Chara
 Materia를 자유롭게 delete하라고 명시되어 있으므로 나는 Character의 trash에 버리기로 한다. copy 또는 destroy 되는 경우에 trash는 clear 된다.
 MateriaSource에서 모든 Materia를 관리하는 경우에는 문제가 발생할 수 있다. 만약에 MateriaSource가 Character보다 먼저 제거되는 경우에는 Character가 equip하고 있던 Materia가 모두 제거된다. 그러므로 Materia는 Character에서 관리해야 한다. MateriaSource는 Materia를 생성하는 역할만 한다.
 
+# cpp05
 
-## cpp06 ex00 - Conversion of scalar types
+cpp05는 예외 객체를 제정의하는 과제이다. 예외 객체는 std::exception 클래스를 상속받도록 구현한다. std::exception은 표준 클래스로써 예외의 여러 종류를 나타내는 여러 자식 클래스를 두고 있다.
+
+### ex00 - exception
+
+Bureaucrat라는 클래스를 정의하고 생성자에 들어오는 값
+
+
+
+
+# cpp06 
+
+### ex00 - Conversion of scalar types
 
 생성자에서 input을 double로 변환하여 저장한다.  
 double을 다른 타입으로 타입 캐스팅하여 사용한다.  
