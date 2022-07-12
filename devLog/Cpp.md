@@ -50,16 +50,15 @@ MateriaSource에서 모든 Materia를 관리하는 경우에는 문제가 발생
 
 # cpp05
 
-cpp05는 예외 객체를 제정의하는 과제이다. 예외 객체는 std::exception 클래스를 상속받도록 구현한다. std::exception은 표준 클래스로써 예외의 여러 종류를 나타내는 여러 자식 클래스를 두고 있다.
+cpp05는 std::exception 클래스를 상속받는 예외 객체를 구현하는 과제이다. 표준 라이브러리의 exception 클래스에는 what 이라는 맴버 함수가 있다. 이 함수를 재정의하면 예외 객체를 받는 catch 영역에서 원하는 문자열을 반환하여 사용할 수 있다.  
 
 ### ex00 - exception
 
-Bureaucrat라는 클래스를 정의하고 생성자에 들어오는 값
+Bureaucrat라는 클래스를 정의하고 생성자의 인자인 grade가 범위에 벗어난다면 예외를 발생시키는 과제이다. 
 
 
 
-
-# cpp06 
+# cpp06 - type casting
 
 ### ex00 - Conversion of scalar types
 
@@ -106,8 +105,26 @@ double  strtod(const char* str, char** str_end);
    - [ ] 
  - [ ] double
    - [x] 소수점이 없는 경우에 ".0"
-   - [x] inff에 '+'
-   - [ ] 
+   - [x] inff에 '+'  
+
+[소수점 처리](https://m.cplusplus.com/reference/ios/fixed/)
+
+
+Conversion 클래스의 생성자는 인자로 (const char *argv) 를 받는다. argv는 변환되어야 하는 문자열로써 반드시 char, int, float 또는 double 타입이 문자열로 표현되어 들어온다. 그리고 char를 제외하고 모두 10진수 표현이다.  
+
+ - char : non displayable 문자는 들어오지 않는다. 그리고 문자로 변환에서 표시할 수 없다면 적절한 메시지를 출력한다.  
+ - float : ( -inff, +inff, nanf ) 세가지를 모두 처리해야 한다.
+ - double : ( -inf, +inf, nan ) 세가지를 모두 처리해야 한다.
+
+인자로 들어온 리터럴을 확인하고, 실제 세가지 타입으로 변환해야 한다. 만약에 변환이 말이 안되거나 오버플로우라면 impossible 메시지를 출력한다. 
+
+float와 double이 출력되는 형식을 위해서 iomanip을 사용한다. 소수점을 1자리로 고정하려면 precision과 fixed를 사용하면 된다. precision은 출력되는 자리수를 정해주고, fixed는 정해진 자리수를 소수점에 한해서 적용되도록 한다.  
+
+
+### ex01
+
+객체 직렬화(Serialization)는 객체의 메모리를 연속적인 바이트로 만들고, 연속적인 바이트를 원래 객체로 복원하는 작업을 말한다. 주로 메모리에 있는 데이터를 스트림으로 보낼 때 사용한다. 스트림을 이용하면 객체를 파일에 입력이나 출력을 할 수 있으며, 네트워크에서 송수신할 수 있다. 
+
 
 
 
