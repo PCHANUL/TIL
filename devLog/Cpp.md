@@ -48,8 +48,36 @@ Materia가 생성되어 equip된다. 그런데 하나의 Materia가 여러 Chara
 Materia를 자유롭게 delete하라고 명시되어 있으므로 나는 Character의 trash에 버리기로 한다. copy 또는 destroy 되는 경우에 trash는 clear 된다.
 MateriaSource에서 모든 Materia를 관리하는 경우에는 문제가 발생할 수 있다. 만약에 MateriaSource가 Character보다 먼저 제거되는 경우에는 Character가 equip하고 있던 Materia가 모두 제거된다. 그러므로 Materia는 Character에서 관리해야 한다. MateriaSource는 Materia를 생성하는 역할만 한다.
 
+# cpp05 - exception
 
-## cpp06 ex00 - Conversion of scalar types
+cpp05는 std::exception 클래스를 상속받는 예외 객체를 재정의하고 예외 상황에서 사용해본다.  
+예외 처리는 try~catch 구문과 throw로 구현된다. 예외가 발생할 수 있는 영역을 try로 감싸고, 이 영역에서 throw로 예외가 던져진다면 catch 영역에서 예외를 받는다. 예외 영역에서는 처리하려는 예외의 타입을 정할 수 있다. 이 과제에서는 catch 영역에서 (const std::exception &)를 받는다.
+
+### ex00 - Bureaucrat
+
+Bureaucrat라는 클래스를 정의하고 grade 값이 범위를 벗어난다면 예외가 발생하도록 구현한다.  
+생성자에서는 name 문자열과 grade 정수를 받고, grade가 1보다 작거나 150보다 크다면 예외가 발생된다.  
+예외가 발생되는 시점은 생성되는 시점과 increment, decrement 맴버함수를 호출하는 시점이다.
+이때마다 grade 값을 확인하고 std::exception 클래스를 상속받은 객체를 throw한다. 
+
+### ex01 - Form
+
+Form 클래스는 이전에 구현한 Bureaucrat와 비슷하게 구현된다.  
+생성되는 시점에 받는 sign_grade와 exec_grade를 범위에서 벗어나지 않는지 확인한다.  
+구현되어야 하는 맴버함수는 beSigned()이다. 이 함수는 Bureaucrat를 받아서 sign 자격을 확인한다. 인자의 grade와 자신의 sign_grade를 비교하여 sign_grade가 더 작다면 sign 할 수 없다는 예외를 발생시킨다.  
+추가로 이미 sign 되었음에도 시도하면 예외를 발생시키도록 구현하였다.  
+
+### ex02 - Child forms
+
+Form 클래스를 상속받는 자식 클래스를 구현한다.  
+이 자식 클래스들은 정해진 sign_grade와 exec_grade로 생성되고 execute를 override 해야한다.  
+Form 클래스에 execute 함수를 순수 가상 함수로 선언하여 더이상 객체로 생성될 수 없다.  
+자식 클래스들의 execute 함수를 각자 주어진 동작을 실행하기 전에 grade를 확인한다.  
+인자로 들어오는 Bureaucrat의 grade를 exec_grade와 비교하여 낮은 grade라면 예외를 발생시킨다.  
+
+# cpp06 - type casting
+
+### ex00 - Conversion of scalar types
 
 생성자에서 input을 double로 변환하여 저장한다.  
 double을 다른 타입으로 타입 캐스팅하여 사용한다.  
