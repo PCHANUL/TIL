@@ -8,321 +8,508 @@
 
 <hr>
 
+## 22.07.13 : template
+
+>template는 함수나 클래스를 개별적으로 다시 작성하지 않아도, 여러 자료형으로 사용할 수 있도록 만들어 놓은 틀이다.  
+>template는 Function Template와 Class Template로 나뉘어진다.  
+>template 매개변수는 타입을 인수로 전달하는데 사용할 수 있는 특별한 종류의 매개변수이다. 
+>template를 선언하는 형식은 다음과 같다. 
+>
+>```cpp
+>template <class identifier> function_declaration;
+>template <typename identifier> function_declaration;
+>```
+>
+>### Function Template
+>
+>함수를 정의할 때, 함수의 기능은 명확하지만 자료형을 모호하게 둔다. 
+>c++에서는 다형성의 오버로딩 특성에 의해서 함수 이름이 같아도 되기 때문에 다음과 같이 함수를 정의하게 된다.  
+>
+>```cpp
+>int sum(int a, int b)
+>{
+>    return (a + b);
+>}
+>
+>double sum(double a, double b)
+>{
+>    return (a + b);
+>}
+>```
+>
+>인자의 타입을 다르게 하여 같은 이름의 함수를 반복적으로 정의해야 한다. 이렇게 반복해야하는 문제를 해결하기 위해 >template를 사용한다. 다음은 위의 코드를 template로 작성한 코드이다.  
+>
+>```cpp
+>template <typename T>
+>T sum(T a, T b)
+>{
+>    return (a + b);
+>}
+>```
+>
+>두개의 인자가 타입이 다른 경우
+>
+>```cpp
+>template <class T1, class T2>
+>void printAll(T1 a, T2 b)
+>{
+>    cout << "T1: " << a << endl;
+>    cout << "T2: " << b << endl;
+>}
+>```
+>
+>이 함수 템플릿을 사용하기 위해서는 다음과 같은 형식을 사용한다.
+>
+>```cpp
+>function_name <type> (parameters);
+>```
+>
+>만약에 위에 구현된 함수를 호출하는 경우에는 다음과 같이 작성할 수 있다. 
+>
+>```cpp
+>int x, y;
+>sum <int> (x, y);
+>```
+>
+>컴파일러는 템플릿 함수에 대한 호출을 만나면 실제 템플릿 매개 변수로 전달된 타입으로 대체하는 함수를 자동으로 생성한 다음 호출한다. 
+>
+>```cpp
+>
+>template <class T>
+>T sum(T a, T b)
+>{
+>    T   result;
+>    result = a + b;
+>    return (result);
+>}
+>
+>int main(void)
+>{
+>    int i=5, j=10, k;
+>    long x=5, y=10, z;
+>
+>    k = sum<int>(i, j);
+>    z = sum<long>(x, y);
+>
+>    std::cout << k << std::endl;
+>    std::cout << z << std::endl;
+>    return (0);
+>}
+>```
+>
+>위의 예에서는 함수 템플릿 sum()을 두번 사용했다. 처음에는 int 타입의 인수를 사용하고, 다음은 long 타입의 인수를 사용했다. 컴파일러는 적절한 함수를 인스턴스화한 다음에 호출한다. `T` 타입이 sum() 템플릿 함수안에서 객체를 선언하는 데에도 사용된다.  
+>
+>컴파일러는 각 호출에 필요한 타입을 자동으로 결정한다. 템플릿 함수가 동일한 타입의 인수가 들어올 것이라고 예상하고 있기 때문에 다른 타입의 인수를 보내면 컴파일 에러가 발생한다. 만약에 두 인수의 타입을 다르게 한다면 다음과 같이 둘 이상의 타입 매개 변수를 허용하는 함수 템플릿을 정의할 수도 있다.  
+>
+>```cpp
+>template <class T, class U>
+>T GetMin(T a, U b)
+>{
+>    return (a<b?a:b);
+>}
+>```
+>
+>이 경우에 다른 두 매개변수를 허용하고 함수는 T 유형의 객체를 반환한다.  
+>
+>### 클래스 템플릿
+>
+>클래스 템플릿을 작성하여 템플릿 매개변수를 유형으로 사용하는 맴버를 가질 수 있다.  
+>
+>```cpp
+>template <class T>
+>class mypair {
+>    T values [2];
+>  public:
+>    mypair (T first, T second)
+>    {
+>      values[0]=first; values[1]=second;
+>    }
+>};
+>```
+>
+>이 클래스의 객체를 선언하여 사용하려면 다음과 같이 작성할 수 있다. 
+>
+>```cpp
+>mypair<int> myobject (115, 36);
+>
+>mypair<double> myfloats (3.0, 2.18);
+>```
+>
+>클래스 템플릿 선언의 외부에 함수 맴버를 정의한다면 정의 앞에 템플릿 <...> 점두사를 붙여야 한다.  
+>
+>```cpp
+>// class templates
+>#include <iostream>
+>using namespace std;
+>
+>template <class T>
+>class mypair {
+>    T a, b;
+>  public:
+>    mypair (T first, T second)
+>      {a=first; b=second;}
+>    T getmax ();
+>};
+>
+>template <class T>
+>T mypair<T>::getmax ()
+>{
+>  T retval;
+>  retval = a>b? a : b;
+>  return retval;
+>}
+>
+>int main () {
+>  mypair <int> myobject (100, 75);
+>  cout << myobject.getmax();
+>  return 0;
+>}
+>```
+>
+>### 템플릿 전문화
+>
+>다음은 클래스 템플릿 전문화에 사용되는 구문이다.
+>
+>```cpp
+>template <> class mycontainer <char> { ... };
+>```
+>
+>클래스 템플릿 이름 앞에 빈 template<> 매개변수 목록이 된다. 템플릿 전문화를 명시적으로 선언하는 것이다. 이 접두사보다 더 중요한 것은 클래스 템플릿 이름 위에있는 <char> 매개변수이다. 이 특수화 매개변수 자체는 템플릿 클래스 특수화를 선언할 유형을 식별한다. 일반 클래스 템플릿과 전문화 간의 차이점을 확인할 수 있다. 
+>
+>```cpp
+>template <class T> class mycontainer { ... };   // 일반 템플릿
+>template <> class mycontainer <char> { ... };   // 전문화
+>```
+>
+>### 템플릿에 대한 비유형 매개변수
+>
+>유형을 나타내는 class 또는 typename 키워드 대신에 일반 타입 매개변수를 가질 수도 있다. 일반 타입 매개변수를 설정하면 다음과 같이 정의된다.
+>
+>```cpp
+>template <class T=char, int N=10> class mysequence { ... };
+>```
+>
+>
+
+
+
+[template에 관하여](https://blockdmask.tistory.com/43)
+
 ## 22.07.12 : 왜 예외를 쓰는 게 좋을까요?
-
-c++에 예외가 도입된 이유를 생각해볼 필요가 있다. Java와 c# 같은 언어가 c++의 예외를 물려받은 이유는 결함내성 소프트웨어를 쉽게 작성하기 위함이다. 에러 처리를 한 후에도 일관성있는 상태를 유지해야 한다는 사실은 결함 내성을 달성하기 까다롭게 만든다.  
-
-어떤 파일을 열고 데이터를 읽어들이는 C코드를 생각해본다.
-
-```cpp
-char*
-OpenAndRead(char* fn, char* mode)
-{
-  FILE* fp = fopen(fn, mode);
-  char *buf = malloc(BUF_SZ);
-  fgets(buf, BUF_SZ, fp);
-  return buf;
-}
-```
-
-OpenAndRead()는 모든 서브루틴이 잘 수행된다는 가정을 한다면 잘 작동하고 읽기 쉽다. 하지만 fn 파일이 없는 경우, malloc()이나 fgets()가 실패되어 에러가 발생할 가능성이 있다. 이 코드를 결함내성이 있게 만드려면 각 서브루틴이 호출된 후에 에러가 발생하는지 확인하고, 어떤 행동을 해야하는지 결정해야한다. 단순히 에러 메시지를 출력하고 자원을 해제한 후에 -1을 반환하도록 바꾸어 보면 다음과 같을 것이다.  
-
-```cpp
-int
-OpenAndRead(char* fn, char* mode, char** data)
-{
-  *data = NULL;
-  char* buf = NULL;
-  FILE* fp = fopen(fn, mode);
-  if (!fp) {
-    printf("Can't open %s\n", fn);
-    return -1;
-  }
- 
-  buf = malloc(BUF_SZ);
-  if (!buf) {
-    printf("Can't allocate memory for data\n");
-    fclose(fp);
-    return -1;
-  }
- 
-  if (!fgets(buf, BUF_SZ, fp)) {
-    printf("Can't read data from %s\n", fn);
-    free(buf);
-    fclose(fp);
-    return -1;
-  }
- 
-  *data = buf;
- 
-  return 0;
-}
-```
-
-이 코드는 에러를 처리하지만 읽기 어렵다. 알고리즘과 에러 처리가 섞여있기 때문인데 이 문제를 예외를 발생시키는 방법으로 변경할 수 있다.  
-
-```cpp
-int
-OpenAndRead(char* fn, char* mode, char** data)
-{
-  *data = NULL;
-  char* buf = NULL;
-  FILE* fp = NULL;
-  try {
-    fp = fopen(fn, mode);
-    buf = malloc(BUF_SZ);
-    fgets(buf, BUF_SZ, fp);
-    *data = buf;
-    return 0;
-  }
-  catch (const FileDoesNotExist&) {
-    printf("Can't open %s\n", fn);
-  }
-  catch (const FileNotAccessible&) {
-    printf("The access %s is not permissible for %s\n", mode, fn);
-  }
-  catch (const MemoryExhausted&) {
-    printf("Can't allocate memory for data\n");
-    fclose(fp);
-  }
-  catch (const EndOfFile&) {
-    printf("Can't read data from %s\n", fn);
-    fclose(fp);
-    free(buf);
-  }
- 
-  return -1;
-}
-```
-
-OpenAndRead() 주 제어 흐름이 에러 처리와 분리되어 읽기 쉬워졌다. 하지만 아직 라인 수가 많다. 여기에서 예외가 발생했을 때 이루어지는 스택 풀기 과정을 이해하면 코드 라인 수를 줄일 수 있다.  
-
-스택 풀기는 예외가 발생하면 예외 처리기를 만나기 전까지 스택을 풀어가는 과정을 말한다. c++ 에서는 try 영역에서 생성된 모든 자동 객체들에 대해 소멸자를 불러온다. 자동 객체들은 생성되었던 반대 순서로 소멸된다.  
-
-자원을 소유하는 객체들을 자동 객체로 정의하면 예외가 발생하더라도 자동적으로 소멸된다. 이런 프로그래밍을 가능하게 만드는 자원 소유 객체들이 파일이나 메모리에 이미 정의되어 있다. 파일 자원용으로 std::fstream, 메모리 자원용으로는 boost::scoped_ptr을 사용할 수 있다. 이 객체를 사용하면 다음과 같이 구현할 수 있다.  
-
-```cpp
-char*
-OpenAndRead(const std::string& fn, std::ios_base::openmode mode)
-{
-  try {
-    std::fstream fs(fn.c_str(), mode);
-    boost::scoped_ptr buf(new char[BUF_SZ+1]);
-    fs.getline(buf.get(), BUF_SZ);
-    return buf.get();
-  }
-  catch (const std::ios_base::failure&) {
-    std::cout << "Can't open or read data from " << fn << std::endl;
-  }
-  catch (const std::bad_alloc&) {
-    std::cout << "Can't allocate memory for data" << std::endl;
-  }
- 
-  return 0;
-}
-```
-
-c++ 런타임이 모든 자원 해제를 알아서 해주기 때문에 에러 코드에 자원 해제 코드를 추가하지 않아도 된다. OpenAndRead()가 상당히 간단해졌다.  
-
-예외를 사용하는 경우에 다음과 같은 문제도 해결할 수 있다. 만약에 에러가 발생한 원인을 알고 싶지만 OpenAndRead를 호출하는 시점이 멀리 떨어져 있다면 어떻게 원인을 알 수 있는지 생각할 수 있다. 다음과 같은 상황에서는 원인을 파악할 수 없다.
-
-```cpp
-int
-OpenAndRead(char* fn, char* mode, char** data)
-{
-  *data = NULL;
-  char* buf = NULL;
-  FILE* fp = fopen(fn, mode);
-  if (!fp) {
-    printf("Can't open %s\n", fn);
-    return -1;
-  }
- 
-  buf = malloc(BUF_SZ);
-  if (!buf) {
-    printf("Can't allocate memory for data\n");
-    fclose(fp);
-    return -2;
-  }
- 
-  if (!fgets(buf, BUF_SZ, fp)) {
-    printf("Can't read data from %s\n", fn);
-    free(buf);
-    fclose(fp);
-    return -3;
-  }
- 
-  *data = buf;
- 
-  return 0;
-}
- 
-char* foo(char* fn, char* mode)
-{
-  char* data = 0;
-  if (OpenAndRead(fn, mode, &data) >= 0)
-    return data;
-  else
-    return 0;
-}
- 
-void bar()
-{
-  ...... // fn과 mode를 얻어낸다
-  char* data = foo(fn, mode);
-  if (data) {
-    ...... // 정상 처리
-  }
-  else {
-    ...... // bar()가 뭘 할 수 있을까요?
-  }
-}
-```
-
-OpenAndRead()는 반환 코드를 통해서 에러를 구분하려 하지만 foo()에서 무시하여 bar()는 무슨 일이 일어났는지 알 수 없다. bar()가 할 수 있는 일은 에러 메시지를 출력하고 종료하거나 에러를 무시할 수 밖에 없다. 이런 문제는 예외를 사용하여 해결할 수 있다. 호출 경로상의 어떤 함수가 예외를 처리하지 않고 무시하면 된다. OpenAndRead()와 foo()는 예외를 어떻게 처리해야 할지 모른다고 가정하고, bar()는 처리할 수 있다고 가정한다면 다음과 같이 구현된다.  
-
-```cpp
-char*
-OpenAndRead(const std::string& fn, std::ios_base::openmode mode)
-{
-  std::fstream fs(fn.c_str(), mode); // std::ios_base::failure() 가 발생할지 모릅니다.
-  boost::scoped_ptr buf(new char[BUF_SZ+1]);  // std::bad_alloc() 가 발생할지 모릅니다
-  fs.getline(buf.get(), BUF_SZ);
-  return buf.get();
-}
- 
-char* foo(char* fn, char* mode)
-{
-  // 아무런 예외도 잡지 않고 있습니다
-  return OpenAndRead(fn, mode);
-}
- 
-void bar()
-{
-  ...... // fn과 mode를 알아냅니다
-  try {
-    char* data = foo(fn, mode);
-  }
-  catch (const std::ios_base::failure&) {
-    std::cout << "Can't open or read data from " << fn << std::endl;
-    // 왜 fn 열어서 데이터를 읽으려고 했는지를 안다면 좀 더 정확한 진단 메시지를 출력하고,
-    // 사용자에게 뭔가 조치를 취하라고 알려줄 수 있습니다
-  }
-  catch (const std::bad_alloc&) {
-    std::cout << "Can't allocate memory for data" << std::endl;
-    // 이런 경우를 대비해 메모리를 미리 따로 마련해 놓았다면 bad_alloc()를 
-    // 좀 더 부드럽게 처리할 수도 있을 것입니다.
-  }
-}
-```
-
-이제는 OpenAndRead()와 foo()가 다시 간단해졌고, bar()만 에러 처리에 관여하고 있다. 그리고 예외가 무엇을 의미하는지 알고 충분한 상황 정보가 있기 때문에 예외를 잘 처리할 수 있다.  
-
-또 한가지 예외의 장점은 객체라는 점이다. 객체이기 때문에 많은 정보를 담아서 발생시키면 정확한 에러 상황을 알 수 있다. 예외 처리기는 그 정보들이 접근하여 어떤 일이 벌어지고 있는지 정확히 알아내는데 도움이 된다.  
-
-
-## intptr_t, uintptr_t
-
-intptr_t와 uintptr_t는 포인터의 주소를 저장하는데 사용된다.  
-안전한 포인터 선언 방법으로 제공하기 때문에 포인터를 정수 표현으로 변환할 때 유용하게 사용할 수 있다. 포인터 주소를 정수값으로 가지고 있기 때문에 연산이 가능하다. 특히 비트연산을 하는 경우에 사용된다. 비트 연산은 unsigned에서 더 잘 수행되기 때문에 uintptr_t를 하면 된다.  
-
-다음 예시는 포인터가 포인터 배열인지 테스트한다.
-```cpp
-#define N  10
-char special[N][1];
-
-// UB as testing order of pointer, not of the same array, is UB.
-int test_special1(char *candidate) {
-  return (candidate >= special[0]) && (candidate <= special[N-1]);
-}
-
-// OK - integer compare
-int test_special2(char *candidate) {
-  intptr_t ca = (intptr_t) candidate;
-  intptr_t mn = (intptr_t) special[0];
-  intptr_t mx = (intptr_t) special[N-1];
-  return (ca >= mn) && (ca <= mx);
-}
-```
-
-[what is the use of intptr_t?](https://stackoverflow.com/questions/35071200/what-is-the-use-of-intptr-t)
-
+> 
+> c++에 예외가 도입된 이유를 생각해볼 필요가 있다. Java와 c# 같은 언어가 c++의 예외를 물려받은 이유는 결함내성 소프트웨어를 쉽게 작성하기 위함이다. 에러 처리를 한 후에도 일관성있는 상태를 유지해야 한다는 사실은 결함 내성을 달성하기 까다롭게 만든다.  
+> 
+> 어떤 파일을 열고 데이터를 읽어들이는 C코드를 생각해본다.
+> 
+> ```cpp
+> char*
+> OpenAndRead(char* fn, char* mode)
+> {
+>   FILE* fp = fopen(fn, mode);
+>   char *buf = malloc(BUF_SZ);
+>   fgets(buf, BUF_SZ, fp);
+>   return buf;
+> }
+> ```
+> 
+> OpenAndRead()는 모든 서브루틴이 잘 수행된다는 가정을 한다면 잘 작동하고 읽기 쉽다. 하지만 fn 파일이 없는 경우, malloc()이나 fgets()가 실패되어 에러가 발생할 가능성이 있다. 이 코드를 결함내성이 있게 만드려면 각 서브루틴이 호출된 후에 에러가 발생하는지 확인하고, 어떤 행동을 해야하는지 결정해야한다. 단순히 에러 메시지를 출력하고 자원을 해제한 후에 -1을 반환하도록 바꾸어 보면 다음과 같을 것이다.  
+> 
+> ```cpp
+> int
+> OpenAndRead(char* fn, char* mode, char** data)
+> {
+>   *data = NULL;
+>   char* buf = NULL;
+>   FILE* fp = fopen(fn, mode);
+>   if (!fp) {
+>     printf("Can't open %s\n", fn);
+>     return -1;
+>   }
+>  
+>   buf = malloc(BUF_SZ);
+>   if (!buf) {
+>     printf("Can't allocate memory for data\n");
+>     fclose(fp);
+>     return -1;
+>   }
+>  
+>   if (!fgets(buf, BUF_SZ, fp)) {
+>     printf("Can't read data from %s\n", fn);
+>     free(buf);
+>     fclose(fp);
+>     return -1;
+>   }
+>  
+>   *data = buf;
+>  
+>   return 0;
+> }
+> ```
+> 
+> 이 코드는 에러를 처리하지만 읽기 어렵다. 알고리즘과 에러 처리가 섞여있기 때문인데 이 문제를 예외를 발생시키는 방법으로 변경할 수 있다.  
+> 
+> ```cpp
+> int
+> OpenAndRead(char* fn, char* mode, char** data)
+> {
+>   *data = NULL;
+>   char* buf = NULL;
+>   FILE* fp = NULL;
+>   try {
+>     fp = fopen(fn, mode);
+>     buf = malloc(BUF_SZ);
+>     fgets(buf, BUF_SZ, fp);
+>     *data = buf;
+>     return 0;
+>   }
+>   catch (const FileDoesNotExist&) {
+>     printf("Can't open %s\n", fn);
+>   }
+>   catch (const FileNotAccessible&) {
+>     printf("The access %s is not permissible for %s\n", mode, fn);
+>   }
+>   catch (const MemoryExhausted&) {
+>     printf("Can't allocate memory for data\n");
+>     fclose(fp);
+>   }
+>   catch (const EndOfFile&) {
+>     printf("Can't read data from %s\n", fn);
+>     fclose(fp);
+>     free(buf);
+>   }
+>  
+>   return -1;
+> }
+> ```
+> 
+> OpenAndRead() 주 제어 흐름이 에러 처리와 분리되어 읽기 쉬워졌다. 하지만 아직 라인 수가 많다. 여기에서 예외가 발생했을 때 이루어지는 스택 풀기 과정을 이해하면 코드 라인 수를 줄일 수 있다.  
+> 
+> 스택 풀기는 예외가 발생하면 예외 처리기를 만나기 전까지 스택을 풀어가는 과정을 말한다. c++ 에서는 try 영역에서 생성된 모든 자동 객체들에 대해 소멸자를 불러온다. 자동 객체들은 생성되었던 반대 순서로 소멸된다.  
+> 
+> 자원을 소유하는 객체들을 자동 객체로 정의하면 예외가 발생하더라도 자동적으로 소멸된다. 이런 프로그래밍을 가능하게 만드는 자원 소유 객체들이 파일이나 메모리에 이미 정의되어 있다. 파일 자원용으로 std::fstream, 메모리 자원용으로는 boost::scoped_ptr을 사용할 수 있다. 이 객체를 사용하면 다음과 같이 구현할 수 있다.  
+> 
+> ```cpp
+> char*
+> OpenAndRead(const std::string& fn, std::ios_base::openmode mode)
+> {
+>   try {
+>     std::fstream fs(fn.c_str(), mode);
+>     boost::scoped_ptr buf(new char[BUF_SZ+1]);
+>     fs.getline(buf.get(), BUF_SZ);
+>     return buf.get();
+>   }
+>   catch (const std::ios_base::failure&) {
+>     std::cout << "Can't open or read data from " << fn << std::endl;
+>   }
+>   catch (const std::bad_alloc&) {
+>     std::cout << "Can't allocate memory for data" << std::endl;
+>   }
+>  
+>   return 0;
+> }
+> ```
+> 
+> c++ 런타임이 모든 자원 해제를 알아서 해주기 때문에 에러 코드에 자원 해제 코드를 추가하지 않아도 된다. OpenAndRead()가 상당히 간단해졌다.  
+> 
+> 예외를 사용하는 경우에 다음과 같은 문제도 해결할 수 있다. 만약에 에러가 발생한 원인을 알고 싶지만 OpenAndRead를 호출하는 시점이 멀리 떨어져 있다면 어떻게 원인을 알 수 있는지 생각할 수 있다. 다음과 같은 상황에서는 원인을 파악할 수 없다.
+> 
+> ```cpp
+> int
+> OpenAndRead(char* fn, char* mode, char** data)
+> {
+>   *data = NULL;
+>   char* buf = NULL;
+>   FILE* fp = fopen(fn, mode);
+>   if (!fp) {
+>     printf("Can't open %s\n", fn);
+>     return -1;
+>   }
+>  
+>   buf = malloc(BUF_SZ);
+>   if (!buf) {
+>     printf("Can't allocate memory for data\n");
+>     fclose(fp);
+>     return -2;
+>   }
+>  
+>   if (!fgets(buf, BUF_SZ, fp)) {
+>     printf("Can't read data from %s\n", fn);
+>     free(buf);
+>     fclose(fp);
+>     return -3;
+>   }
+>  
+>   *data = buf;
+>  
+>   return 0;
+> }
+>  
+> char* foo(char* fn, char* mode)
+> {
+>   char* data = 0;
+>   if (OpenAndRead(fn, mode, &data) >= 0)
+>     return data;
+>   else
+>     return 0;
+> }
+>  
+> void bar()
+> {
+>   ...... // fn과 mode를 얻어낸다
+>   char* data = foo(fn, mode);
+>   if (data) {
+>     ...... // 정상 처리
+>   }
+>   else {
+>     ...... // bar()가 뭘 할 수 있을까요?
+>   }
+> }
+> ```
+> 
+> OpenAndRead()는 반환 코드를 통해서 에러를 구분하려 하지만 foo()에서 무시하여 bar()는 무슨 일이 일어났는지 알 수 없다. bar()가 할 수 있는 일은 에러 메시지를 출력하고 종료하거나 에러를 무시할 수 밖에 없다. 이런 문제는 예외를 사용하여 해결할 수 있다. 호출 경로상의 어떤 함수가 예외를 처리하지 않고 무시하면 된다. OpenAndRead()와 foo()는 예외를 어떻게 처리해야 할지 모른다고 가정하고, bar()는 처리할 수 있다고 가정한다면 다음과 같이 구현된다.  
+> 
+> ```cpp
+> char*
+> OpenAndRead(const std::string& fn, std::ios_base::openmode mode)
+> {
+>   std::fstream fs(fn.c_str(), mode); // std::ios_base::failure() 가 발생할지 모릅니다.
+>   boost::scoped_ptr buf(new char[BUF_SZ+1]);  // std::bad_alloc() 가 발생할지 모릅니다
+>   fs.getline(buf.get(), BUF_SZ);
+>   return buf.get();
+> }
+>  
+> char* foo(char* fn, char* mode)
+> {
+>   // 아무런 예외도 잡지 않고 있습니다
+>   return OpenAndRead(fn, mode);
+> }
+>  
+> void bar()
+> {
+>   ...... // fn과 mode를 알아냅니다
+>   try {
+>     char* data = foo(fn, mode);
+>   }
+>   catch (const std::ios_base::failure&) {
+>     std::cout << "Can't open or read data from " << fn << std::endl;
+>     // 왜 fn 열어서 데이터를 읽으려고 했는지를 안다면 좀 더 정확한 진단 메시지를 출력하고,
+>     // 사용자에게 뭔가 조치를 취하라고 알려줄 수 있습니다
+>   }
+>   catch (const std::bad_alloc&) {
+>     std::cout << "Can't allocate memory for data" << std::endl;
+>     // 이런 경우를 대비해 메모리를 미리 따로 마련해 놓았다면 bad_alloc()를 
+>     // 좀 더 부드럽게 처리할 수도 있을 것입니다.
+>   }
+> }
+> ```
+> 
+> 이제는 OpenAndRead()와 foo()가 다시 간단해졌고, bar()만 에러 처리에 관여하고 있다. 그리고 예외가 무엇을 의미하는지 알고 충분한 상황 정보가 있기 때문에 예외를 잘 처리할 수 있다.  
+> 
+> 또 한가지 예외의 장점은 객체라는 점이다. 객체이기 때문에 많은 정보를 담아서 발생시키면 정확한 에러 상황을 알 수 있다. 예외 처리기는 그 정보들이 접근하여 어떤 일이 벌어지고 있는지 정확히 알아내는데 도움이 된다.  
+> 
+> 
+> ## intptr_t, uintptr_t
+> 
+> intptr_t와 uintptr_t는 포인터의 주소를 저장하는데 사용된다.  
+> 안전한 포인터 선언 방법으로 제공하기 때문에 포인터를 정수 표현으로 변환할 때 유용하게 사용할 수 있다. 포인터 주소를 정수값으로 가지고 있기 때문에 연산이 가능하다. 특히 비트연산을 하는 경우에 사용된다. 비트 연산은 unsigned에서 더 잘 수행되기 때문에 uintptr_t를 하면 된다.  
+> 
+> 다음 예시는 포인터가 포인터 배열인지 테스트한다.
+> ```cpp
+> #define N  10
+> char special[N][1];
+> 
+> // UB as testing order of pointer, not of the same array, is UB.
+> int test_special1(char *candidate) {
+>   return (candidate >= special[0]) && (candidate <= special[N-1]);
+> }
+> 
+> // OK - integer compare
+> int test_special2(char *candidate) {
+>   intptr_t ca = (intptr_t) candidate;
+>   intptr_t mn = (intptr_t) special[0];
+>   intptr_t mx = (intptr_t) special[N-1];
+>   return (ca >= mn) && (ca <= mx);
+> }
+> ```
+> 
+> [what is the use of intptr_t?](https://stackoverflow.com/questions/35071200/what-is-the-use-of-intptr-t)
+> 
 
 
 
 ## 22.07.09 : Overloading, Overriding
-
-overloading과 overriding은 이름이 비슷해서 헷갈리는 경우가 있다.  
-overloading은 같은 이름의 함수를 여러개 정의하고, 매개변수의 유형과 개수를 다르게하여 다양한 유형의 호출에 응답할 수 있게 만든다.  
-overriding은 상위 클래스가 가지고 있는 맴버함수를 하위 클래스의 메서드로 재정의해서 사용한다. 부모 클래스의 메서드를 무시하고 자식 클래스의 메서드 기능을 사용한다.  
-
-overloading은 매서드의 이름만 같고, 매개변수와 리턴 타입이 달라도 되지만 override는 메서드 이름과 매개변수, 리턴타입이 모두 같아야 한다.  
-
-[오버로딩과 오버라이딩의 차이와 예제](https://private.tistory.com/25)
-
+> 
+> overloading과 overriding은 이름이 비슷해서 헷갈리는 경우가 있다.  
+> overloading은 같은 이름의 함수를 여러개 정의하고, 매개변수의 유형과 개수를 다르게하여 다양한 유형의 호출에 응답할 수 있게 만든다.  
+> overriding은 상위 클래스가 가지고 있는 맴버함수를 하위 클래스의 메서드로 재정의해서 사용한다. 부모 클래스의 메서드를 무시하고 자식 클래스의 메서드 기능을  사용한다.  
+> 
+> overloading은 매서드의 이름만 같고, 매개변수와 리턴 타입이 달라도 되지만 override는 메서드 이름과 매개변수, 리턴타입이 모두 같아야 한다.  
+> 
+> [오버로딩과 오버라이딩의 차이와 예제](https://private.tistory.com/25)
+> 
 ## 22.07.05 : this 포인터
-
-c++에서 클래스의 멤버 함수를 호출할 때 객체를 어떻게 찾을까?  
-숨겨진 포인터인 this를 사용한다. 멤버 함수를 컴파일 단계에서 다음과 같이 변환한다.  
-
-```cpp
-void func(int i)
-{
-	val = i;
-}
-
-obj.func(10);
-```
-
-```cpp
-void func(Simple* const this, int i)
-{
-	this->val = i;
-}
-
-obj.func(&obj, 10);
-```
-
-멤버 함수의 인수로 객체의 주소가 전달된다. 멤버 함수의 정의도 컴파일러에 의해 변환된다. 객체에 this 포인터를 추가하여 멤버 함수 안의 변수가 맴버 함수를 호출한 객체를 참조하도록 한다.  
-그러나 명시적으로 this를 참조해야하는 경우가 있다.  
-
-1. 멤버 변수와 이름이 같은 매개 변수를 가진 멤버 함수
-
-```cpp
-void func(int val)
-{
-	this->val = val;
-}
-
-// this->val : 멤버 변수
-// val       : 매개 변수
-```
-
-2. 멤버 함수 체이닝 기법
-
-멤버 함수가 this를 반환하면 체이닝 기능이 있는 함수를 만들 수 있다.  
-
-```cpp
-Simple& func(int val)
-{
-	this->val += val;
-	return (*this);
-}
-```
-
-```cpp
-int main(void)
-{
-	Simple obj;
-	
-	obj.func(10).func(5).func(1);
-	std::cout << obj.getValue() << std::endl;
-	return (0);
-}
-```
-
-[this 포인터](https://boycoding.tistory.com/250)
-
+> 
+> c++에서 클래스의 멤버 함수를 호출할 때 객체를 어떻게 찾을까?  
+> 숨겨진 포인터인 this를 사용한다. 멤버 함수를 컴파일 단계에서 다음과 같이 변환한다.  
+> 
+> ```cpp
+> void func(int i)
+> {
+> 	val = i;
+> }
+> 
+> obj.func(10);
+> ```
+> 
+> ```cpp
+> void func(Simple* const this, int i)
+> {
+> 	this->val = i;
+> }
+> 
+> obj.func(&obj, 10);
+> ```
+> 
+> 멤버 함수의 인수로 객체의 주소가 전달된다. 멤버 함수의 정의도 컴파일러에 의해 변환된다. 객체에 this 포인터를 추가하여 멤버 함수 안의 변수가 맴버 함수를 호출한  객체를 참조하도록 한다.  
+> 그러나 명시적으로 this를 참조해야하는 경우가 있다.  
+> 
+> 1. 멤버 변수와 이름이 같은 매개 변수를 가진 멤버 함수
+> 
+> ```cpp
+> void func(int val)
+> {
+> 	this->val = val;
+> }
+> 
+> // this->val : 멤버 변수
+> // val       : 매개 변수
+> ```
+> 
+> 2. 멤버 함수 체이닝 기법
+> 
+> 멤버 함수가 this를 반환하면 체이닝 기능이 있는 함수를 만들 수 있다.  
+> 
+> ```cpp
+> Simple& func(int val)
+> {
+> 	this->val += val;
+> 	return (*this);
+> }
+> ```
+> 
+> ```cpp
+> int main(void)
+> {
+> 	Simple obj;
+> 	
+> 	obj.func(10).func(5).func(1);
+> 	std::cout << obj.getValue() << std::endl;
+> 	return (0);
+> }
+> ```
+> 
+> [this 포인터](https://boycoding.tistory.com/250)
+> 
 
 
 ## 22.07.03 : 고정 소수점의 사칙연산
@@ -468,16 +655,24 @@ int main(void)
 > 
 > ## static_cast 연산자
 > 
-> - 컴파일 단계에서 타입 캐스팅이 적합한지 검사하고 에러를 발생시킨다.  
-> - 기본 자료형 간의 타입 캐스팅에 사용된다. 
+>  - 컴파일 단계에서 타입 캐스팅이 적합한지 검사하고 에러를 발생시킨다.  
+>  - 기본 자료형 간의 타입 캐스팅에 사용된다. 
+>  - 포인터 타입을 다른 타입으로 변환하지 않는다.
+>  - 상속 관계에 있는 포인터 간의 변환이 가능하다.
+>  - downcast시에는 unsafe하게 동작할 수 있다.  
 > 
 > ```cpp
-> double	d = 3.14;
-> int		x = static_cast<int>(d);
-> int		y = dynamic_cast<int>(d); // 컴파일 에러
+> double  d = 3.14;
+> int     x = static_cast<int>(d);
+> 
+> std::cout << x << std::endl;  // 3
 > ```
 > 
-> - 부모-자식 클래스 간의 타입 캐스팅을 지원하여 컴파일은 가능하지만 안전하지 않다. (`부모 -> 자식`, `자식 -> 부모` 모두 가능)
+>  - 부모-자식 클래스 간의 타입 캐스팅을 지원하여 컴파일은 가능하지만 안전하지 않다.
+>  - `부모 -> 자식`, `자식 -> 부모` 모두 가능하다.
+>  - `부모 -> 자식`의 경우에 자식 클래스의 속성에 임의의 값이 들어간다.
+> 
+> ### 부모 -> 자식 형변환
 > 
 > ```cpp
 > class	Parent
@@ -520,28 +715,62 @@ int main(void)
 > 	c2->print_point();
 > }
 > 
-> // c2->y 에는 쓰레기 값이 들어간다.
+> // c2->y 에는 임의의 값이 들어간다.
 > ```
 > 
+> ### Errors
+> 
+> ```cpp
+> double	d = 3.14;
+> double	*ptr = &d;
+> int		*x = static_cast<int*>(d);
+> 
+> std::cout << x << std::endl;
+> /*
+> <컴파일 에러>
+> error: cannot cast from type 'double' to pointer type 'int *'
+> */
+> ```
+> 
+> ```cpp
+> double	d = 3.14;
+> double	*ptr = &d;
+> int		*x = static_cast<int*>(ptr);
+> 
+> std::cout << x << std::endl;
+> /*
+> <컴파일 에러>
+> error: static_cast from 'double *' to 'int *' is not allowed
+> */
+> ```
 > 
 > ## dynamic_cast 연산자
 > 
+> - 상속 관계에서 static_cast보다 안정적으로 타입 캐스팅을 처리한다. 
+> - `자식 -> 부모` 변환에서 safe downcasting이 가능하다.
 > - dynamic_cast는 런타임에서 안정성 검사를 진행한다.  
-> - 상속 관계에서 static_cast보다 안정적으로 타입 캐스팅을 처리한다. (`자식 -> 부모`)
+> - 컴파일 시점에는 변환하려는 클래스가 다향성 클래스인지 검사한다.
+> - 런타임 시간에 해당 타입이 다운 캐스팅이 가능한지 검사하기 때문에 런타임 비용이 조금 높다.
+> - 성공할 경우 new_type의 value를 반환한다.
+> - 실패한 경우 
+>   - new_type이 포인터라면 null pointer
+>   - new_type이 참조라면 bad_cast (exception) 
 > 
 > ```cpp
 > int	main(void)
 > {
 > 	Parent*	p1 = new Child(10, 20);
-> 	Child*	c1 = dynamic_cast<Child*>(p1); // 에러
+> 	Child*	c1 = dynamic_cast<Child*>(p1); 
+> 	// 컴파일 에러: error: 'Parent' is not polymorphic
+> 
 > 	c1->print_point();
 > 	
 > 	Parent*	p2 = new Parent(10);
-> 	Child*	c2 = dynamic_cast<Child*>(p2); // 에러
+> 	Child*	c2 = dynamic_cast<Child*>(p2);
+> 	// 컴파일 에러: error: 'Parent' is not polymorphic
+> 
 > 	c2->print_point();
 > }
-> 
-> // 부모 클래스의 포인터에서 자식 클래스의 포인터로 변환을 시도하기 때문에 에러가 발생한다.  
 > ```
 > 
 > - dynamic_cast는 가상 함수를 가진 다향성 클래스에 한해서는 `부모 -> 자식` 타입 캐스팅을 허용한다.  
@@ -565,6 +794,19 @@ int main(void)
 > Child*	c1 = dynamic_cast<Child*>(p1); // 컴파일 성공
 > ```
 > 
+> - 부모 객체를 자식 클래스로 변환하면 컴파일을 성공하지만 null pointer가 반환된다.
+> 
+> ```cpp
+> Parent	*p2 = new Parent(10);
+> ChildA	*c2 = dynamic_cast<ChildA *>(p2); 
+> 
+> std::cout << "isNull: " << (c2 == NULL ? "true" : "false") << std::endl;
+> 
+> // isNull: true
+> ```
+> 
+> [dynamic_cast](https://blockdmask.tistory.com/241?category=249379)
+> 
 > ## reinterpret_cast 연산자
 > 
 > - 포인터/참조의 타입 캐스팅 연산자로서 타입을 재해석하는 수준으로 변환을 진행한다.  
@@ -577,13 +819,56 @@ int main(void)
 > 
 > ## const_cast 연산자
 > 
-> - const를 제거하기 위해 사용된다.  
-> - const_cast로 const가 제거된 포인터로 데이터 값을 변경하지는 못한다.  
+>  - 포인터 또는 참조형의 const를 잠시 제거하는데 사용된다.
+>  - volatile 키워드를 잠시 제거하는데에도 사용 가능하다.
+>  - 다른 형변환 연산자처럼 타입을 변형하지 못한다.
+>  - 함수 포인터에는 사용하지 못한다.
 > 
 > ```cpp
-> const char* str1 = "hello";
-> char*		str2 = const_cast<char*>(str1);
-> str2[0] = 'H'; // 에러
+> char        str[] = "hello";
+> const char* str1 = str;
+> char*		    str2 = const_cast<char*>(str1);
+> 
+> str2[0] = 'H';
+> std::cout << str << std::endl;  // Hello
+> std::cout << str1 << std::endl; // Hello
+> ```
+> 
+> ### Errors
+> 
+> ```cpp
+> int  main(void)
+> {
+>   int	      i = 0;
+>   const int *ptr = &i;
+>   double    *d = const_cast<double *>(ptr);
+> 
+>   std::cout << d << std::endl;
+>   return (0);
+> }
+> 
+> /*
+> < 컴파일 에러 >
+> error: const_cast from 'const int *' to 'double *' is not allowed
+> */
+> ```
+> 
+> ```cpp
+> int  main(void)
+> {
+>   int	      i = 0;
+> 	const int *ptr = &i;
+> 	double    *d = const_cast<double>(ptr);
+> 
+> 	std::cout << d << std::endl;
+>   return (0);
+> }
+> 
+> /*
+> < 컴파일 에러 >
+> error: const_cast to 'double', which is not a reference,
+>       pointer-to-object, or pointer-to-data-member
+> */
 > ```
 > 
 > [c++ 형변환 연산자 정리](https://mynameisdabin.tistory.com/20)
@@ -602,7 +887,7 @@ int main(void)
 > // 반환 : [0 ~ RAND_MAX] 범위에서 랜덤한 숫자
 > ```
 > 
-> RAND_MAX는 stdlib.h 헤더 파일에 32767으로 작성되어있다. 0부터 32767 사이에서 랜덤한 값을 얻을 수 있지만 프로그램이 생성되는 시점에 정해져서 프로그램을 > 여러번 실행시켜도 같은 값을 반환한다.  
+> RAND_MAX는 stdlib.h 헤더 파일에 32767으로 작성되어있다. 0부터 32767 사이에서 랜덤한 값을 얻을 수 있지만 프로그램이 생성되는 시점에 정해져서 프로그램을 여러번 실행시켜도 같은 값을 반환한다.  
 > 
 > ```cpp
 > #include <iostream>

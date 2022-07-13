@@ -48,7 +48,6 @@ Materia가 생성되어 equip된다. 그런데 하나의 Materia가 여러 Chara
 Materia를 자유롭게 delete하라고 명시되어 있으므로 나는 Character의 trash에 버리기로 한다. copy 또는 destroy 되는 경우에 trash는 clear 된다.
 MateriaSource에서 모든 Materia를 관리하는 경우에는 문제가 발생할 수 있다. 만약에 MateriaSource가 Character보다 먼저 제거되는 경우에는 Character가 equip하고 있던 Materia가 모두 제거된다. 그러므로 Materia는 Character에서 관리해야 한다. MateriaSource는 Materia를 생성하는 역할만 한다.
 
-<<<<<<< HEAD
 # cpp05 - exception
 
 cpp05는 std::exception 클래스를 상속받는 예외 객체를 재정의하고 예외 상황에서 사용해본다.  
@@ -75,19 +74,15 @@ Form 클래스를 상속받는 자식 클래스를 구현한다.
 Form 클래스에 execute 함수를 순수 가상 함수로 선언하여 더이상 객체로 생성될 수 없다.  
 자식 클래스들의 execute 함수를 각자 주어진 동작을 실행하기 전에 grade를 확인한다.  
 인자로 들어오는 Bureaucrat의 grade를 exec_grade와 비교하여 낮은 grade라면 예외를 발생시킨다.  
-=======
-# cpp05
-
-cpp05는 std::exception 클래스를 상속받는 예외 객체를 구현하는 과제이다. 표준 라이브러리의 exception 클래스에는 what 이라는 맴버 함수가 있다. 이 함수를 재정의하면 예외 객체를 받는 catch 영역에서 원하는 문자열을 반환하여 사용할 수 있다.  
-
-### ex00 - exception
-
-Bureaucrat라는 클래스를 정의하고 생성자의 인자인 grade가 범위에 벗어난다면 예외를 발생시키는 과제이다. 
-
-
->>>>>>> 2a13467dd400a7389c649bc41e33ca767a676bfd
 
 # cpp06 - type casting
+
+c에서는 형변환을 가차없이 진행했지만 c++에서는 형변환을 위한 연산자를 제공하여 조금더 안정적인 형변환을 할 수 있도록 한다. 
+
+ - static_cast : 기본 자료형 간의 형변환에 사용된다. 컴파일 단계에서 형변환을 검사하고 에러를 발생시킨다.
+ - dynamic_cast : 상속 관계에서 안정적으로 형변환을 처리한다. 런타임 단계에서 형변환 검사를 진행한다. 
+ - reinterpret_cast : 포인터/참조의 형변환 연산자이다. 변환을 강제하기 때문에 안전하지 않다.
+ - const_cast : const를 제거하기 위해 사용된다.  
 
 ### ex00 - Conversion of scalar types
 
@@ -109,33 +104,6 @@ double  strtod(const char* str, char** str_end);
 ```
 
 [cppreference (strtod)](https://en.cppreference.com/w/cpp/string/byte/strtof)
-
-
- - [ ] input
-   - [x] input string을 strtod() 함수를 호출하여 double로 변환한다. 
-   - [x] 수에 대한 값 이외에 문자가 들어오면 잘못된 입력임으로 impossible
- - [x] impossible
-   - [x] input string에 숫자 이외의 문자가 있는 경우
-   - [x] 숫자가 없이 문자만 입력되는 경우
-
- - [ ] char
-   - [x] overflow - impossible (input < 0 || input > 128)
-   - [x] Non displayable (0 - 31)
-   - [x] (32 - 127)은 문자 출력
-   - [ ] nan - impossible
-   - [ ] 
- - [ ] int
-   - [ ] 범위를 벗어나면 overflow
-   - [ ] nan이면 impossible이다.  
-   - [ ] 
- - [ ] float
-   - [x] 소수점이 없는 경우에 ".0"
-   - [x] inff에 '+'
-   - [ ] 
- - [ ] double
-   - [x] 소수점이 없는 경우에 ".0"
-   - [x] inff에 '+'  
-
 [소수점 처리](https://m.cplusplus.com/reference/ios/fixed/)
 
 
@@ -154,7 +122,7 @@ float와 double이 출력되는 형식을 위해서 iomanip을 사용한다. 소
 
 객체 직렬화(Serialization)는 객체의 메모리를 연속적인 바이트로 만들고, 연속적인 바이트를 원래 객체로 복원하는 작업을 말한다. 주로 메모리에 있는 데이터를 스트림으로 보낼 때 사용한다. 스트림을 이용하면 객체를 파일에 입력이나 출력을 할 수 있으며, 네트워크에서 송수신할 수 있다. 
 
+### ex02
 
-
-
+dynamic_cast으로 상속 관계의 변환을 다룬다. dynamic_cast는 상속 관계에 있는 클래스의 형변환을 위해 사용된다. static_cast는 컴파일 시점에서 형변환이 가능한지 검사하지만 dynamic_cast는 런타임에 형변환이 가능한지 확인하게 된다. 그래서 dynamic_cast를 사용한 뒤에 정상적으로 형변환이 일어났는지 확인하는 과정이 필요하다. 형변환이 성공한 경우에는 정상적으로 변환된 주소의 값을 반환하지만 실패하는 경우는 두가지로 나누어 진다. 포인터를 변환하는 경우에 실패하면 NULL 포인터를 반환하고, 참조를 변환하는 경우에 실패하면 예외를 던진다. 변환이 성공하는 경우와 실패하는 경우를 구별하여 과제를 해결할 수 있다.  
 
