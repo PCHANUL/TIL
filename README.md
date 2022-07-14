@@ -194,6 +194,7 @@
 
 
 [template에 관하여](https://blockdmask.tistory.com/43)
+[template](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=4roring&logNo=221145837492)
 
 ## 22.07.12 : 왜 예외를 쓰는 게 좋을까요?
 > 
