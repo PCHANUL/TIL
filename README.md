@@ -8,6 +8,90 @@
 
 <hr>
 
+## 22.07.15 : container, template specialization
+>
+>## Container
+>
+>- Standard sequence container (vector, deque, list)
+>- vector : 크기가 변할 수 있는 배열을 나타내는 시퀀스 컨테이너이다. 
+>    - 배열과 달리 크기가 동적으로 변경될 수 있으며 저장공간은 컨테이너에서 자동으로 처리된다.
+>    - 내부적으로 vector는 동적으로 할당된 배열을 사용하여 요소를 저장한다.  
+>    - 새 요소가 삽입될 때 크기를 늘려야 한다면 새 배열을 할당하고 모든 요소를 옮긴다.  
+>
+>    - 컨테이너 속성
+>    - Sequence : 요소는 엄격한 선형 시퀀스로 정렬된다. 개별 요소에 해당 위치로 접근된다. 
+>    - Dynamic array : 포인터로 모든 요소에 직접 접근할 수 있으며, 끝에 추가/제거를 빠르게 할 수 있다. 
+>    - Allocator-aware : 저장공간을 동적으로 처리한다.
+>
+>- deque(double ended queue) : 양방향 큐는 양쪽 끝에서 확장하거나 축소할 수 있는 동적 크기의 시퀀스 컨테이너이다. 
+>    - 일반적으로 동적 배열의 일부 형태로 다양한 방식으로 구현될 수 있다.
+>    - 개별 요소는 임의 접근 반복자를 통해 직접 접근할 수 있다.
+>    - 필요에 따라서 컨테이너를 확장 및 축소하여 저장 공간을 자동으로 처리할 수 있다. 
+>    - vector와 유사하지만 시작 부분에도 요소를 효율적으로 삽입/삭제한다. 
+>    - 모든 요소가 인접한 저장 위치에 저장된다고 보장하지 않으므로 다른 요소에 대한 포인터를 오프셋하여 접근하면 정의되지 않은 동작이 발생한다.
+>    - 시작과 끝이 아닌 위치에 요소를 삽입/제거하는 작업의 경우에 list보다 성능이 저하되고 반복자와 참조의 일관성이 떨어진다.
+>
+>- list : 시퀀스 내에서 어느 곳에나 삽입/제거를 일정한 시간에 수행하고 양방향으로 반복할 수 있는 시퀀스 컨테이너이다. 
+>    - list는 이중 연결 리스트로 구현된다. 
+>    - 이중 연결 리스트는 서로 관련 없는 저장 위치에 포람된 각 요소를 저장할 수 있다. 
+>    - list는 일반적으로 반복자가 이미 확보된 컨테이너 내의 모든 위치에서 요소의 삽입/추출/이동에서 좋은 성능을 보이기 때문에 이러한 속성을 사용하는 알고리즘에서 수행된다. 
+>    - 주요 단점은 위치별로 요소에 직접 접근할 수 없다. 시작이나 끝같은 위치에서 해당 위치까지 반복해야 하므로 선형 시간이 걸린다. 
+>
+>## Template specialization
+>
+>템플릿의 특정 패턴에 대해서 별도의 처리가 하고 싶은 경우에 사용할 수 있다.  
+>예를 들어 다음과 같은 상황이 있을 수 있다.  
+>
+>```cpp
+>template <typename T>
+>T Max(const T a, const T b)
+>{
+>    return (a > b ? a : b);
+>}
+>
+>int main(void)
+>{
+>    std::cout << Max<int>(100, 200) << std::endl;
+>    std::cout << Max<const char*>("one", "two") << std::endl;
+>    return (0);
+>}
+>```
+>
+>`int` 타입인 경우에는 정상적으로 크기를 비교하지만, `const char *` 타입인 경우에는 단순히 주소를 비교하여 출력된다.  
+>위의 코드에 특수화를 사용하여 제대로 동작하도록 수정하면 다음과 같다.  
+>
+>```cpp
+>template <typename T>
+>T Max(const T a, const T b)
+>{
+>    return (a > b ? a : b);
+>}
+>
+>// char* 타입에 대한 특수화
+>template <>
+>char* Max<char*>(char* a, char* b)
+>{
+>    return (strcmp(a, b) > 0 ? a : b);
+>}
+>
+>// const char* 타입에 대한 특수화
+>template <>
+>const char* Max<const char*>(const char* a, const char* b)
+>{
+>    return (stdlen(a) > strlen(b) ? a : b);
+>}
+>
+>int main(void)
+>{
+>    std::cout << Max<int>(100, 200) << std::endl;
+>    std::cout << Max<const char*>("one", "two") << std::endl;
+>    return (0);
+>}
+>```
+>
+>`char*`, `const char*` 타입의 함수를 직접 명시하므로 컴파일러가 해당 타입 함수가 필요할 때 임의대로 만들지 않고 명시된 함수를 사용하도록 만든다.  
+>
+
 ## 22.07.13 : template
 
 >template는 함수나 클래스를 개별적으로 다시 작성하지 않아도, 여러 자료형으로 사용할 수 있도록 만들어 놓은 틀이다.  
