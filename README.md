@@ -8,7 +8,7 @@
 
 <hr>
 
-## 22.07.17 : span, iterator
+## 22.07.17 : iterator
 
 ### iterator
 
