@@ -42,6 +42,69 @@ void	person::print_age(void)
 }
 ```
 
+### this 포인터
+
+c++에서 클래스의 멤버 함수를 호출할 때 객체를 어떻게 찾을까?  
+숨겨진 포인터인 this를 사용한다. 멤버 함수를 컴파일 단계에서 다음과 같이 변환한다.  
+
+```cpp
+void func(int i)
+{
+	val = i;
+}
+
+obj.func(10);
+```
+
+```cpp
+void func(Simple* const this, int i)
+{
+	this->val = i;
+}
+
+obj.func(&obj, 10);
+```
+
+멤버 함수의 인수로 객체의 주소가 전달된다. 멤버 함수의 정의도 컴파일러에 의해 변환된다. 객체에 this 포인터를 추가하여 멤버 함수 안의 변수가 멤버 함수를 호출한  객체를 참조하도록 한다.  
+그러나 명시적으로 this를 참조해야하는 경우가 있다.  
+
+1. 멤버 변수와 이름이 같은 매개 변수를 가진 멤버 함수
+
+```cpp
+void func(int val)
+{
+	this->val = val;
+}
+
+// this->val : 멤버 변수
+// val       : 매개 변수
+```
+
+2. 멤버 함수 체이닝 기법
+
+멤버 함수가 this를 반환하면 체이닝 기능이 있는 함수를 만들 수 있다.  
+
+```cpp
+Simple& func(int val)
+{
+	this->val += val;
+	return (*this);
+}
+```
+
+```cpp
+int main(void)
+{
+	Simple obj;
+	
+	obj.func(10).func(5).func(1);
+	std::cout << obj.getValue() << std::endl;
+	return (0);
+}
+```
+
+[this 포인터](https://boycoding.tistory.com/250)
+
 ### 범위 지정 연산자 (::)
 
 범위 지정 연산자는 여러 범위에서 사용된 식별자를 식별하고 구분하는데 사용하는 연산자이다. 식별자로는 변수, 함수 또는 열거체가 올 수 있다.  
