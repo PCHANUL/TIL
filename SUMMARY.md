@@ -26,5 +26,6 @@
   * [string](c++/string.md)
   * [stringMethods](c++/stringMethods.md)
   * [typecast](c++/typecast.md)
+  * [operatorOverload](c++/operatorOverload.md)
 * [Thread](Thread.md)
 * [Mutex](Mutex.md)
