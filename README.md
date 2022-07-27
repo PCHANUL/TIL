@@ -4,6 +4,74 @@
 
 <hr>
 
+## 22.07.27 : SwiftUI App
+
+> # App structure and behavior
+> 
+> SwiftUI는 UIKit의 AppDelegate와 SceneDelegate 대신에 다른 라이프 사이클을 가진다. `App protocol`을 준수하는 타입을 만들고 이를 사용하여 유저 인터페이스를 구성한다. 데이터 모델 객체를 관리하기 위해서 `StateObject`를 사용하여 객체를 인스턴스화하고 앱 구조를 감싼다.  
+> 
+> 라이프 사이클 반응에 대한 작업을 해야하는 경우에는 적절한 scene에 onChange같은 수정자를 추가하여 scene의 변화를 확인할 수 있다. view에서도 마찬가지로 수정자를 사용할 수 있다.  
+> 
+> 만약에 UIKit이나 AppKit, WatchKit에서 구현하듯이 앱의 delegate를 만들어 callback에 응답해야한다면 적절한 delegate adaptor 속성 레퍼를 사용할 수 있다.  
+> 
+> ## App
+> 
+> 앱의 구조와 동작을 나타내는 타입이다.  
+> 
+> ```swift
+> @main
+> struct MyApp: App {
+> 	var body: some Scene {
+> 		WindowGroup {
+> 			Text("Hello, world!")
+> 		}
+> 	}
+> }
+> ```
+> 
+> `App` 프로토콜을 준수하는 구조를 선언하여 앱을 만든다. `body`는 앱의 콘텐츠를 정의하는데 필요한 속성을 계산한다.  
+> 
+> `@main`은 앱의 진입점을 나타낸다. `App protocol` 구조체 선언 앞에 붙여서 시스템이 앱을 시작하기 위한 메서드에 기본 구현을 알려준다. 앱 파일은 단 하나의 진입점을 가질 수 있다.  
+> 
+> `Scene protocol`을 준수하는 인스턴스에서 앱의 body를 구성한다. 각각의 scene은 계층 구조의 루트뷰를 포함하고 있으며, 시스템에서 관리하는 라이프 사이클이 있다. 기본적으로 제공하는 scene 타입이 있으며, 사용자 지정 scene을 만들 수 있다.  
+> 
+> ```swift
+> @main
+> struct Mail: App {
+> 	var body: some Scene {
+> 		WindowGroup {
+> 			MailViewer()
+> 		}
+> 		Settings {
+> 			SettingView()
+> 		}
+> 	}
+> }
+> ```
+> 
+> 앱에서 상태를 선언하여 앱의 모든 scene에서 공유할 수 있다. 다음의 코드와 같이 `StateObject` 속성을 사용하여 데이터 모델을 선언하고, 모델을 `ObservedObject`로 뷰의 인자로 제공하거나 `EnvironmentObject`로 환경을 통해 제공할 수 있다.  
+> 
+> ```swift
+> @main
+> struct Mail: App {
+>     @StateObject private var model = MailModel()
+> 
+>     var body: some Scene {
+>         WindowGroup {
+>             MailViewer()
+>                 .environmentObject(model) // Passed through the environment.
+>         }
+>         Settings {
+>             SettingsView(model: model) // Passed as an observed object.
+>         }
+>     }
+> }
+> ```
+> 
+
+
+
+
 ## 22.07.17 : iterator
 
 > ## iterator
