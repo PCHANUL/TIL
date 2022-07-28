@@ -4,6 +4,307 @@
 
 <hr>
 
+## 22.07.28 : c++ loops, SwiftUI Lifecycle
+> 
+> 어떤 반복문을 사용해야 하는지 의문이 들었다. index를 사용한 반복문이 iterator를 사용한 반복문보다 빠르다는 사실을 알게된 이후로 생긴 의문이다. 검색해보니 컨테이너에서 반복문을 사용하는 방법을 정리한 글을 찾게 되었다.  
+> 
+> [c++ loops](https://stackoverflow.com/questions/14373934/iterator-loop-vs-index-loop)
+> 
+> 1. index-based iteration
+> 
+> ```c++
+> for (std::size_t i = 0; i != v.size(); ++i) {
+>     // access element as v[i]
+> 
+>     // any code including continue, break, return
+> }
+> ```
+> 
+> 장점: C 스타일로 친숙하며, 다른 보폭으로 루프가 가능하다 (예를 들어 `i += 2`)  
+> 단점: 순차 랜덤 액세스 컨테이너(`vector`, `array`)의 경우에만 작동하고, 연관 컨테이너(`deque`)에서는 작동하지 않는다. 루프 제어가 약간 장황하다(초기화, 확인, 증가).  
+> 
+> 2. iterator-based iteration
+> 
+> ```c++
+> for (auto it = v.begin(); it != v.end(); ++it) {
+>     // if the current index is needed:
+>     auto i = std::distance(v.begin(), it); 
+> 
+>     // access element as *it
+> 
+>     // any code including continue, break, return
+> }
+> ```
+> 
+> 장점: 모든 컨테이너에서 작동한다. 연관 컨테이너에서도 사용할 수 있다. 다른 보폭으로 루프가 가능하다. (std::advance(it, 2))  
+> 단점: 현재 요소의 인덱스를 가져오려면 추가 작업이 필요하다. 루프 제어가 약간 장황하다. (초기화, 확인, 증가)  
+> 
+> 3. STL for_each algorithm + lambda
+> 
+> ```c++
+> std::for_each(v.begin(), v.end(), [](T const& elem) {
+>      // if the current index is needed:
+>      auto i = &elem - &v[0];
+> 
+>      // cannot continue, break or return out of the loop
+> });
+> ```
+> 
+> 장점: iterator-based iteration과 같으며 루프 제어에서 확인과 증가를 하지 않아도 되기 때문에 버그 비율을 줄일 수 있다. (잘못된 초기화, 확인 또는 증가, 하나씩 오류)  
+> 단점: 명시적 반복자 루프와 동일하고 루프의 흐름 제어에 대한 제한된 가능성(continue, break, return 사용 불가) 및 다른 보폭이 대한 옵션이 없다.  
+> 
+> 4. range-for loop
+> 
+> ```c++
+> for (auto& elem: v) {
+>      // if the current index is needed:
+>      auto i = &elem - &v[0];
+> 
+>     // any code including continue, break, return
+> }
+> ```
+> 
+> 장점: 매우 컴팩트한 루프 제어, 현재 요소에 대한 직접 액세스.  
+> 단점: 인덱스를 얻기 위한 추가 명령문. 다른 보폭을 사용할 수 없다.  
+> 
+> **그래서 무엇을 사용해야 하는가?**
+> 
+> std::vector의 경우에 index가 필요하거나 다른 보폭이 필요한 경우에 indexed-loop, 아니면 range-for 루프를 사용한다.  
+> 일반 컨테이너에 대한 일반 알고리즘의 경우, 루프 내부에 흐름 제어가 필요하고 다른 보폭이 필요하다면 iterator-loop, 아니면 `for_each + a lambda`를 사용한다.  
+> 
+> # SwiftUI Scene
+> 
+> ## Scene
+> 
+> Scene은 시스템에서 관리하는 수명 주기가 있는 App 사용자 인터페이스의 일부를 나타낸다. App 인스턴스는 포함된 장면을 표시하지만 각 Scene은 뷰 계층 구조의 루트 요소 역할을 한다.  
+> 
+> 시스템은 Scene의 타입, 플랫폼 및 컨텍스트에ㅡ 따라서 다양한 방식으로 Scene을 제시한다. Scene은 전체 디스플레이, 디스플레이의 일부, 창, 창의 탭 등을 채울 수 있다. 경우에 따라 앱이 한 번에 둘 이상의 Scene 인스턴스를 표시할 수도 있다.  
+> 
+> 뷰를 구성하는 방법과 유사하게 수정자를 사용하여 Scene을 구성한다. 예를 들어 Scene이 포함된 창의 모양을 windowStyle 수정자로 조정할 수 있다.  
+> 
+> App의 body에 Scene protocol을 준수하는 하나 이상의 인스턴스를 결합하여 App을 만든다. SiwftUI가 제공하는 기본 Scene을 사용하거나 다른 Scene에서 구성한 사용자 지정 Scene을 포함할 수 있다. 사용자 정의 Scene을 만들려면 Scene protocol을 준수하는 유형을 선언하면 된다.  
+> 
+> ```swift
+> struct MyScene: Scene {
+>     var body: some Scene {
+>         WindowGroup {
+>             MyRootView()
+>         }
+>     }
+> }
+> ```
+> 
+> Scene은 사용자에게 표시하여는 뷰 계층 구조의 컨테이너 역할을 한다. 시스템은 앱의 현재 상태에 따라 사용자 인터페이스에 뷰 계층 구조를 표시할 시기와 방법을 결정한다. 예를 들어 창 그룹의 경우 시스템에서 사용자가 macOS 및 iPadOS와 같은 플랫폼에 포함된 창을 생성하거나 제거할 수 있다. 다른 플랫폼에서는 동일한 뷰 계층 구조가 활성 상태일 때 전체 디스플레이를 사용할 수 있다.  
+> 
+> Scene 또는 해당 View 중 하나에서 환경 값을 읽어서 장면이 활성 상태인지 아니면 다른 상태인지 확인할 수 있다. 환경 속성을 사용하여 Scene의 단계를 포함하는 속성을 만들 수 있다.  
+> 
+> ```swift
+> struct MyScene: Scene {
+>     @Environment(\.scenePhase) private var scenePhase
+> 
+>     // ...
+> }
+> ```
+> 
+> Scene protocol은 Scene을 구성하는데 사용하는 기본 수정자를 제공한다. 이 수정자는 프로토콜 메서드로 정의되어 있다. 예를 들어 onChange 수정자를 사용하여 값이 변경되는 작업을 트리거할 수 있다. 그리고 창 그룹의 모든 Scene이 배경으로 이동할 때 캐시를 비운다.  
+> 
+> ```c++
+> struct MyScene: Scene {
+>     @Environment(\.scenePhase) private var scenePhase
+>     @StateObject private var cache = DataCache()
+> 
+>     var body: some Scene {
+>         WindowGroup {
+>             MyRootView()
+>         }
+>         .onChange(of: scenePhase) { newScenePhase in
+>             if newScenePhase == .background {
+>                 cache.empty()
+>             }
+>         }
+>     }
+> }
+> ```
+> 
+> ## ScenePhase
+> 
+> Scene의 작동 상태를 나타낸다.  
+> 시스템은 장면의 작동 상태를 반영하는 단계를 통해 앱의 Scene 인스턴스를 이동시킨다. 단계 변경을 트리거하여 사용할 수 있다. 다음 예제는 Environment에서 scenePhase 값을 관찰하여 현재 단계를 읽는다.
+> 
+> ```c++
+> @Environment(\.scenePhase) private var scenePhase
+> ```
+> 
+> 값을 해석하는 방법은 값을 읽은 위치에 따라 다르다.  
+> View 인스턴스 안에서 scenePhase를 읽으면 View가 포함된 scene의 단계를 반영하는 값을 얻는다. 다음 예제는 onChange 메서드를 사용하여 둘러싸이는 scene이 ScenePhase.active 단계에 들어갈 떄마다 타이머를 활성화하고 다른 단계에 들어갈 때 타이머를 비활성한다. 
+> 
+> ```swift
+> struct MyView: View {
+>     @ObservedObject var model: DataModel
+>     @Environment(\.scenePhase) private var scenePhase
+> 
+>     var body: some View {
+>         TimerView()
+>             .onChange(of: scenePhase) { phase in
+>                 model.isTimerRunning = (phase == .active)
+>             }
+>     }
+> }
+> ```
+> 
+> 만약에 App 인스턴스 안에서 scenePhase를 읽으면 모든 scene의 단계를 반영하는 집계 값을 얻는다. 앱은 활성화된 scene이 있는 경우 ScenePhase.active 값을 보고하고, 아닌 경우에는 ScenePhase.inactive 값을 보고한다. 여기에는 단일 scene 선언에서 생성된 여러 scene 인스턴스가 포함된다. WindowGroup에서 ScenePhase.backgroud 단계에 들어가면 앱이 곧 종료된다고 예상할 수 있다. 
+> 
+> ```swift
+> @main
+> struct MyApp: App {
+>     @Environment(\.scenePhase) private var scenePhase
+> 
+>     var body: some Scene {
+>         WindowGroup {
+>             MyRootView()
+>         }
+>         .onChange(of: scenePhase) { phase in
+>             if phase == .background {
+>                 // Perform cleanup when all scenes within
+>                 // MyApp go to the background.
+>             }
+>         }
+>     }
+> }
+> ```
+> 
+> 만약에 custom Scene에서 읽는다면 값은 custom scene을 구성하는 모든 scene의 집계를 유사하게 반영한다.  
+> 
+> ```swift
+> struct MyScene: Scene {
+>     @Environment(\.scenePhase) private var scenePhase
+> 
+>     var body: some Scene {
+>         WindowGroup {
+>             MyRootView()
+>         }
+>         .onChange(of: scenePhase) { phase in
+>             if phase == .background {
+>                 // Perform cleanup when all scenes within
+>                 // MyScene go to the background.
+>             }
+>         }
+>     }
+> }
+> ```
+> 
+> ### Getting scene phase
+> 
+> - `case active` : scene이 앞에 있으며 반응하고 있다.
+> - `case inactive` : scene이 앞에 있지만 작업이 중단되어 있다. 
+> - `case background` : scene의 현재 UI가 보이지 않는다. 
+> 
+> 
+> # SwiftUI Lifecycle
+> 
+> [SwiftUI’s New App Lifecycle and Replacements for AppDelegate and SceneDelegate in iOS 14](https://betterprogramming.pub/swiftuis-new-app-lifecycle-and-replacements-for-appdelegate-and-scenedelegate-in-ios-14-c9cf4a2367a9)  
+> 
+> SwiftUI는 UIKit의 AppDelegate와 SceneDelegate에서 벗어나기 위해서 새로운 라이프 사이클을 가진다. 이를 위해 iOS 14는 App Protocol, SceneBuilder, scenePhase enumerator, UIApplicationDelegateAdapter를 제공한다. 이들을 살펴보기 전에 SceneDelegate를 빠르게 훑어본다.  
+> 
+> SceneDelegate는 iOS 13에 iPadOS의 다중 창 지원을 해결하기 위해 도입되었다. 이는 window 개념에서 scene 개념으로 전환되며 AppDelegate의 책임이 분리되었다.  
+> 
+> iOS 14에서부터 새로운 SwiftUI 애플리케이션 프로젝트를 생성할 때 `SwiftUI App Lifecycle`과 `UIKit App Delegate` 중에서 선택할 수 있게 되었다. 후자를 사용하는 경우에는 예전과 같이 AppDelegate와 SceneDelegate 보일러 플레이트 코드와 UIHostingController가 SwiftUI View를 포함하는데 사용된다. 하지만 전자를 사용하면 완전히 새로운 출발점의 SwiftUI를 맞이하게 된다.  
+> 
+> ## SwiftUI App Protocol: 새로운 시작점
+> 
+> ```swift
+> @main
+> struct ProjectName: App {
+>     var body: some Scene {
+>         WindowGroup {
+>             ContentView()
+>         }
+>     }
+> }
+> ```
+> 
+> 위의 코드는 짧지만 많은 작업이 자동으로 이루어진다. 기본적으로 구조체는 Scene과 View을 한 곳에 통합하여 SwiftUI 애플리케이션 계층 구조에 대한 조감도를 제공한다. 코드를 작성하는데 주의할 점은 다음과 같다.  
+> 
+> - `@main` 속성은 위의 구조체가 SwiftUI 애플리케이션의 시작점임을 나타낸다.  
+> - App protocol을 준수하며 하나 이상의 scene을 구성하기위한 SceneBuilder를 구현해야 한다. 
+> - 위의 예에서 WindowGroup은 SwiftUI view를 감싸는 컨테이너 scene이다. iPadOS나 macOS는 위의 애플리케이션을 실행하며 여러 WindowGroup scene을 생성하는 기능을 지원한다. 
+> 
+> WindowGroup 외에도 DocumentGroup을 사용하거나 WKNotificationScene와 같은 scene 타입을 사용할 수 있다.  
+> 
+> WindowGroup scene에서 명령어 수정자를 사용하여 단축키를 설정할 수 있다. 이를 위해서는 새로운 CommandBuilder를 활용하여 Commands protocol을 사용하는 CommandMenu를 그룹화해야 한다.  
+> 
+> 복잡한 Scene을 구성할 때는 계산된 속성을 @SceneBuilder로 반드시 설정해야 한다. 예를 들어 아래의 코드는 macOS 플랫폼에 대한 환경 설정 메뉴 장면을 생성한다.  
+> 
+> ```swift
+> @main
+> struct SwiftUITestApp: App {
+> 	@SceneBuilder var body: some Scene {
+> 		WindowGroup {
+> 			ContentView()
+> 		}
+> 		
+> 		#if os(macOS)
+> 			Settings {
+> 				ContentView()
+> 			}
+> 		#endif
+> 	}
+> }
+> ```
+> 
+> ## How to Listen to SceneDelegate Lifecycle Methods?
+> 
+> SceneDelegate에서와 같이 scene의 수명 주기 업데이트를 수신하기 위해서는 scenePhase 열거자를 사용한다. 이를 환경 속성 래퍼 및 onChange 수정자에 사용하여 scene의 상태 변경을 수신할 수 있다.  
+> 
+> ```swift
+> @main
+> struct MyApp: App {
+>     @Environment(\.scenePhase) private var scenePhase
+> 
+>     var body: some Scene {
+>         WindowGroup {
+>             ContentView()
+>         }
+>         .onChange(of: scenePhase) { phase in
+>             if phase == .background {
+>                //perform cleanup
+>             }
+>         }
+>     }
+> }
+> ```
+> 
+> ## How to Use AppDelegate With SwiftUI App Protocol
+> 
+> AppDelegate 클래스는 애플리케이션의 중요한 부분이다. 알림 처리를 하든지 Firebase 처리를 하든지 다양한 수명 주기 방식으로 중요한 역할을 한다.  
+> 
+> AppDelegate 기능을 연결하기 위해서 UIKit을 SwiftUI 애플리케이션으로 가져와야 한다. SwiftUI는 새로운 속성 래퍼인 UIApplicationDelegateAdaptor를 제공한다. 이를 통해 AppDelegate를 SwiftUI 구조에 주입할 수 있다.  
+> 
+> ```swift
+> class AppDelegate: NSObject, UIApplicationDelegate {
+>     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+>         return true
+>     }
+> }
+> 
+> @main
+> struct MyApp: App {
+> 
+>     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+> 
+>     var body: some Scene {
+>         WindowGroup {
+>             ContentView()
+>         }
+>     }
+> }
+> ```
+> 
+> 
+
+
+
+
 ## 22.07.27 : SwiftUI App
 
 > # App structure and behavior
