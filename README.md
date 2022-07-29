@@ -4,6 +4,46 @@
 
 <hr>
 
+## 22.07.29 : SwiftUI Lifecycle
+> 
+> ## ScenePhase
+> 
+> [SwiftUI App lifecycle 정리](https://huniroom.tistory.com/entry/iOS14SwfitUI-SwiftUI-life-cycle-%EC%97%90%EC%84%9C-%EB%94%A5%EB%A7%81%ED%81%AC-%EC%B2%98%EB%A6%AC)
+> 
+> 애플이 iOS14부터 ScenePhase를 제공했다. ScenePhase는 @Environment 속성 래퍼를 사용하여 가져오고, onChange(of:) 수정자를 사용하여 변경사항을 받을 수 있다.  
+> 
+> ```swift
+> import SwiftUI
+> 
+> @main
+> struct TestApp: App {
+>     @Environment(\.scenePhase) var scenePhase
+> 
+>     var body: some Scene { 
+>         WindowGroup {
+>             ContentView()
+>         }.onChange(of: scenePhase) { newScenePhase in
+>             switch newScenePhase {
+>             case .active:
+>               print("App is active")
+>             case .inactive:
+>               print("App is inactive")
+>             case .background:
+>               print("App is in background")
+>             @unknown default:
+>               print("Oh - interesting: I received an unexpected new value.")
+>             }
+>           }
+>     }
+> }
+> ```
+> 
+> - App is active : 앱이 켜진 직후
+> - App is inactive : 앱 스위칭 할 수 있게 올린 상태
+> - App is in baskgroud : 아이폰 홈 화면으로 나온 상태
+> 
+> 
+
 ## 22.07.28 : c++ loops, SwiftUI Lifecycle
 > 
 > 어떤 반복문을 사용해야 하는지 의문이 들었다. index를 사용한 반복문이 iterator를 사용한 반복문보다 빠르다는 사실을 알게된 이후로 생긴 의문이다. 검색해보니 컨테이너에서 반복문을 사용하는 방법을 정리한 글을 찾게 되었다.  
@@ -78,7 +118,7 @@
 > 
 > Scene은 시스템에서 관리하는 수명 주기가 있는 App 사용자 인터페이스의 일부를 나타낸다. App 인스턴스는 포함된 장면을 표시하지만 각 Scene은 뷰 계층 구조의 루트 요소 역할을 한다.  
 > 
-> 시스템은 Scene의 타입, 플랫폼 및 컨텍스트에ㅡ 따라서 다양한 방식으로 Scene을 제시한다. Scene은 전체 디스플레이, 디스플레이의 일부, 창, 창의 탭 등을 채울 수 있다. 경우에 따라 앱이 한 번에 둘 이상의 Scene 인스턴스를 표시할 수도 있다.  
+> 시스템은 Scene의 타입, 플랫폼 및 컨텍스트에 따라서 다양한 방식으로 Scene을 제시한다. Scene은 전체 디스플레이, 디스플레이의 일부, 창, 창의 탭 등을 채울 수 있다. 경우에 따라 앱이 한 번에 둘 이상의 Scene 인스턴스를 표시할 수도 있다.  
 > 
 > 뷰를 구성하는 방법과 유사하게 수정자를 사용하여 Scene을 구성한다. 예를 들어 Scene이 포함된 창의 모양을 windowStyle 수정자로 조정할 수 있다.  
 > 
@@ -108,7 +148,7 @@
 > 
 > Scene protocol은 Scene을 구성하는데 사용하는 기본 수정자를 제공한다. 이 수정자는 프로토콜 메서드로 정의되어 있다. 예를 들어 onChange 수정자를 사용하여 값이 변경되는 작업을 트리거할 수 있다. 그리고 창 그룹의 모든 Scene이 배경으로 이동할 때 캐시를 비운다.  
 > 
-> ```c++
+> ```swift
 > struct MyScene: Scene {
 >     @Environment(\.scenePhase) private var scenePhase
 >     @StateObject private var cache = DataCache()
@@ -131,7 +171,7 @@
 > Scene의 작동 상태를 나타낸다.  
 > 시스템은 장면의 작동 상태를 반영하는 단계를 통해 앱의 Scene 인스턴스를 이동시킨다. 단계 변경을 트리거하여 사용할 수 있다. 다음 예제는 Environment에서 scenePhase 값을 관찰하여 현재 단계를 읽는다.
 > 
-> ```c++
+> ```swift
 > @Environment(\.scenePhase) private var scenePhase
 > ```
 > 
