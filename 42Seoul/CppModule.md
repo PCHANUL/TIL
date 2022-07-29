@@ -1,6 +1,6 @@
 # Cpp
 
-# cpp03 - 클래스의 상속
+# cpp03 - Class inheritance
 
 cpp module 03에서는 클래스 상속을 구현한다. 클래스 상속은 기존 클래스를 속성을 다른 클래스가 받고 의도에 맞게 수정하여 사용하거나 클래스 간의 종속 관계를 형성하여 객체를 조직화한다.  
 
@@ -18,7 +18,7 @@ ClapTrap 클래스를 상속받는 ScavTrap과 FragTrap 클래스를 만든다.
 
 ScavTrap과 FragTrap을 상속받는 DiamondTrap 클래스를 구현하는 과제이다. ScavTrap과 FragTrap은 앞에서 구현했듯이 모두 ClapTrap을 상속받고 있다. 그렇기 때문에 두 클래스를 상속받는 일은 문제를 발생시킨다. DiamondTrap이 ClapTrap의 속성이나 멤버 함수를 사용하고자 하면 ScavTrap의 ClapTrap을 참조하는지 FragTrap의 ClapTrap을 참조해야하는지 헷갈리기 때문이다. 이때 virtual 키워드를 사용하여 모호성을 해결한다. virtual 키워드는 객체에 대한 참조를 컴파일 시점이 아닌 런타임 시점으로 미룬다. 이를 각각 정적 바인딩과 동적 바인딩이라고 부른다. 객체가 호출되는 시점에 이동할 메모리 주소를 정적 바인딩은 컴파일 시점에 저장해주고, 동적 바인딩은 컴파일 시점에 메모리 공간을 확보한 다음 런타임 시점에 결정한다.  
 
-# cpp04
+# cpp04 - Abstract class, Interface
 
 ### ex00 - override function
 
@@ -48,7 +48,7 @@ Materia가 생성되어 equip된다. 그런데 하나의 Materia가 여러 Chara
 Materia를 자유롭게 delete하라고 명시되어 있으므로 나는 Character의 trash에 버리기로 한다. copy 또는 destroy 되는 경우에 trash는 clear 된다.
 MateriaSource에서 모든 Materia를 관리하는 경우에는 문제가 발생할 수 있다. 만약에 MateriaSource가 Character보다 먼저 제거되는 경우에는 Character가 equip하고 있던 Materia가 모두 제거된다. 그러므로 Materia는 Character에서 관리해야 한다. MateriaSource는 Materia를 생성하는 역할만 한다.
 
-# cpp05 - exception
+# cpp05 - Exception
 
 cpp05는 std::exception 클래스를 상속받는 예외 객체를 재정의하고 예외 상황에서 사용해본다.  
 예외 처리는 try~catch 구문과 throw로 구현된다. 예외가 발생할 수 있는 영역을 try로 감싸고, 이 영역에서 throw로 예외가 던져진다면 catch 영역에서 예외를 받는다. 예외 영역에서는 처리하려는 예외의 타입을 정할 수 있다. 이 과제에서는 catch 영역에서 (const std::exception &)를 받는다.
@@ -70,14 +70,13 @@ Form 클래스는 이전에 구현한 Bureaucrat와 비슷하게 구현된다.
 ### ex02 - Child forms
 
 Form 클래스를 상속받는 자식 클래스를 구현한다.  
-이 자식 클래스들은 정해진 sign_grade와 exec_grade로 생성되고 execute를 override 해야한다.  
+자식 클래스들은 정해진 sign_grade와 exec_grade로 생성되고 execute를 override 해야한다.  
 Form 클래스에 execute 함수를 순수 가상 함수로 선언하여 더이상 객체로 생성될 수 없다.  
 자식 클래스들의 execute 함수를 각자 주어진 동작을 실행하기 전에 grade를 확인한다.  
 인자로 들어오는 Bureaucrat의 grade를 exec_grade와 비교하여 낮은 grade라면 예외를 발생시킨다.  
 
 
-
-# cpp06 - type casting
+# cpp06 - Type casting
 
 c에서는 형변환을 가차없이 진행했지만 c++에서는 형변환을 위한 연산자를 제공하여 조금더 안정적인 형변환을 할 수 있도록 한다. 
 
@@ -129,16 +128,13 @@ float와 double이 출력되는 형식을 위해서 iomanip을 사용한다. 소
 dynamic_cast으로 상속 관계의 변환을 다룬다. dynamic_cast는 상속 관계에 있는 클래스의 형변환을 위해 사용된다. static_cast는 컴파일 시점에서 형변환이 가능한지 검사하지만 dynamic_cast는 런타임에 형변환이 가능한지 확인하게 된다. 그래서 dynamic_cast를 사용한 뒤에 정상적으로 형변환이 일어났는지 확인하는 과정이 필요하다. 형변환이 성공한 경우에는 정상적으로 변환된 주소의 값을 반환하지만 실패하는 경우는 두가지로 나누어 진다. 포인터를 변환하는 경우에 실패하면 NULL 포인터를 반환하고, 참조를 변환하는 경우에 실패하면 예외를 던진다. 변환이 성공하는 경우와 실패하는 경우를 구별하여 과제를 해결할 수 있다.  
 
 
+# cpp07 - Template
 
-# cpp07
-
-함수 템플릿으로 함수를 구현하는 과제이다.
-템플릿은 함수나 클래스를 개별적으로 작성하지 않고, 여러 자료형으로 사용할 수 있도록 만들어 놓은 틀이다.  
+템플릿 함수와 템플릿 클래스를 구현하는 과제이다.  
+템플릿은 함수나 클래스를 개별적으로 작성하지 않고, 여러 자료형으로 사용할 수 있도록 만들어 놓는 틀이다.  
 
 템플릿은 함수나 클래스를 찍어내는 형틀이다.  
 c++에서 함수를 정의할 때 오버로딩 특성에 의해서 같은 이름의 함수를 인자의 타입을 다르게 하여 반복적으로 정의하게 되는데 이를 템플릿이 해결해준다. 템플릿 함수/클래스를 정의하면 컴파일러가 자동으로 타입을 변환하여 작성해준다. 정의된 템플릿 함수/클래스를 호출하면 호출부의 인수의 타입을 읽어서 그에 맞는 함수/클래스를 작성한다. 즉, 모든 타입의 함수/클래스가 만들어지지 않고 호출된 타입의 함수/클래스만 만들어진다. 
-
-
 
 ### ex00
 
@@ -212,7 +208,7 @@ void* operator new (size_t size)
 - delete 연산자 오버로딩
 
 
-# cpp08
+# cpp08 - Container, Algorithm
 
 ### ex00
 
