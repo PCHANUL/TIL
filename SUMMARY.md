@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Today I Learned](README.md)
-  * [22.05](TodayILearned/22.05.md)
   * [22.06](TodayILearned/22.06.md)
+  * [22.05](TodayILearned/22.05.md)
 * [devLog](devLog/README.md)
   * [Gridot](devLog/Gridot.md)
 * [42Seoul](42Seoul/README.md)
@@ -33,9 +33,9 @@
   * [stringMethods](c++/stringMethods.md)
   * [typecast](c++/typecast.md)
   * [operatorOverload](c++/operatorOverload.md)
-  * [template] (c++/template.md)
-  * [exception] (c++/exception.md)
-  * [this] (c++/this.md)
+  * [template](c++/template.md)
+  * [exception](c++/exception.md)
+  * [this](c++/this.md)
 * [C](c/README.md)
   * [Thread](c/Thread.md)
   * [Mutex](c/Mutex.md)
