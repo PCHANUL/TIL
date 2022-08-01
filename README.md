@@ -4,6 +4,101 @@
 
 <hr>
 
+## 22.08.01 : c++ container(map), Ray Casting
+
+> ## map
+> 
+> [[C++/STL]map,set 참조링크](https://sarah950716.tistory.com/6)
+> 
+> map은 key와 value의 쌍으로 이루어진 트리로써 연관된 두 값을 묶어서 관리할 수 있다. 검색, 삽입, 삭제 등의 속도를 빠르게 하기 위해 균형 이진 트리 중의 하나인 `레드 블랙 트리`로 구현되어 있다. key를 기준으로 정령된 상태이기 때문에 검색 속도가 특히 빠르다.  
+> 
+> map는 반복자(iterator)와 인덱스(key)를 이용하여 요소에 접근할 수 있다. 중복된 key를 사용할 수 없으며, 만약에 존재하는 key값을 가진 노드를 추가한다면 이미 존재하는 노드에 덮어씌워진다. 그렇기 때문에 유일한 key, value 쌍을 가진다.  
+> 
+> ### 멤버 함수
+> 
+> - `map.size()` : 노드 개수를 반환
+> - `map.empty()` : 사이즈가 0인지 아닌지 확인
+> - `map.begin()` : 첫번째 원소를 가리키는 iterator 반환
+> - `map.end()` : 마지막 원소를 가리키는 iterator 반환
+> - `map[key] = value` : (key, value) 노드를 추가
+> - `map.insert(make_pair(key, value))` : (key, value) 노드를 추가
+> - `map.erase(key)` : key를 찾아서 제거
+> - `map.find(key)` : key를 찾고, 있다면 해당 노드를 가리키는 iterator 반환하고 없다면 마지막 원소 iterator 반환
+> 
+> ```c++
+> int main(void)
+> {
+> 	map<char,int>	m;
+> 
+> 	m['A'] = 10;
+> 	m.insert(make_pair('B', 20));
+> 	
+> 	// m : (A, 10), (B, 20)
+> 	
+> 	m.insert(make_pair('A', 30));
+> 
+> 	// m : (A, 30), (B, 20)
+> 	
+> 	map<char, int>::iterator	iter = m.find('B');
+> 	
+> 	if (iter != m.end())
+> 	{
+> 		cout << iter->first << endl;
+>         cout << iter->second << endl;
+> 	}
+> 	
+> 	return (0);
+> }
+> ```
+> 
+> [raycasting_tutorial](https://github.com/365kim/raycasting_tutorial/blob/master/2_basics.md)
+> [raycasting_tutorial_원문](https://lodev.org/cgtutor/raycasting.html)
+> 
+> ## Ray Casting이란
+> 
+> 2차원 맵에서 3차원 원근감을 만드는 렌더링 기술이다. 
+> 
+> - 스크린의 모든 수직선에 대해 계산하여 속도가 빠르다. 
+> - 과거의 느린 컴퓨터에서 3D를 구현하는 최초의 해결책이었다. 
+> - 레이캐스팅 기술을 사용한 가장 유명한 게임은 'Wolfenstein 3D'이다. 
+> 
+> ## Ray Casting, Ray Tracing
+> 
+> - Ray Casting은 4MHz 그래픽 계산기에서도 실시간으로 빠르게 작동하는 semi-3D 기술이다.
+> - Ray Tracing은 3D 장면의 반사, 그림자를 지원하여 현실감있게 렌더링하는 기술이며, 컴퓨터가 빨라진 후에 높은 해상도와 복잡한 장면을 실시간으로 처리할 수 있게 되었다. 
+> 
+> ## 기본적인 원리
+> 
+> - 2차원 정사각형 그리드 맵이 있다. 
+> - 맵의 한 칸은 0과 양수로 벽의 존재와 특정 색상, 질감을 나타낸다.
+> - 화면의 모든 x값(수직선)에 대해 플레이어 위치에서부터 시작하는 광선을 쏜다. 
+> - 광선의 방향은 **플레이어가 바라보는 방향**, 화면의 **x좌표**에 의존한다.
+> - 광선은 벽에 부딪힐때까지 직진하고 벽에 부딪히면 **적중지점**으로부터 **플레이어까지의 거리**를 구한다.
+> - 거리에 따라서 **벽의 높이**가 화면에 어떻게 그려져야 하는지 결정된다. 
+> - 벽의 높이는 거리가 멀수록 낮게, 가까울수록 높게 표시된다. 
+> 
+> 정리하면
+> 1. 광선이 벽에 부딪힐때까지 직진하여 적중지점을 찾는다.
+> 2. 광선의 길이를 구한다.
+> 3. 광선의 길이에 따라서 벽의 높이를 정한다.
+> 
+> - 광선은 검사지점의 간격만큼 직진한다.
+> - 광선이 벽에 부딪혔는지 확인은 Ray Casting Algorithm으로 사각형 안에 포인트가 들어왔는지 확인한다.  
+> - 아니면 광선이 닿는 벽의 모든 면을 검사하여 벽이 있어야 하는지 확인한다.  
+> - 검사간격이 일정하지 않고, 다음 측면까지의 거리에 따라 달라진다.
+> 
+> ## DDA(Digital Differential Analysis)
+> 
+> [DDA 알고리즘을 이용한 Ray Casting](https://wonillism.tistory.com/199)
+> 
+> 2차원 그리드를 지나가는 선이 어떤 네모칸과 부딪히는지 찾을 때 일반적으로 사용되는 속도가 빠른 알고리즘이다. 이 알고리즘은 광선이 어떤 네모칸과 부딪히는지 찾고, 부딪힘이 확인되면 중단된다.  
+> 
+> 광선이 측면에 도달하면 벽에 적중했는지 확인하는 알고리즘이다. x축과 y축에 광선이 닿을때 확인하는데 현재 닿은 x축과 다음에 닿을 x축의 간격이 그 다음에 닿을 x축까지의 거리와 같으므로 이를 이용한다. 이 간격을 누적하며 벽을 확인한다.  
+> 
+> ![](src/42Seoul/cub3d_01.png)
+> 
+
+
 ## 22.07.31 : SwiftUI DocumentGroup, Settings
 > 
 > ## DocumentGroup
