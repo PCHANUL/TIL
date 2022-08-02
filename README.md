@@ -4,6 +4,104 @@
 
 <hr>
 
+## 22.08.02 : SwiftUI State and data flow
+
+> # State and data flow
+> 
+> 앱 모델 내에서 데이터 흐름과 변경 사항을 제어하고 이에 대응한다. SwiftUI는 사용자 인터페이스 디자인에 대한 선언적 접근 방식을 제공한다. View 계층 구조를 구성할 때 View에 대한 데이터 종속성도 표시한다. 만약에 이벤트로 인해 데이터가 변경된다면 SwiftUI가 자동으로 업데이트해준다. 즉, 뷰컨트롤러의 작업을 프레임워크가 자동으로 수행한다.
+> 
+> 프레임워크는 앱의 데이터를 사용자 인터페이스에 연결하기 위한 상태 변수 및 바인딩과 같은 도구를 제공한다. 이러한 도구는 앱의 모든 데이터 조각에 대한 단일 정보 소스를 유지하는 데 도움이 된다. 상황에 맞게 도구를 사용하면 된다.  
+> 
+> - 값 유형을 State 속성으로 래핑하여 일시적인 UI 상태를 관리
+> - ObservedObject 속성 래퍼를 사용하여 ObservableObject 프로토콜을 준수하는 외부 참조 모델 데이터에 연결한다. EnvironmentObject 속성 래퍼를 사용하여 환경에 저장된 관찰 가능한 개체에 액세스한다. StateObject를 사용하여 View에서 직접 관찰 가능한 개체를 인스턴스화한다. 
+> - Binding 속성 래퍼를 사용하여 State 또는 Observable object와 같은 소스에 대한 참조를 공유한다.
+> - Environment에 저장하여 앱 전체에 데이터를 배포한다.
+> - PreferenceKey를 사용하여 하위 View에 데이터를 전달한다.
+> - FetchRequest를 사용하여 CoreData에 저장된 영구 데이터를 관리한다. 
+> 
+> ## 속성 래퍼 활용
+> 
+> SwiftUI는 State 및 Binding과 같은 많은 데이터 관리 유형을 Swift 속성 래퍼로 구현한다.  
+> 
+> ```swift
+> @State private var isVisible = true	// isVisible을 state 변수로 선언
+> ```
+> 
+> SwiftUI의 상태 및 데이터 흐름 속성 래퍼는 데이터 변경 사항을 감시하고 필요에 따라 영향을 받는 View를 자동으로 업데이트한다. 코드에서 속성을 직접 참조할 때 래핑된 값에 액세스한다. 위의 예에서 isVisible 상태 속성의 경우 저장된 Boolean이다.  
+> 
+> ```swift
+> if isVisible == true {
+>     Text("Hello") // isVisible이 true인 경우에만 렌더링
+> }
+> ```
+> 
+> 또는 속성 이름 앞에 달러 기호($)를 붙여서 속성 래퍼의 예상 값에 액세스할 수 있다. SwiftUI 상태 및 데이터 흐름 속성 래퍼는 항상 Binding을 프로젝션하여 다른 View에서 단일 소스에 액세스하고 변경할 수 있도록 한다.  
+> 
+> ```swift
+> Toggle("Visible", isOn: $isVisible) // 토글이 저장된 값을 변경
+> ```
+> 
+> # Property Wrappers
+> 
+> 속성 래퍼는 속성이 저장되는 방식을 관리하는 코드와 속성을 정의하는 코드 사이에 분리 계층을 추가한다.  
+> 
+> 예를 들어 스레드 안전성 검사를 제공하거나 기본 데이터를 데이터베이스에 저장하는 속성이 있는 경우 모든 속성에 해당 코드를 작성해야 한다. 그러나 속성 래퍼를 사용하면 래퍼를 정의할 때 관리 코드를 한 번 작성한 다음 여러 속성에 적용하여 해당 관리코드를 재사용할 수 있다.  
+> 
+> 속성 래퍼를 정의하려면 wrappedValue로 정의된 struct, enum 또는 class를 만들어야 한다. 아래의 코드를 보면, TwelveOrLess 구조체가 감싸는 값이 항상 12보다 적거나 같게 된다. 만약에 더 큰 수를 저장한다면 12가 저장될 것이다.  
+> 
+> ```swift
+> @propertyWrapper
+> struct TwelveOrLess {
+>     private var number = 0
+>     var wrappedValue: Int {
+>         get { return number }
+>         set { number = min(newValue, 12) }
+>     }
+> }
+> ```
+> 
+> 속성 앞에 래퍼의 이름을 속성으로 작성하여 속성에 래퍼를 적용한다. 다음은 TwelveOrLess 속성 래퍼를 사용하여 항상 12이하의 크기를 가지는 사각형을 저장하는 구조체이다.  
+> 
+> ```swift
+> struct SmallRectangle {
+>     @TwelveOrLess var height: Int
+>     @TwelveOrLess var width: Int
+> }
+> 
+> var rectangle = SmallRectangle()
+> print(rectangle.height)
+> // Prints "0"
+> 
+> rectangle.height = 10
+> print(rectangle.height)
+> // Prints "10"
+> 
+> rectangle.height = 24
+> print(rectangle.height)
+> // Prints "12"
+> ```
+> 
+> 속성에 래퍼를 적용하면 컴파일러는 래퍼에 대한 저장소를 제공하는 코드와 애퍼를 통해 속성에 대한 액세스를 제공하는 코드를 합성한다. 다음은 @TwelveOrLess를 사용하는 대신 TwelveOrLess 구조체를 사용하여 래핑한다.  
+> 
+> ```swift
+> struct SmallRectangle {
+>     private var _height = TwelveOrLess()
+>     private var _width = TwelveOrLess()
+>     var height: Int {
+>         get { return _height.wrappedValue }
+>         set { _height.wrappedValue = newValue }
+>     }
+>     var width: Int {
+>         get { return _width.wrappedValue }
+>         set { _width.wrappedValue = newValue }
+>     }
+> }
+> ```
+> 
+> 
+> 
+
+
 ## 22.08.01 : c++ container(map), Ray Casting
 
 > ## map
