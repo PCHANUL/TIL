@@ -21,23 +21,17 @@ $$
 
 ## 1. 초기화
 
-$$
-\Delta x = x_b - x_a \\
-\Delta y = y_b - y_a
-$$
+$\Delta x = x_b - x_a$  
+$\Delta y = y_b - y_a$  
 
-$$
-m = \frac{\Delta y}{\Delta x}\\
-$$
+$m = \frac{\Delta y}{\Delta x}$  
 
-$$
-x_1 = x_a\\
-y_1 = y_a
-$$
+$x_1 = x_a$  
+$y_1 = y_a$  
 
 ## 2. 연산
 
-- $m$이 $0 <= m <= 1$인 경우, 매번 $K + 1$번째 점$(1 \leq k \leq \Delta x)$에서  
+- $m$이 $0 <= m <= 1$인 경우, 매번 $K + 1$번째 점 $(1 \leq k \leq \Delta x)$ 에서  
 
 $x_{K+1} = x_k + 1$  
 $y_{K+1} = y_k + m$  
