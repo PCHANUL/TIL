@@ -4,6 +4,129 @@
 
 <hr>
 
+## 22.08.15 : DDA 알고리즘, 레이캐스팅
+> 
+> # Digital Differential Analyzer
+> 
+> DDA 알고리즘은 중간값을 취하지 않고 데이터를 한 자리씩 다루어서 정밀도를 높이는 알고리즘이다.  
+> 
+> ## 조건
+> 
+> 1. 먼저, 직선 기울기의 절대값을 확인한다.
+> 2. 기울기가 1보다 작으면 x축을 기준으로, 1보다 크면 y축을 기준으로 잡는다.
+> 3. 기준으로 잡은 축을 1씩 이동시키고, 다른 축에는 기울기를 더한다.
+> 4. 나온 값이 실수라면 반올림을 한 좌표에 점을 찍는다.
+> 
+> ## 레이캐스팅
+> 
+> DDA 알고리즘으로 좌표 상에 그려지는 광선을 추적하며 충돌하는 벽을 확인할 수 있다.  
+> 
+> 1. 반복문을 실행할 때마다 누적될 직선의 기울기 절대값을 확인한다.  
+> 2. x축 또는 y축으로 1씩 이동하며, 기울기 값을 더한다.  
+> 3. 이동된 좌표에 벽이 있는지 확인하고, 존재한다면 충돌되어 이동을 멈춘다.  
+> 
+> ![](src/dda_03.png)  
+> 
+> 위의 그림과 같이 sideDistX와 sideDistY에 deltaDist 값이 각각 더해진다. 값이 더해지는 순서는 sideDist 값을 비교하여 정한다.  
+> sideDistX가 sideDistY보다 작다면 sideDistX에 deltaDistX가 더해지며, x축으로 1만큼 이동시킨다.  
+> sideDistY가 sideDistX보다 작다면 sideDistY에 deltaDistY가 더해지며, y축으로 1만큼 이동시킨다.  
+> 이렇게 x축 또는 y축으로 1씩 이동시키며 해당 좌표에 벽이 있는지 확인한다.  
+> 
+> ## deltaDist  
+> 
+> 두 직각 삼각형이 닮음이라면, 대응되는 변의 길이에 대한 비율은 같다. 이를 활용하여 다음과 같이 delta 값을 구한다.  
+> 
+> ![](src/dda_01.png)  
+> ![](src/dda_02.png)  
+> 
+> - 광선의 방향벡터인 ray로 하나의 삼각형을 그린다.
+> - delta 값을 빗변의 길이로 가지는 삼각형을 그린다.
+> - 두 직각 삼각형은 예각의 각도가 같으므로 대응하는 변의 길이의 비가 같다.
+>   - $ray.x : 1 = v : dx$
+> - 그러므로 다음과 같은 공식이 만들어진다.
+>   - $dx = v / ray.x$
+> - delta 값은 앞으로 비율로써 계산하기 때문에 $v$를 1이라고 할 수 있다.
+>   - $dx = 1 / ray.x$
+> - delta 값은 절대값으로 충돌 지점을 만나기 전까지 누적된다.
+>   - $dx = |\ 1 / ray.x\ |$
+> - 코드로 구현하면 다음과 같다.
+>     ```c
+>     double delta_dist_x = abs(1 / ray_dir_x);
+>     double delta_dist_y = abs(1 / ray_dir_y);
+>     ```  
+> 
+> ## sideDist  
+> 
+> deltaDist를 구하는 방식처럼 닮음 조건을 활용하여 sideDist 값을 구할 수 있다.  
+> 
+> ![](src/dda_04.png)  
+> ![](src/dda_05.png)  
+> 
+> - delta 값을 구한 방식처럼 두 직각 삼각형의 변의 길이의 비율로 side 값을 구한다. 그러면 다음과 같은 식이 나온다.
+>     - $sideX = x \times dx$
+>     - $sideY = y \times dy$
+> - 시작점과 그리드 상의 좌표로 $x, y$를 구할 수 있다.
+>     - 광선방향X가  
+>     0보다 작다면 ( $x = posX - mapX$ ),  
+>     0보다 크다면 ( $x = mapX + 1.0 - posX$ )
+>     - 광선방향Y가  
+>     0보다 작다면 ( $y = posY - mapY$ ),  
+>     0보다 크다면 ( $y = mapY + 1.0 - posY$ )  
+> - $x, y$를 이전의 공식에 대입하면 다음과 같다.
+>     - 광선방향X가  
+>     0보다 작다면 ( $sideX = (posX - mapX) \times dx$ ),  
+>     0보다 크다면 ( $sideX = (mapX + 1.0 - posX) \times dx$  )  
+>     - 광선방향Y가  
+>     0보다 작다면 ( $sideY = (posY - mapY) \times dy$ ),  
+>     0보다 크다면 ( $sideY = (mapY + 1.0 - posY) \times dy$ )  
+>     
+> 
+> 
+
+
+
+
+
+
+
+## 22.08.13 : SwiftUI
+
+> # 동적으로 미리보기 생성
+> 
+> PreviewProvider에 코드를 추가하여 다양한 장치 크기에서 미리보기를 렌더링할 수 있다. 기본적으로 미리보기는 활성화된 scheme의 크기로 렌더링된다. Device() 수정자를 호출하여 미리보기 장치를 변경할 수 있다.  
+> 
+> ![](src/swiftui_01.png)  
+> 
+> 아래의 코드는 현재 리스트 미리보기를 iPhone SE 사이즈로 변경한다. Xcode의 scheme 메뉴에 있는 장치 이름을 넘겨주면 된다.  
+> 
+> ```swift
+> // ...
+> 
+> struct LandmarkList_Previews: PreviewProvider {
+>     static var previews: some View {
+>         LandmarkList()
+>             .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
+>     }
+> }
+> ```  
+> 
+> LandmarkList에 장치 이름 배열을 데이터로 사용할 수 있다. ForEash는 list와 동일한 방식으로 컬렉션에서 작동한다. 모든 child View를 사용하는 모든 곳에 사용할 수 있다. '\\.self' 데이터 요소가 여기에 사용하는 문자열과 단순한 값 유형인 경우 식별자에 대한 키 경로로 사용할 수 있다. 
+> 
+> ```swift
+> // ...
+> 
+> struct LandmarkList_Previews: PreviewProvider {
+>     static var previews: some View {
+>         ForEach(["iPhone SE (2nd generation)", "iPhone XS Max"], id: \.self) { deviceName in
+>             LandmarkList()
+>                 .previewDevice(PreviewDevice(rawValue: deviceName))
+>         }
+>     }
+> }
+> ```
+> 
+
+
 ## 22.08.11 : 직각삼각형의 비
 > 
 > 두 직각삼각형의 예각의 각도가 같다면 그 삼각형 안의 대응하는 변의 길이의 비도 같다.  
