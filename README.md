@@ -4,6 +4,97 @@
 
 <hr>
 
+## 22.08.18 : SwiftUI LazyVGrid
+
+> [ios13과 ios14에서 그리드 레이아웃을 구현하는 방법](https://betterprogramming.pub/the-swiftui-equivalents-to-uicollectionview-60415e3c1bbe)  
+> 
+> SwiftUI는 CollectionView을 지원하지 않기 때문에 UIKit에서 CollectionView를 가져와서 사용하거나 VStack, HStack으로 구현해야했다. 그러나 ios14 버전부터 LazyVGrid, LazyHGrid 라는 그리드 컨테이너를 지원한다.  
+> 
+> # LazyVGrid
+> 
+> 수직 방향의 그리드에 자식 뷰를 정렬하여 필요한 만큼만 항목을 생성하는 컨테이너 뷰이다.  
+> 
+> ```swift
+> init(
+> 	columns: [GridItem],
+> 	alignment: HorizontalAlignment,
+> 	spacing: CGFloat?,
+> 	pinnedViews: PinnedScrollableViews,
+> 	content: () -> Content
+> 	)
+> ```  
+> 
+> - columns: 그리드의 각 행의 크기와 위치를 지정하기 위한 GridItem의 배열
+> - alignment: 상위 뷰 내에서 그리드의 정렬
+> - spacing: 그리드와 상위 뷰의 다음 항목 사이의 간격
+> - pinnedViews: 부모 스크롤 뷰의 경계에 고정할 뷰
+> - content: 그리드의 내용 
+> 
+> 클로저에 제공하는 첫번째 content는 그리드의 맨 위 행에 나타난다. 첫번째 행을 선행 가장 자리에서 후행 가장자리로 채운 다음 두번째 행을 채우는 식으로 계속된다. 행의 수는 무제한으로 증가할 수 있지만 열의 수는 인자로 받은 GridItem 인스턴스에 따라서 지정된다.  
+> 
+> ```swift
+> struct VerticalSmileys: View {
+>     let columns = [GridItem(.flexible()), GridItem(.flexible())]
+> 
+>     var body: some View {
+>          ScrollView {
+>              LazyVGrid(columns: columns) {
+>                  ForEach(0x1f600...0x1f679, id: \.self) { value in
+>                      Text(String(format: "%x", value))
+>                      Text(emoji(value))
+>                          .font(.largeTitle)
+>                  }
+>              }
+>          }
+>     }
+> 
+>     private func emoji(_ value: Int) -> String {
+>         guard let scalar = UnicodeScalar(value) else { return "?" }
+>         return String(Character(scalar))
+>     }
+> }
+> ```  
+> 
+> ![](src/lazygrid_01.png)  
+> 
+> ## GridItem
+> 
+> lazy grid의 항목 레이아웃을 GridItem 인스턴스 배열을 사용하여 구성할 수 있다. 각각의 GridItem은 size와 spacing과 같은 레이아웃 속성을 지정한다.  
+> 
+> ```swift
+> struct GridItemDemo: View {
+>     let rows = [
+>         GridItem(.fixed(30), spacing: 1),
+>         GridItem(.fixed(60), spacing: 10),
+>         GridItem(.fixed(90), spacing: 20),
+>         GridItem(.fixed(10), spacing: 50)
+>     ]
+> 
+>     var body: some View {
+>         ScrollView(.horizontal) {
+>             LazyHGrid(rows: rows, spacing: 5) {
+>                 ForEach(0...300, id: \.self) { _ in
+>                     Color.red.frame(width: 30)
+>                     Color.green.frame(width: 30)
+>                     Color.blue.frame(width: 30)
+>                     Color.yellow.frame(width: 30)
+>                 }
+>             }
+>         }
+>     }
+> }
+> ```  
+> 
+> LazyHGrid는 열에서 가장 넓은 셀을 기준으로 각 열의 너비를 설정한다. 주어진 열의 모든 View에 한 번에 접근할 수 있기 때문에 이 작업을 수행할 수 있다. 위의 예에서 Color View는 항상 동일한 고정 너비를 가지므로 전체 그리드에서 열 너비가 균일하다.  
+> 
+> 그러나 LazyVGrid는 사람들이 앱의 정보를 스크롤할 때 새 셀을 생성하기 때문에 일반적으로 행의 모든 View에 액세스할 수 없다. 대신 각 행에 대한 정보는 그리드 항목에 의존한다. 위의 예는 각 행에 대해 서로 다른 고정 높이를 나타내고 각 행 뒤에 표시할 간격을 다르게 설정한다.  
+> 
+> ![](src/lazygrid_02.png)  
+> 
+> 
+
+
+
 ## 22.08.16 : 픽셀 단위 원 그리기
 
 > [Bresenham 알고리즘으로 원 그리기](https://reitbe.github.io/computergraphics/2022/07/30/CG-03-bresenham-algorithm-circle-drawing.html)
