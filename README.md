@@ -4,6 +4,94 @@
 
 <hr>
 
+## 22.08.20 : SwiftUI onDrag, onDrop, itemProvider
+
+> # onDrag
+> 
+> 해당 View를 끌어서 놓기 작업의 소스로 활성화한다.  
+> 
+> ```swift
+> func onDrag(
+> 	_ data: @escaping () -> NSItemProvider
+> ) -> some View
+> 
+> func onDrag<V>(
+> 	_ data: @escaping () -> NSItemProvider, 
+> 	preview: () -> V
+> ) -> some View where V : View
+> ```
+> 
+> ## Parameters
+> 
+> - `data` : 해당 View에서 드래그 가능한 데이터를 나타내는 하나의 [NSItemProvider](https://developer.apple.com/documentation/foundation/nsitemprovider)를 반환하는 클로저 함수이다. NSItemProvider는 프로세스 간에 데이터 또는 파일을 전달하기 위한 item provider이다.  
+> - `preview` : 그래그가 시작될 때 미리보기 소스가 되는 View를 반환한다. 미리보기는 소스 view의 중앙에 있다. 
+>   
+> # onDrop
+> 
+> 끌어서 놓기 작업의 대상을 정의한다. 지정된 클로저로 놓아진 컨텐츠를 처리한다.  
+> 
+> ```swift
+> func onDrop(
+>     of supportedContentTypes: [UTType],
+>     isTargeted: Binding<Bool>?,
+>     perform action: @escaping ([NSItemProvider]) -> Bool
+> ) -> some View
+> 
+> func onDrop(
+>     of supportedContentTypes: [UTType],
+>     isTargeted: Binding<Bool>?,
+>     perform action: @escaping ([NSItemProvider], CGPoint) -> Bool
+> ) -> some View
+> 
+> func onDrop(
+> 	of supportedContentTypes: [UTType],
+> 	delegate: DropDelegate
+> ) -> some View
+> ```
+> 
+> ## Parameters
+> 
+> - `supportedContentTypes` : 끌어서 놓기를 통해 수락할 수 있는 컨텐츠 유형을 설명하는 유형 식별자이다. 작업에 지원되는 유형이 없으면 놓기 대상이 활성화 되지 않고, 업데이트되지 않는다.  
+> - `isTargeted` : 끌어서 놓기 작업이 놓기 대상 영역에 들어오거나 나갈 때 업데이트되는 바인딩이다. 바인딩 값이 true이면 커서가 영역 내부에 있고, false라면 커서가 외부에 있다.  
+> - `action` : 놓아진 컨텐츠를 가져와서 적절하게 응답하는 클로저이다. action의 첫번째 매개변수인 [NSItemProvider]는 `supportedContentTypes`에 의해 지정된 유형과 함께 삭제된 항목 포함된다. 두번째 매개변수는 View의 좌표 공간에서 놓은 위치를 포함한다. 놓기 작업이 성공하면 true, 아니면 false를 반환한다.  
+> - `delegate` : DropDelegate 프로토콜을 준수하는 유형이다. 대리자를 사용하여 놓기 동작을 포괄적으로 제어할 수 있다. 
+> 
+> 
+> # itemProvider
+> 
+> 특정 데이터 요소에 사용할 드래그 표현을 반환하는 클로저를 제공한다.  
+> 
+> ```swift
+> func itemProvider(_ action: Optional<() -> NSItemProvider?>) -> some View
+> ```
+> 
+> # DropDelegate
+> 
+> 수정된 뷰에서 놓기 작업과 상호 작용하기 위해 구현하는 인터페이스이다.  
+> DropDelegate 프로토콜은 놓기 동작과 포괄적이고 유연하게 상호 작용하는 방법을 제공한다. `onDrop(of:delegate:)` 메서드로 놓기를 허용하도록 View를 수정할 때 dropDelegate를 지정한다.  
+> 또는 dropDelegate를 요구하지 않는 간단한 방법으로 `onDrop(of:isTargeted:perform:)`이나 `onDrop(of:isTargeted:perform:)` 메서드를 사용할 수 있다. 이 메서드들은 클로저를 사용하여 놓기 수정자의 일부 기능을 제공한다.  
+> 
+> ## Receiving drop infomation
+> 
+> - `func dropEntered(info: DropInfo)` : 수정된 View에 drop이 들어왔음을 delegate에게 알린다.
+> - `func dropExited(info: DropInfo)` : 수정된 View에서 drop이 나갔음을 delegate에게 알린다.
+> - `func dropUpdated(info: DropInfo) -> DropProposal?` : 수정된 View 안에서 drop이 움직임을 delegate에게 알린다.
+> - `func validateDrop(info: DropInfo) -> Bool` : 예상 유형 중 하나를 준수하는 항목을 포함하는 drop이 허용되는 View에 들어갔음을 delegate에게 알린다.
+> - `func performDrop(info: DropInfo) -> Bool` : 지정된 정보에서 항목 공급자 데이터를 요청할 수 있을을 delegate에게 알린다. 
+> 
+> # DropInfo
+> 
+> drop의 현재 상태이다.  
+> 
+> ```swift
+> struct DropInfo
+> ```  
+> 
+> - `var location: CGPoint` : drop View의 좌표 공간에서 드래그의 위치이다.
+> - `func hasItemsConforming(to: [UTType]) -> Bool` : 하나 이상의 항목이 지정된 균일 유형 식별자 중 하나 이상을 준수하는지 여부를 나타낸다.
+> - `func itemProviders(for: [UTType]) -> [NSItemProvider]` : 지정된 균일 유형 식별자 중 하나 이상을 준수하는 항목 공급자를 찾는다. 
+> 
+
 ## 22.08.18 : SwiftUI LazyVGrid
 
 > [ios13과 ios14에서 그리드 레이아웃을 구현하는 방법](https://betterprogramming.pub/the-swiftui-equivalents-to-uicollectionview-60415e3c1bbe)  
