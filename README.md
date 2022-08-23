@@ -4,7 +4,121 @@
 
 <hr>
 
-
+## 22.08.23 : NSItemProvider
+> 
+> [Data Delivery with Drag and Drop](https://velog.io/@inwoodev/July-02-2021-TIL-Today-I-Learned-Data-Delivery-with-Drag-and-Drop)  
+> [Action Extension](https://g-y-e-o-m.tistory.com/91)  
+> 
+> 
+> 끌어서 놓기 또는 복사/붙여넣기 작업으로 데이터 또는 파일을 전달하기 위한 아이템 공급자이다. 데이터 또는 파일을 호스트 앱에서 다른 앱으로 전달하거나, 다른 프로세스로 전달할 수 있다.  
+> 
+> ```swift
+> class NSItemProvider : NSObject
+> ```
+> 
+> NSItemProvider는 앱 확장의 개체인 `NSExtensionItem`에서 `attachments` 속성을 검사할 때 만난다.
+> 검사 중에 `hasItemConformingToTypeIdentitfier(_:)` 메서드를 사용하여 인식하는 데이터를 찾을 수 있다.  
+> 아이템 공급자는 UTI( Uniform Type Identifier ) 값을 사용하여 포함된 데이터를 식별한다.  
+> 확장에서 사용할 수 있는 데이터를 찾은 후에 `loadItem(forTypeIdentifier:options:completionHandler:)` 메서드를 호출하여 completion 핸들러에 전달되는 실제 데이터를 로드한다.  
+> 아래의 예시는 액션 확장을 구현한 코드이다. 텍스트 뷰에 있는 텍스트 데이터 값을 `UIActivityViewController`에 보내고, 해당 확장에서 작업 후에 핸들러를 통해 값을 가져와서 다시 활용한다.  
+> 
+> ```swift
+> import UIKit
+> import MobileCoreServices
+> 
+> class ViewController: UIViewController {
+> 
+>     @IBOutlet weak var textView: UITextView!
+>     override func viewDidLoad() {
+>         super.viewDidLoad()
+>         // Do any additional setup after loading the view, typically from a nib.
+>     }
+>     @IBAction func btnClicked(_ sender: UIButton) { var objectsToShare = [String]()
+>         
+>         if let text = textView.text {
+>             objectsToShare.append(text)
+>         }
+>         let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+>         activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+>         self.present(activityVC, animated: true, completion: nil)
+>         
+>         activityVC.completionWithItemsHandler =
+>             { (activityType, completed, returnedItems, error) in
+>                 
+>                 if returnedItems!.count > 0 {
+>                     
+>                     let textItem: NSExtensionItem =
+>                         returnedItems![0] as! NSExtensionItem
+>                     
+>                     let textItemProvider =
+>                         textItem.attachments![0] as! NSItemProvider
+>                     
+>                     if textItemProvider.hasItemConformingToTypeIdentifier(
+>                         kUTTypeText as String) {
+>                         
+>                         textItemProvider.loadItem(
+>                             forTypeIdentifier: kUTTypeText as String,
+>                             options: nil,
+>                             completionHandler: {(string, error) -> Void in
+>                                 let newtext = string as! String
+>                                 DispatchQueue.main.async {
+>                                     self.textView.text = newtext
+>                                 }
+>                         })
+>                     }
+>                 }
+>         }
+>     }
+> }
+> ```
+> 
+> 아이템 공급자를 생성하여 다른 프로세스에 데이터를 전달할 수 있다. 원래 데이터 아이템을 수정하는 확장은 호스트 앱으로 다시 보낼 새 NSItemProvider 개체를 만들 수 있다. 데이터 아이템을 생성할 때 데이터 개체와 해당 개체의 유형을 지정한다. 선택적으로 `previewImageHandler` 속성을 사용하여 데이터에 대한 미리보기 이미지를 생성할 수 있다. 
+> 
+> 단일 아이템 제공자는 사용자 정의 블록을 사용하여 다양한 형식으로 데이터를 제공할 수 있다.  
+> 아이템 제공자를 구성할 때 registerItem(forTypeIdentifier:loadHandler:) 메소드를 사용하여 블록과 각 블록이 지원하는 형식을 등록하면 된다.  
+> 클라이언트가 특정 형식의 데이터를 요청하면 아이템 공급자가 해당 블록을 실행하고 해당 블록은 데이터를 적절한 유형으로 강제 변환하여 클라이언트에게 반환하는 역할을 한다.  
+> 
+> 
+> ## Providing Data
+> 
+> ```swift
+> let image = UIImage(named: "Photo")
+> let itemProvider = NSItemProvider(object: image!)
+> ```
+> 
+> ## Retrieving Data
+> 
+> ```swift
+> itemProvider.loadObject(ofClass: UIImage.self) { (object, error) in
+> 	if let image = object as? UIImage {
+> 		DispatchQueue.main.async {
+> 			// Update UI
+> 		}
+> 	}
+> }
+> ```
+> 
+> ## Progress and Cancellation
+> 
+> ```swift
+> let progress = itemProvider.loadObject(ofClass: UIImage.self) { // returns progress
+> 	(object, error) in
+> 	
+> 	// ...
+> 	
+> }
+> 
+> let progressSoFar = progress.fractionCompleted
+> let isFinished = progress.isFinished
+> 
+> progress.cancel()
+> ```
+> 
+> # Uniform Type Identifiers
+> 
+> UTI는 변환되는 각 타입 포멧에 태그 값으로 주어서 드래그 된 아이템이 어떤 데이터 타입인지 식별할 수 있게 한다.  
+> 네이티브 파일 포맷의 경우에는 문자열로 태그를 줄 수 있고, kuttype을 활용하여 태그 값을 줄 수 있다.  
+> 
 
 ## 22.08.20 : SwiftUI onDrag, onDrop, itemProvider, DropDelegate
 
