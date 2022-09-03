@@ -4,6 +4,68 @@
 
 <hr>
 
+## 22.09.03 : Test
+
+> 
+> [뱅크샐러드 iOS팀이 숨쉬듯이 테스트코드 짜는 방식](https://blog.banksalad.com/tech/test-in-banksalad-ios-3/)  
+> [Testing & Debugging](https://minosaekki.tistory.com/40)  
+> 
+> # TDD를 향해서
+> 
+> 테스트 코드는 내가 만들어야 하는 코드를 작성하도록 강제하기 때문에 구현 전에 작성되어야 진가를 발휘한다. 그러나 TDD로 iOS 앱을 개발하려니 감이 잡히지 않는다. 처음부터 모든 것을 TDD로 개발할 필요는 없다. 테스트하기 쉬운 영역이 분명히 존재하며, 그 영역에서 시작하여 TDD로 구현하는 연습을 할 수 있다. 점점 영역을 확장하다보면 어느새 대부분의 스펙들을 TDD로 작성 할 수 있게 될 것이다.  
+> 
+> # 테스트 파일 생성
+> 
+> ```swift
+> import XCTest
+> 
+> class Tests_iOS: XCTestCase {
+> 
+>     override func setUpWithError() throws {
+>         // 여기에 설정 코드를 입력합니다. 이 메서드는 클래스의 각 테스트 메서드를 호출하기 전에 호출됩니다.
+> 
+>         // UI 테스트에서는 일반적으로 오류가 발생하면 즉시 중지하는 것이 가장 좋습니다.
+>         continueAfterFailure = false
+> 
+>         // UI 테스트에서는 테스트를 실행하기 전에 테스트에 필요한 초기 상태(예: 인터페이스 방향)를 설정하는 것이 중요합니다. setUp 메소드는 이를 수행하기에 좋은 위치입니다.
+>     }
+> 
+>     override func tearDownWithError() throws {
+>         // 여기에 분해 코드를 넣으십시오. 이 메서드는 클래스의 각 테스트 메서드를 호출한 후에 호출됩니다.
+>     }
+> 
+>     func testExample() throws {
+>         // UI 테스트는 테스트하는 애플리케이션을 시작해야 합니다.
+>         let app = XCUIApplication()
+>         app.launch()
+> 
+>         // XCTAssert 및 관련 함수를 사용하여 테스트가 올바른 결과를 생성하는지 확인하십시오.
+>     }
+> 
+>     func testLaunchPerformance() throws {
+>         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
+>             // 애플리케이션을 시작하는 데 걸리는 시간을 측정합니다.
+>             measure(metrics: [XCTApplicationLaunchMetric()]) {
+>                 XCUIApplication().launch()
+>             }
+>         }
+>     }
+> }
+> ```
+> 
+> - 파일에서 import하는 XCTest 프레임워크는 default 테스팅 라이브러리를 포함하고 있다. 
+> - Tests_iOS 클래스는 XCTestCase를 상속하고 있다. 
+> - Tests_iOS 클래스 안에 있는 defualt 메서드 중에 `setUpWithError`와 `tearDownWithError` 메서드는 테스트 과정에서 중요한 역할을 한다.
+> - `setUpWithError`는 클래스의 `test` 메서드가 호출되기 전에 호출되어 초기 상태를 설정한다.
+>   - 테스트 전에 앱이 특정 상태에 있는지 확인하고 변경된 사항을 되돌릴 수 있다. 
+>   - `continueAfterFailure` 값을 `false`로 설정하면 첫번째 실패 이후에 테스트 과정을 멈추게 한다. 
+> - `tearDownWithError`는 `test` 메서드가 완료될 때마다 호출된다. 
+> - 테스트 메서드 이름은 반드시 `test`로 시작해야 프레임 워크가 해당 테스트를 진행한다. 
+> 
+> 
+
+
+
 ## 22.08.25 : 그래픽스 찍먹하기 
 
 > # 그래픽스 찍먹하기(3차원 모델이 랜더링되는 과정을 살펴봅시다) - 42서울 청년멘토 deal
