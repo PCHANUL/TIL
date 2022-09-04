@@ -4,8 +4,160 @@
 
 <hr>
 
-## 22.09.03 : Test
+## 22.09.04 : VoiceOver와 친해지기
 
+> [보이스오버와 친해지기[유튜브]](https://www.youtube.com/watch?v=M3JF7ZJixaY&list=PLIGFku39tFfaVByI2WGSvxhQ2ZbCbnzzL&index=1)  
+> 
+> 아이폰 앱을 만드는데 접근성 지원이 중요하다. 특히, 시각장애인 접근성 지원이 중요하다.  
+> 아이폰의 VoiceOver 기능을 활용하자는 이야기를 꺼내면 다음과 같은 생각을 한다. 과연 시각장애인이 과연 앱을 자유롭게 사용할 수 있을까 하는 의구심과 만약에 VoiceOver 기능을 지원한다고 하면 굉장히 많은 일을 해야 한다고 생각할 수 있다. 그러나 조금씩만 신경 쓰면 지원이 가능하고, 이를 통해 더 많은 사람들에게 편의성을 제공할 수 있다면 해야 한다고 생각한다. 
+> 
+> 
+> ## 통합 UI테스트 도입의 선행작업  
+> [뱅크샐러드 통합UI테스트](https://blog.banksalad.com/tech/test-in-banksalad-ios-1/)  
+> 
+> 테스트를 작성하려고 시도했을 때, 마음처럼 되지 않는 경험을 할 수 있다. 이런 경우는 앱의 접근성 경험이 제대로 갖춰지지 않아서 생긴 문제일 가능성이 크다. 통합 UI테스트에서 실제로 버튼을 누르는 UITestRunner는 "접근성 트리"를 활용해서 버튼을 찾기 때문이다. 컴퓨터에는 눈이 없기 때문에 시각 장애인이 앱을 사용하는 방식과 같이 동작하는 것이다. 그렇기 때문에 통합 UI테스트를 도입하기 전에 VoiceOver로 앱을 충분히 사용할 수 있도록 작업을 해야한다. VoiceOver 지원 작업은 쉽다. UI레이어 차원의 작업이므로 비주얼한 영역에 전혀 영향을 끼치지 않는 작업이기 때문이다.  
+> 
+> ## 단위 테스트
+> [뱅크샐러드 스펙별 단위 테스트](https://blog.banksalad.com/tech/test-in-banksalad-ios-3/)  
+> 
+> 테스트 코드 작성은 쉽고, 빠르게 작성할 수 있으며, 앱의 기능 대부분을 테스트할 수 있고, 장기적인 차원 뿐만 아니라 단기적인 차원에서 개발 속도를 훨씬 빠르게 만들어 준다. 뱅크샐러드에서는 최대한 단순하고 일관된 형태로 단위 테스트를 작성할 수 있는 도구들을 `TestUtility`라는 모듈에서 관리하고 있다.  
+> 
+> 1. BaseTestCase : 모든 테스트 케이스들의 기반이 된다. 테스트 코드들이 given, when, then의 문법으로 짜일 수 있는 구조를 제공한다.  
+> 2. RxTestCase : RxSwift로 비동기 로직을 관리하기 때문에 Rx를 통한 입력과 출력을 확인하는 테스트 케이스가 대부분이다.  
+> 3. EventLoggingTestCase : 로깅은 눈에 보이지 않기 때문에 문제를 인지하는데 시간이 오래걸린다. 그렇기 때문에 가장 먼저 테스트해야 한다.  
+> 4. PresentationTestCase : Form 필드의 로직을 하나씩 테스트하기보다 큰 틀에서 Form 전체를 하나의 인풋으로 보고, 화면전환 여부를 하나의 아웃풋으로 보는 테스트를 작성할 수 있다.  
+> 
+> ### BaseTestCase
+> 
+> ```swift
+> open class BaseTestCase: XCTestCase {
+>     /// 초기에 주입받아야 할 데이터를 지정합니다
+>     open func given(_ task: () -> Void) {
+>         task()
+>     }
+> 
+>     /// 발생해야 할 이벤트, 또는 메소드 호출등을 실행시킵니다
+>     open func when(_ task: () -> Void) {
+>         task()
+>     }
+> 
+>     /// 결과 값이 기대와 같은지 확인합니다
+>     open func then(_ task: () -> Void) {
+>         task()
+>     }
+> }
+> ```
+> 
+> ### RxTestCase
+> 
+> BaseTestCase를 상속받는다.  
+> RxTestCase에서는 `when(observing: Observer)` 메소드가 추가된다. 매개변수인 Observer는 resultEvents에 이벤트를 전달해서 테스트의 마지막인 `then`에서는 언제나 resultEvents에 이벤트들이 쌓여있는지 검사한다. 이렇게 입력과 출력을 명확히 함으로써 가독성을 향상시키고, TestScheduler 관련 보일러플레이트 코드들을 최대한 줄여서 테스트 코드가 3줄 내외로 작성될 수 있도록 했다.  
+> 
+> ```swift
+> /// Rx로 만들어진 이벤트 스트림을 테스트하는 테스트케이스
+> open class RxTestCase<T>: BaseTestCase {
+>     open var scheduler: TestScheduler!
+>     open var disposeBag: DisposeBag!
+>     private var resultObserver: TestableObserver<T>!
+> 
+>     /// 이 TestCase에서 관측하고자 하는 대상을 설정합니다.
+>     open var eventsToObserve: Observable<T> = .empty() {
+>         didSet {
+>             disposeBag = DisposeBag()
+>             scheduler = TestScheduler(initialClock: 0)
+>             resultObserver = scheduler.createObserver(T.self)
+>             eventsToObserve.bind(to: resultObserver).disposed(by: disposeBag)
+>         }
+>     }
+> 
+>     open func when(observing events: Observable<T>, _ task: () -> Void) {
+>         self.eventsToObserve = events
+>         task()
+>         executeEvents()
+>     }
+> 
+>     // 이 테스트에서 처리해야 할 입력을 편하게 생성하도록 합니다.
+>     open func createEvents<U>(_ events: [Recorded<Event<U>>], to relay: PublishRelay<U>) {
+>         scheduler.createHotObservable(events)
+>             .bind(to: relay)
+>             .disposed(by: disposeBag)
+>     }
+> 
+>     open func createEvents<U>(_ events: [Recorded<Event<U>>], to subject: PublishSubject<U>) {
+>         scheduler.createHotObservable(events)
+>             .bind(to: subject)
+>             .disposed(by: disposeBag)
+>     }
+> 
+>     open func executeEvents(advanceTo futureTime: VirtualTimeScheduler<TestSchedulerVirtualTimeConverter>.VirtualTime = 10) {
+>         scheduler.start()
+>         scheduler.advanceTo(futureTime)
+>         scheduler.stop()
+>     }
+> 
+>     /// 테스트의 결과. 테스트의 마지막에는 , 이 값에 기대한 값이 들어있는지 확인한다.
+>     open var resultEvents: [Recorded<Event<T>>] {
+>         resultObserver.events
+>     }
+> }
+> ```
+> 
+> ```swift
+> class SampleRxTestCase: RxTestCase<String> {
+> 
+>     func test버튼하나만_누르면_동작_안함() {
+>         given {
+>             viewModel = SampleViewModel(data: "Hello")
+>         }
+> 
+>         when(observing: viewModel.log) {
+>             createEvents([.next(0, Void())], to: viewModel.aButtonClicked)
+>         }
+> 
+>         then {
+>             XCTAssert(resultEvents.isEmpty)
+>         }
+>     }
+> 
+>     func test버튼_두개를_눌러야_동작함() {
+>         given {
+>             viewModel = SampleViewModel(data: "World")
+>         }
+> 
+>         when(observing: viewModel.log) {
+>             createEvents([.next(0, Void())], to: viewModel.aButtonClicked)
+>             createEvents([.next(1, Void())], to: viewModel.bButtonClicked)
+>         }
+> 
+>         then {
+>             XCTAssert(resultEvents == [.next(1, "World")])
+>         }
+>     }
+> } 
+> ```
+> 
+> ### EventLoggingTestCase
+> 
+> 로깅을 뱅크샐러드에서는 `EventLogger` 라는 도구를 활용해 기록한다. 이 도구에서 이벤트를 기록했는지 여부를 테스트코드에서 관측할 수 있도록 돕는 `eventObserver` 속성을 추가했다. 그러므로 EventLogging 관련 코드를 테스트 할 때, 출력은 언제나 eventObserver의 내용이다.  
+> 코드는 간단하지만 이벤트 코드에 대한 테스트의 중요성을 프로젝트 차원에서 강조하기 위해 EventLoggingTestCase를 만들었다. 또한, 검색을 통해서 관련 예제를 빠르게 찾아볼 수 있다는 효과도 있다.  
+> 
+> ```swift
+> open class EventLoggingTestCase: RxTestCase<(name: String, properties: [String: Any]?)> {
+>     open override func setUpWithError() throws {
+>         try super.setUpWithError()
+>         EventLogger.eventObserver = PublishSubject<(name: String, properties: [String: Any]?)>()
+>     }
+> 
+>     open override func when(_ task: () -> Void) {
+>         eventsToObserve = EventLogger.eventObserver
+>         task()
+>         executeEvents()
+>     }
+> }
+> ```
+> 
+
+## 22.09.03 : Test
 > 
 > [뱅크샐러드 iOS팀이 숨쉬듯이 테스트코드 짜는 방식](https://blog.banksalad.com/tech/test-in-banksalad-ios-3/)  
 > [Testing & Debugging](https://minosaekki.tistory.com/40)  
@@ -63,8 +215,6 @@
 > - 테스트 메서드 이름은 반드시 `test`로 시작해야 프레임 워크가 해당 테스트를 진행한다. 
 > 
 > 
-
-
 
 ## 22.08.25 : 그래픽스 찍먹하기 
 
