@@ -4,6 +4,39 @@
 
 <hr>
 
+## 22.09.06 : 테스트 케이스 및 테스트 방법 정의
+> 
+> [테스트 케이스 및 테스트 방법 정의](https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods)  
+> 
+> 프로젝트에 테스트를 추가하기
+> - 테스트 대상 내에서 XCTestCase의 새 하위 클래스를 만든다.
+> - 테스트 케이스에 하나 이상의 테스트 메소드를 추가한다.
+> - 각 테스트 방법에 하나 이상의 테스트 어설견을 추가한다.
+> 
+> 테스트 메서드는 XCTestCase의 하위 클래스의 메서드이며, 매개 변수과 반환 값이 없고, 메소드 이름이 소문자 `test`로 시작해야 한다. 테스트 메소드는 XCTest 프레임 워크에 의해 자동으로 감지된다. 아래의 코드는 테스트 케이스와 테스트 메소드 예시이다.  
+> 
+> ```swift
+> class TableValidationTests: XCTestCase {
+> 	// 새 테이블 인스턴스에 행과 열이 없는지 테스트한다.
+> 	func testEmptyTableRowAndColumnCount() {
+> 		let table = Table()
+> 		XCTAssertEqual(table.rowCount, 0, "Row count was not zero.")
+> 		XCTAssertEqual(table.columnCount, 0, "Column count was not zero.")
+> 	}
+> }
+> ```
+> 
+> 예시 코드에서는 `TableValidationTests`라는 클래스와 `testEmptyTableRowAndColumnCount()`라는 테스트 메소드를 정의했다. 이 테스트 메소드는 `Table` 인스턴스를 생성하고 `rowCount`와 `columnCount` 속성이 0인지 확인한다.  
+> 
+> 테스트 구성을 명확히 하려면 테스트 케이스 이름을 테스트를 요약하는 이름으로 지정하고, 테스트 메소드 이름은 실패한 테스트를 식별하는데 도움이 되도록 테스트하는 항목을 명확히하는 이름을 지정하면 좋다.  
+> 
+> ### Asserting Test Conditions
+> 
+> 코드가 예상대로 작동하는지 확인하기 위해 테스트 메소드 내에서 조건을 확인할 수 있다. XCTAssert 함수군을 사용해서 Boolean 조건, nil 또는 non-nil 값, 예상한 값, 그리고 애러 발생을 체크하면 된다.  
+> 
+> 
+
+
 ## 22.09.04 : VoiceOver와 친해지기
 
 > [보이스오버와 친해지기[유튜브]](https://www.youtube.com/watch?v=M3JF7ZJixaY&list=PLIGFku39tFfaVByI2WGSvxhQ2ZbCbnzzL&index=1)  
