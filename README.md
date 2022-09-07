@@ -4,6 +4,50 @@
 
 <hr>
 
+## 22.09.07 : 테스트 빌드
+
+> [@testable import에 대한 고찰](https://zeddios.tistory.com/1078)  
+> [UITest에서는 앱 모듈에 접근할 수 없다](https://stackoverflow.com/questions/33755019/linker-error-when-accessing-application-module-in-ui-tests-in-xcode-7-1?rq=1)  
+> 
+> UI Test에서는 앱 코드에 접근할 수 없으며, 별도의 프로세스로 앱 외부에서 실행된다. 이는 UI 테스트에서 앱 코드에 접근하지 못하도록 의도된 디자인이라고 한다. 앱 코드에 접근하기 원하면 Unit Test를 사용해야 한다.  
+> 
+> ## @testable import 
+> 
+> import에 @testable을 추가하면 Target에 대한 높은 접근 권한을 가지게 된다.  
+> 
+> ```swift
+> import XCTest
+> @testable import TargetName
+> ```  
+> 
+> Unit 테스트를 작성하면 앱 코드에 접근하기 위해 다음과 같이 코드를 작성한다. Target은 앱, 번들, 프레임워크 등이 될 수 있으며 Swift에서 별도의 module로 처리된다. 그래서 각각의 Target의 코드가 public이나 open으로 작성되어있지 않으면 접근할 수 없다. Swift 클래스는 internal이 default Access level이다. 기본적으로 클래스는 외부에서 접근할 수 없도록 정의되기 때문에 모든 정의를 public으로 정해야 한다. 이는 Swift의 type safety를 저해하기 때문에 @testable을 추가하여 높은 접근 권한을 가지도록 한다. internal이나 public으로 표시된 클래스는 open처럼 사용할 수 있다.  
+> 
+> 
+> ## Access level
+> 
+> [접근 한정자](https://blog.asamaru.net/2017/01/04/swift-3-access-controls/)  
+> 
+> ### open
+> 
+> 소속 모듈을 import하는 모든 모듈에서 class와 class 맴버에 접근하고, sub class를 생성하거나 메소드를 override할 수 있다. 
+> 
+> ### public
+> 
+> open과 동일한 접근을 허용하지만 외부 모듈에서 sub class 생성과 override가 제한된다. 
+> 
+> ### internal
+> 
+> 기본 접근 수준으로써 접근 한정자가 지정되지 않은 경우에 설정된다. 소속 모듈에서 사용할 수 있지만 외부 모듈에서는 접근할 수 없다.
+> 
+> ### fileprivate
+> 
+> 소속 소스 파일 내에서만 접근 가능하다.
+> 
+> ### private
+> 
+> 현재 소스를 둘러싸는 선언 내에서만 접근 가능하다. 
+
+
 ## 22.09.06 : 테스트 케이스 및 테스트 방법 정의
 > 
 > [테스트 케이스 및 테스트 방법 정의](https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods)  
