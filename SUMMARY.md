@@ -1,8 +1,10 @@
 # Table of contents
 
 * [Today I Learned](README.md)
-  * [22.06](TodayILearned/22.06.md)
-  * [22.05](TodayILearned/22.05.md)
+  * [22.08](TodayILearned/22_08.md)
+  * [22.07](TodayILearned/22_07.md)
+  * [22.06](TodayILearned/22_06.md)
+  * [22.05](TodayILearned/22_05.md)
 * [devLog](devLog/README.md)
   * [Gridot](devLog/Gridot.md)
 * [42Seoul](42Seoul/README.md)
