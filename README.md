@@ -4,6 +4,25 @@
 
 <hr>
 
+## 22.09.11 : @Binding
+
+> ## @Binding 변수 초기화
+> 
+> [SwiftUI: How to implement a custom init with @Binding variables](https://stackoverflow.com/questions/56973959/swiftui-how-to-implement-a-custom-init-with-binding-variables)  
+> 
+> 바인딩 매개변수를 초기화한다. 속성 래퍼인 `@Binding`을 사용하는 변수를 초기화하기 위해서는 언더바를 앞에 붙히면 된다.  
+> 
+> ```swift
+> struct AmountView: View {
+> 	@Binding var amount: Double
+> 	
+> 	init(withAmount: Binding<Double>) {
+> 		// self.$amount = withAmount	// beta 3
+> 		self._amount = withAmount	// beta 4
+> 	}
+> }
+> ```
+
 ## 22.09.07 : 테스트 빌드
 
 > [@testable import에 대한 고찰](https://zeddios.tistory.com/1078)  
