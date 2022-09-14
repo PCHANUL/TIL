@@ -4,8 +4,8 @@
 
 - [String, Character](#string-character)
 	- [String Indices](#string-indices)
+	- [Inserting and Removing](#inserting-and-removing)
 	- [Substrings](#substrings)
-
 
 ## String Indices
 Swift에서는 문자열의 인덱스를 표현하기 위해 `String.Index` 라는 타입을 사용한다. 문자들이 저장하는 메모리 양이 다를 수 있으며, 어떤 `Character` 가 특정 위치에 있는지 결정하기 위해서 시작이나 끝으로 각 유니코드 스칼라를 반복한다. 그러므로 Swift 문자열은 정수형 값으로 인덱스될 수 없다.
@@ -33,6 +33,32 @@ Swift에서는 문자열의 인덱스를 표현하기 위해 `String.Index` 라�
  print(str.index(str.startIndex, offsetBy: 6))	// "w"
  ```
 
+## Inserting and Removing
+
+문자열의 삽입 메소드에는 `insert(_:at:)`와 `insert(contentsOf:at:)`가 있다.    
+
+```swift
+var welcome = "hello"
+welcome.insert("!", at: welcome.endIndex)
+// welcome now equals "hello!"
+
+welcome.insert(contentsOf: " there", at: welcome.index(before: welcome.endIndex))
+// welcome now equals "hello there!"
+```
+
+문자열의 제거 메소드에는 `remove(at:)`와 `removeSubrange(_:)`가 있다.  
+
+```swift
+welcome.remove(at: welcome.index(before: welcome.endIndex))
+// welcome now equals "hello there"
+
+let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndex
+welcome.removeSubrange(range)
+// welcome now equals "hello"
+```
+
+> `RangeReplaceableCollection` 프로토콜을 준수하는 모든 타입에서 위의 4가지 메소드를 사용할 수 있다. 즉, `Array, Dictionary, Set`과 같은 컬렉션 타입에서 같은 메소드를 사용할 수 있다.  
+
 ## Substrings
  문자열에서 부분 문자열을 얻고자 할때 `Substring`의 인스턴스가 된다. Swift에서 부분 문자열은 대부분 문자열과 같은 메소드를 가지고 있으며, 문자열을 작업하는 같은 방법으로 부분 문자열을 작업할 수 있다. 문자열과 부분 문자열의 다른점은 성능 최적화이다. 부분 문자열은 원본 문자열의 저장소를 재사용하기 때문에 수정되기 전까지 메모리에 복사하는 성능 비용을 지불하지 않는다. 부분 문자열이 사용되는 동안은 전체 원본 문자열은 반드시 메모리에 유지되어야 한다. 아래의 그림은 `String`과 `Substring`의 관계를 보여준다.
 
@@ -49,4 +75,5 @@ Swift에서는 문자열의 인덱스를 표현하기 위해 `String.Index` 라�
 
 [참조]  
 [문자열과 문자](https://kka7.tistory.com/140)  
-[문자열 다루기](http://seorenn.blogspot.com/2018/05/swift-string-index.html)
+[문자열 다루기](http://seorenn.blogspot.com/2018/05/swift-string-index.html)  
+

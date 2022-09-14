@@ -4,6 +4,99 @@
 
 <hr>
 
+## 22.09.14 : Swift Map, Filter, Reduce
+> 
+> # Map
+> 
+> `map`은 기존 데이터에서 변형된 새로운 컨테이너를 반환한다. 기존 데이터는 변형되지 않는다.  
+> 
+> ## 선언
+> 
+> ```swift
+> func map<T>(_ transform: (Self.Element) throws -> T) rethrows -> [T]
+> ```
+> 
+> ## 반환값
+> 
+> 시퀀스의 변환된 요소를 포함하는 배열을 반환한다.
+> 
+> ## 매개변수
+> 
+> `transform` : 매핑 클로저. 시퀀스의 요소를 매개변수로 받고, 동일하거나 변환된 값을 반환한다.
+> 
+> ## 예제
+> 
+> ```swift
+> let cast = ["Vivien", "Marlon", "Kim", "Karl"]
+> let lowercaseNames = cast.map { $0.lowercased() }
+> // 'lowercaseNames' == ["vivien", "marlon", "kim", "karl"]
+> let letterCounts = cast.map { $0.count }
+> // 'letterCounts' == [6, 6, 3, 4]
+> ```
+> 
+> # Filter
+> 
+> `filter`는 데이터에서 걸러낸 새로운 컨테이너를 반환한다.  
+> 
+> ## 선언
+> 
+> ```swift
+> func filter(_ isIncluded: (Self.Element) throws -> Bool) rethrows -> [Self.Element]
+> ```
+> 
+> ## 반환값
+> 
+> 스퀀스의 필터링된 요소를 포함하는 배열을 반환한다.
+> 
+> ## 매개변수
+> 
+> `isIncluded` : 시퀀스의 요소를 인수로 사용하고 요소가 반환된 배열에 포함되어야 하는지 여부를 나타내는 Boolean 값을 반환한다.
+> 
+> ## 예제
+> 
+> ```swift
+> let cast = ["Vivien", "Marlon", "Kim", "Karl"]
+> let shortNames = cast.filter { $0.count < 5 }
+> print(shortNames)
+> // Prints "["Kim", "Karl"]"
+> ```  
+> 
+> 
+> # Reduce
+> 
+> `reduce`는 시퀀스의 요소를 결합한 결과를 반환한다.
+> 
+> ## 선언
+> 
+> ```swift
+> func reduce<Result>(
+>     _ initialResult: Result,
+>     _ nextPartialResult: (Result, Self.Element) throws -> Result
+> ) rethrows -> Result
+> ```
+> 
+> ## 반환값
+> 
+> 최종 누적 값을 반환한다. 만약 시퀀스에 요소가 없다면 `initialResult`가 반환된다.
+> 
+> ## 매개변수
+> 
+> `initialResult` : 초기 누적 값으로 사용할 값이다. 클로저가 처음 실행될 때 전달된다. 
+> `nextPartialResult` : 클로저의 다음 호출에 사용되거나 호출자에게 반환될 누적 값과 시퀀스 요소를 새로운 누적 값으로 결합하는 클로저  
+> 
+> ## 예제
+> 
+> ```swift
+> let numbers = [1, 2, 3, 4]
+> let numberSum = numbers.reduce(0, { x, y in
+>     x + y
+> })
+> // numberSum == 10
+> ```
+> 
+
+
+
 ## 22.09.13 : safe index, Generic
 > 
 > [Handling Index Out of Range Exception the Swift Way](https://www.vadimbulavin.com/handling-out-of-bounds-exception/)  

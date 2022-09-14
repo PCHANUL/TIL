@@ -14,7 +14,7 @@
 * [Swift](swift/README.md)
   * [SwiftUI](swift/SwiftUI/README.md)
     * [Lifecycle](swift/SwiftUI/Lifecycle.md)
-    * [Scene](swift/SwiftUI/README.md)
+    * [Scene](swift/SwiftUI/Scene/README.md)
       * [Scene](swift/SwiftUI/Scene/Scene.md)
       * [ScenePhase](swift/SwiftUI/Scene/ScenePhase.md)
       * [WindowGroup](swift/SwiftUI/Scene/WindowGroup.md)
