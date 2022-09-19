@@ -1,6 +1,13 @@
 # Gridot  
 
-# DevLog
+## Todos
+
+- [ ] Gallery
+  - [ ] Home
+  - [ ] Asset
+  - [ ] Export
+
+## DevLog
 
 ### 22.09.13 : 테스트 케이스
 

@@ -4,7 +4,44 @@
 
 <hr>
 
-## 22.09.18 : 프로그래밍 패러다임
+## 22.09.19 : MVVM
+> 
+> 그리닷 앱을 SwiftUI로 다시 개발하는 과정에서 기존의 코드를 읽게 되었다. 하나씩 읽어보니 코드 구조가 이상했다. 앱의 상당 부분이 Canvas라는 UIView에 의존하고 있었다. 어떠한 View가 ViewModel에 접근하기 위해서 Canvas를 참조하는 구조였다. 이상한 구조를 가지게된 이유는 개발 방식에 있었다. 처음에 Canvas를 구현하고 필요한 기능을 구현하여 붙이는 방식으로 개발하였기 때문이다. 덕분에 구조의 중요성을 깨달았다.  
+> 
+> ## MVVM
+> 
+> [MVVM 패턴](https://velog.io/@k7120792/Model-View-ViewModel-Pattern)  
+> [Model-View-ViewModel Pattern 문서](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm)  
+> 
+> MVVM 패턴은 마틴 파울러의 Presentation 모델 패턴에서 파생되었다. 이 패턴은 비즈니스 로직과 프레젠테이션 로직을 UI로부터 분리하기 위해 사용된다. UI와 로직이 분리되면 테스트, 유지 보수, 재사용이 쉬워진다. 또한, 개발자와 디자이너가 앱의 각 부분을 개발할 때 보다 쉽게 협업할 수 있다.  
+> 
+> ## 구성 요소
+> 
+> Model, View, View Model로 구성되어 있다. 이 3가지 구성 요소의 역할과 책임을 이해하기 위해서는 이들 사이의 관계를 알아야 한다. View는 ViewModel을 알고, ViewModel은 Model을 알고 있다. 그러나 반대 방향으로는 모르는 상태이다. Model은 ViewModel을 모르고, ViewModel은 View를 모른다. 이런 관계의 구조는 ViewModel과 Model이 독립적인 형태를 만들어서 View로부터 분리되는 목적을 이룬다.  
+> 
+> ![](./src/mvvm_01.png)  
+> 
+> ### View 
+> 
+> View는 사용자가 보는 스크린의 레이아웃과 형태를 정의한다. View는 애니메이션과 같은 UI로직을 포함하지만 비즈니스 로직은 포함하지 말아야 한다.  
+> 
+> View는 개체를 시각적으로 나타내는데 사용할 UI 요소를 지정하는 데이터 템플릿으로도 나타낼 수 있다. 특정 ViewModel에 바인딩되도록 설계된다.  
+> 
+> View에서 클릭과 같은 상호작용을 ViewModel에서 실행시키는 방법은 여러가지가 있다. 컨트롤이 Command를 지원하는 경우에 Command의 속성에 ViewModel이 바인딩될 수 있다. Command가 호출되면 ViewModel의 코드가 실행된다. 이외에도 동작을 View의 개체에 첨부하여 호출할 명령이나 발생할 이벤트를 수신할 수 있다.  
+> 
+> ### ViewModel
+> 
+> ViewModel은 View가 사용할 메소드와 필드를 구현하고, View에게 상태 변화를 알린다. ViewModel에서 제공하는 메소드와 필드가 UI에서 제공할 기능을 정의한다. View는 기능을 어떻게 보여줘야하는지 결정한다.  
+> 
+> ViewModel은 View가 사용하기 쉽도록 Model의 데이터를 가공하여 View에게 제공한다. 만약에 View에서 서로 다른 Model들의 데이터를 사용해야 한다면 ViewModel에서 Model의 데이터를 처리하여 View에 제공한다.  
+> 
+> ### Model
+> 
+> Model은 앱의 데이터를 캡슐화하는 비시각적 클래스이다. 일반적으로 비즈니스 및 유효성 검사 논리와 함께 데이터 모델을 포함하는 앱의 도메인 모델을 나타내는 것으로 생각할 수 있다. 데이터 액세스 및 캐싱을 캡슐화하는 서비스 또는 리포지토리와 함께 사용된다. 
+> 
+
+
+## 22.09.18 : 프로그래밍 패러다임, Swift View UnitTest
 
 > [프로그래밍 패러다임](https://ko.wikipedia.org/wiki/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D_%ED%8C%A8%EB%9F%AC%EB%8B%A4%EC%9E%84)  
 > 
@@ -45,7 +82,6 @@
 > ## 디자인 패턴
 > 
 > 반복적으로 사용하는 설계 패턴이다. GOF의 디자인 패턴이 가장 유명하다.  
-> 
 > 
 
 
