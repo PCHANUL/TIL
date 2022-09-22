@@ -49,7 +49,7 @@ MateriaSource에서 모든 Materia를 관리하는 경우에는 문제가 발생
 # cpp05 - Exception
 
 cpp05는 std::exception 클래스를 상속받는 예외 객체를 재정의하고 예외 상황에서 사용해본다.  
-예외 처리는 try~catch 구문과 throw로 구현된다. 예외가 발생할 수 있는 영역을 try로 감싸고, 이 영역에서 throw로 예외가 던져진다면 catch 영역에서 예외를 받는다. 예외 영역에서는 처리하려는 예외의 타입을 정할 수 있다. 이 과제에서는 catch 영역에서 (const std::exception &)를 받는다.
+예외 처리는 try~catch 구문과 throw로 구현된다. 예외가 발생할 수 있는 영역을 try로 감싸고, 이 영역에서 throw로 예외가 던져진다면 catch 영역에서 예외를 받는다. 예외 영역에서는 처리하려는 예외의 타입을 정할 수 있다. 이 과제에서는 catch 영역에서 (const std::exception &)를 받는다.  
 
 ### ex00 - Bureaucrat
 
