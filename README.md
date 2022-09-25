@@ -4,6 +4,265 @@
 
 <hr>
 
+## 22.09.25 : MVC, MVP, MVVM 비교
+
+> [[디자인 패턴] MVC, MVP, MVVM 비교](https://beomy.tistory.com/43)  
+> 
+> 유명하고 많이 쓰이는 디자인 패턴인 MVC 패턴과 MVC에서 파생된 MVP와 MVVM 패턴을 비교하며 어떤 패턴을 사용해야 하는지 생각해본다.  
+> 디자인 패턴의 목적은 `역할의 분리`이다. 각각의 역할을 나누어 코드를 관리하면 유지보수와 개발 효츌이 좋아지기 때문이다.  
+> 
+> ### MVC
+> 
+> MVC 패턴은 Model, View, Controller로 이루어진다.  
+> 
+> - View : 유저 인터페이스
+> - Controller : 유저의 입력 처리
+> - Model : 데이터 처리
+> 
+> ![](./src/architecture_01.png)  
+> 
+> MVC 패턴의 동작 순서는 다음과 같다.  
+> - Controller에 유저의 Action이 들어온다.
+> - Controller는 유저의 Action을 확인하고, Model을 업데이트한다.
+> - Controller는 업데이트된 Model을 보여줄 View를 선택한다.
+> - View는 Model을 화면에 보여준다.
+> 
+> MVC 패턴에서 View가 업데이트 되는 방법은 다음과 같다.
+> - View가 Model을 이용하여 직접 업데이트
+> - Model에서 View에 Notify하여 업데이트
+> - View가 주기적으로 Model의 변경을 감자하여 업데이트
+> 
+> MVC 패턴은 가장 단순하며 보편적으로 많이 사용되는 디자인 패턴이다. 그러나 View와 Model의 높은 의존성 때문에 어플리케이션이 커질수록 복잡해지고 유지보수가 어렵다.  
+> 
+> ### MVP
+> 
+> MVP 패턴은 Model, View, Presenter로 이루어진다.  
+> 
+> - View : 유저 인터페이스
+> - Presenter : Model을 가공하여 View에 전달하며 이어주는 역할
+> - Model : 데이터 처리
+> 
+> ![](./src/architecture_02.png)  
+> 
+> MVP 패턴의 동작 순서는 다음과 같다.  
+> - View에 유저의 Action이 들어온다.
+> - View는 Presenter에 데이터를 요청하고, Presenter는 Model에 데이터를 요청한다.
+> - Model은 Presenter에 데이터로 응답하고, Presenter는 View에 데이터로 응답한다.
+> - View는 Presenter가 응답한 데이터를 화면에 보여준다. 
+> 
+> MVP 패턴은 View와 Model의 의존성이 없지만 View와 Presenter의 의존성이 높다. 어플리케이션이 복잡할 수록 View와 Presenter의 의존성이 강해진다.  
+> 
+> ### MVVM
+> 
+> MVVM 패턴은 Model, View, ViewModel로 이루어진다.  
+> 
+> - View : 유저 인터페이스
+> - ViewModel : View를 표현하기 위한 데이터를 처리하는 Model
+> - Model : 데이터 처리
+> 
+> ![](./src/architecture_03.png)  
+> 
+> MVVM 패턴의 동작 순서는 다음과 같다.  
+> - View에 유저의 Action이 들어온다.
+> - View는 Action을 Command 패턴으로 ViewModel에 Action을 전달한다.
+> - ViewModel은 Model에 데이터를 요청한다.
+> - Model은 ViewModel에 데이터로 응답한다.
+> - ViewModel은 응답받은 데이터를 가공하여 저장한다.
+> - View는 Data Binding된 ViewModel 데이터를 화면에 나타낸다.
+> 
+> MVVM 패턴은 Command 패턴과 Data Binding 패턴으로 View와 ViewModel의 의존성을 제거했다. 의존성을 제거하여 각각의 부분이 독립적이기 때문에 모듈화하여 개발할 수 있다.  
+> 
+> ### Command 패턴 
+> 
+> [[Design Pattern] 커맨드 패턴이란](https://gmlwjd9405.github.io/2018/07/07/command-pattern.html)  
+> 
+> Command 패턴은 실행될 기능을 객체 형태로 캡슐화한다. 주어진 여러 기능을 실행할 수 있는 재사용성이 높은 클래스로 설계한다. 사용자가 보낸 요청을 나중에 이용할 수 있도록 요청에 필요한 정보를 저장 또는 로깅, 취소할 수 있는 패턴이다.  
+> 
+> `행위(Behavioral) 패턴`의 하나이다. 실행될 기능을 캡슐화하여 기능의 실행을 요구하는 호출자 클래스와 실제 기능을 실행하는 수신자 클래스 사이의 의존성을 제거한다.  
+> 
+> ![](./src/architecture_04.png)
+> 
+> - Command : 실행될 기능에 대한 인터페이스, 기능을 execute 메소드로 선언
+> - ConcreteCommand : 실제로 실행되는 기능을 구현, Command 인터페이스를 구현
+> - Invoker : 기능의 실행을 요청하는 호출자 클래스
+> - Receiver : ConcreteCommand에서 execute 메소드를 구현할 때 필요한 클래스
+> 
+> 
+> Command 패턴에서는 Command, Receiver, Invoker, Client라는 용어를 사용한다.  
+> - Command 객체는 Receiver 객체를 가지고 있다. 
+> - Receiver의 메소드가 호출되고, Receiver는 정의된 메소드를 수행한다.
+> - Command 객체는 별도로 Invoker 객체에 전달되어 명령을 발동하게 한다.
+> - Invoker 객체는 필요에 따라서 명령 발동에 대한 기록을 남길 수 있다. 
+> - 하나의 Invoker 객체에 다수의 Command 객체가 전달될 수 있다. 
+> - Client 객체는 Invoker 객체와 하나 이상의 Command 객체를 보유한다. 
+> - Client 객체는 어느 시점에서 어떤 명령을 수행할지를 결정한다. 
+> - 명령을 수행하려면 Client 객체는 Invoker 객체로 Command 객체를 전달한다. 
+> 
+> 
+> #### Command 패턴 예시
+> 
+> 버튼이 눌리면 램프의 불이 켜지는 코드를 C++로 구현한다.  
+> 
+> ```cpp
+> public class Lamp {
+> public void turnOn(){ System.out.println("Lamp On"); }
+> }
+> 
+> public class Button {
+> private Lamp theLamp;
+> public Button(Lamp theLamp) { this.theLamp = theLamp; }
+> public void pressed() { theLamp.turnOn(); }
+> }
+> ```
+> 
+> ```cpp
+> public class Client {
+> public static void main(String[] args) {
+>   Lamp lamp = new Lamp();
+>   Button lampButton = new Button(lamp);
+>   lampButton.pressed();
+> }
+> }
+> ```  
+> 
+> 클라이언트에서 `Button` 객체의 `pressed()` 메소드로 `Lamp` 객체의 `turnOn()` 메소드를 호출하여 불을 킬 수 있다. 만약에 `Button` 객체의 `pressed()` 메소드가 다른 기능을 실행하도록 만드려면 `Button` 클래스를 수정해야한다.  
+> 
+> ```cpp
+> public class Alarm {
+>   public void start(){ System.out.println("Alarming"); }
+> }
+> public class Button {
+>   private Alarm theAlarm;
+>   public Button(Alarm theAlarm) { this.theAlarm = theAlarm; }
+>   public void pressed() { theAlarm.start(); }
+> }
+> ```
+> 
+> 이런 상황에서는 버튼의 기능을 변경하기 어렵다. 만약에 처음 버튼을 눌렀을 때는 램프를 켜고, 다음에는 알람을 동작시키려면 `Button` 클래스를 다음과 같이 변경해야한다.  
+> 
+> ```cpp
+> enum Mode { LAMP, ALARM };
+> // Button 클래스의 코드를 수정
+> public class Button {
+>   private Lamp theLamp;
+>   private Alarm theAlarm;
+>   private Mode theMode;
+>   // 생성자에서 버튼을 눌렀을 때 필요한 기능을 인지로 받는다.
+>   public Button(Lamp theLamp, Alarm theAlarm) {
+>    this.theLamp = theLamp;
+>    this.theAlarm = theAlarm;
+>   }
+>   // 램프 모드 또는 알람 모드를 설정
+>   public void setMode(Mode mode) { this.theMode = mode; }
+>   // 설정된 모드에 따라 램프를 켜거나 알람을 울림
+>   public void pressed() {
+>    switch(theMode) {
+>    case LAMP: theLamp.turnOn(); break;
+>    case ALARM: theAlarm.start(); break;
+>    }
+>  }
+> }
+> ```
+> 
+> Command 패턴을 사용하여 실행될 기능을 캡슐화한다면 이러한 문제를 해결할 수 있다. `Button` 객체의 `pressed()` 메소드가 구체적인 기능을 구현하는 대신에 실행될 기능을 외부에서 제공받는다.  
+> 
+> ![](./src/architecture_05.png)  
+> 
+> ```cpp
+> public interface Command { public abstract void execute(); }
+> ```
+> 
+> ```cpp
+> public class Button {
+> private Command theCommand;
+> // 생성자에서 버튼을 눌렀을 때 필요한 기능을 인지로 받는다.
+> public Button(Command theCommand) { setCommand(theCommand); }
+> public void setCommand(Command newCommand) { this.theCommand = newCommand; }
+> // 버튼이 눌리면 주어진 Command의 execute 메서드를 호출한다.
+> public void pressed() { theCommand.execute(); }
+> }
+> ```
+> 
+> ```cpp
+> public class Lamp {
+> public void turnOn(){ System.out.println("Lamp On"); }
+> }
+> 
+> /* 램프를 켜는 LampOnCommand 클래스 */
+> public class LampOnCommand implements Command {
+> private Lamp theLamp;
+> public LampOnCommand(Lamp theLamp) { this.theLamp = theLamp; }
+> // Command 인터페이스의 execute 메서드
+> public void execute() { theLamp.turnOn(); }
+> }
+> ```
+> 
+> ```cpp
+> public class Alarm {
+> public void start(){ System.out.println("Alarming"); }
+> }
+> 
+> /* 알람을 울리는 AlarmStartCommand 클래스 */
+> public class AlarmStartCommand implements Command {
+> private Alarm theAlarm;
+> public AlarmStartCommand(Alarm theAlarm) { this.theAlarm = theAlarm; }
+> // Command 인터페이스의 execute 메서드
+> public void execute() { theAlarm.start(); }
+> }
+> ```
+> 
+> ```cpp
+> public class Client {
+> public static void main(String[] args) {
+>   Lamp lamp = new Lamp();
+>   Command lampOnCommand = new LampOnCommand(lamp);
+>   Alarm alarm = new Alarm();
+>   Command alarmStartCommand = new AlarmStartCommand(alarm);
+> 
+>   Button button1 = new Button(lampOnCommand); // 램프 켜는 Command 설정
+>   button1.pressed(); // 램프 켜는 기능 수행
+> 
+>   Button button2 = new Button(alarmStartCommand); // 알람 울리는 Command 설정
+>   button2.pressed(); // 알람 울리는 기능 수행
+>   button2.setCommand(lampOnCommand); // 다시 램프 켜는 Command로 설정
+>   button2.pressed(); // 램프 켜는 기능 수행
+> }
+> }
+> ```
+> 
+> ### VIPER 
+> 
+> [iOS 아키텍처 패턴 VIPER](https://bugle.tistory.com/48)  
+> [VIPER Pattern - iOS Architecture](https://dongminyoon.tistory.com/42)  
+> 
+> iOS에서 ViewController는 View의 LifeCycle과 깊게 연관되어 있기 때문에 View와 Controller의 책임을 나누기가 어렵다. 그래서 새로운 애플만의 MVC 패턴이 나오기까지 한다.  
+> 
+> ![](./src/architecture_06.png)  
+> 
+> iOS의 VIPER 패턴은 View, Interactor, Presenter, Entity, Router로 이루어진다.  
+> 
+> VIPER 패턴은 책임 분리의 원칙(SRP)을 기반으로 한다. SRP란 작성된 클래스는 하나의 기능만 가지며 클래스가 제공하는 모든 서비스는 그 하나의 책임(기능)을 수행하는 데 집중되어 있어야 한다는 원칙이다. VIPER 패턴은 각각의 모듈로 역할이 분리되어 있기 때문에 테스트에 용이하다. 하지만 모듈이 너무 잘게 나누어지기 때문에 작은 기능을 개발하더라도 작성해야할 코드가 많다.  
+> 
+> - View : 유저 인터페이스
+> - Presenter : UI 관련 비즈니스 로직을 포함하며, View를 업데이트
+> - Interactor : App의 비즈니스 로직을 가진다. API 호출, 데이터와 관련된 로직을 가진다. 
+> - Entity : 일반적인 데이터 객체
+> - Router : 화면 표시같은 Navigation 로직을 가진다. 
+> 
+> ![](./src/architecture_07.png)  
+> 
+> VIPER 패턴의 동작 순서는 다음과 같다.  
+> - 새롭게 View를 Router로 부터 가져온다.
+> - View는 새로운 데이터가 필요하다고 Presenter에게 알린다.
+> - Presenter는 Interactor에게 데이터를 요청한다.
+> - Interactor는 데이터를 Fetch하는 비즈니스 로직을 실행하고 Entity를 패치해온다.
+> - Interactor는 Fetch한 Entity를 Presenter에게 전달한다.
+> - Presenter는 Entity를 View에게 전달한다.
+> - View는 해당 Entity를 화면에 표시한다.
+> 
+
+
+
 ## 22.09.20 : Clean Architecture  
 > 
 > [The Clean Architecture](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)  
