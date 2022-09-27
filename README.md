@@ -4,12 +4,107 @@
 
 <hr>
 
+### 22.09.27 : SwiftUI Architecture
+> 
+> [SwiftUI를 위한 클린 아키텍처](https://gon125.github.io/posts/SwiftUI%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%81%B4%EB%A6%B0-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98/)
+> 
+> #### 선언적 구문
+> 
+> SwiftUI는 선언적 구문을 사용한다. 선언형 프로그래밍은 화면에 "무엇"이 나타나야하는지 묘사하기 때문에 State 중심의 언어이다. 그래서 이벤트는 직접적으로 View를 변경할 수 없고, 대신에 View에 Binding 되어 있는 State를 변경시킨다.  
+> SwiftUI의 모든 View는 구조체이며, UI를 렌더링하는 body 함수를 가지고 있다. body 함수는 State에 대한 참조를 유지하며 View를 출력한다. 그러므로 SwiftUI의 View는 하나의 함수에 불과하다.  
+> 
+> #### SwiftUI에 내재된 MVVM 아키텍처
+> 
+> SwiftUI의 View가 @State 변수와 함께 작동하는 방식은 MVVM 아키텍처와 유사하다. @State 변수는 @Binding을 제공하여 State가 변경될 때마다 UI가 리프레시될 수 있도록 한다. 만약에 비즈니스 로직을 캡슐화한다면 View가 외부의 ObservableObject를 참조하게 할 수 있다. SwiftUI 앱에서 MVVM이 적용되는 예시는 다음과 같다.  
+> 
+> ```swift
+> // Model : 데이터 컨테이너
+> struct Contry {
+> 	let name: String
+> }
+> ```
+> 
+> ```swift
+> // View : SwiftUI 뷰
+> struct CountriesList: View {
+>     
+>     @ObservedObject var viewModel: ViewModel
+>     
+>     var body: some View {
+>         List(viewModel.countries) { country in
+>             Text(country.name)
+>         }
+>         .onAppear {
+>             self.viewModel.loadCountires()
+>         }
+>     }
+>     
+> }
+> ```
+> 
+> ```swift
+> // ViewModel : 비스니스 로직을 캡슐화한 ObservableObject
+> extension CountriesList {
+>     class ViewModel: ObservableObject {
+>         @Published private(set) var countries: [Country] = []
+>         
+>         private let service: WebService
+>         
+>         func loadCountires() {
+>             service.getCountries { [weak self] result in
+>                 self?.countries = result.value ?? []
+>             }
+>         }
+>     }
+> }
+> ```
+> 
+> 위의 예시는 View가 화면에 나타나면 onAppear callback이 ViewModel의 loadContries()를 호출하고, WebService에 있는 데이터를 가져온다. ViewModel이 callback에 주어진 데이터를 받아서 @Published 변수인 contries에 업데이트를 하고, View가 변화를 알아차린다.  
+> 
+> ![](./src/architecture_08.png)  
+> 
+> 
+> #### SwiftUI 클린 아키텍처
+> 
+> 1. SwiftUI는 Router가 필요없다.
+> 2. View-State Binding의 네이티브 지원으로 Presenter가 필요없다.
+> 3. 디자인 패턴의 모듈 수가 줄었기 때문에 Builder가 필요없다. 
+> 
+> 다양한 디자인 패턴들이 해결하려는 문제가 SwiftUI에는 존재하지 않기 때문에 다른 디자인 패턴을 사용해야 한다.  
+> 
+> 클린 아키텍처는 어플리케이션의 도메인에 따라 레이어 개수가 다르지만 3가지 레이어는 필요하다.  
+> 
+> - Presentation Layer
+> - Business Logic Layer
+> - Data Access Layer
+> 
+> 클린 아키텍처의 요구사항을 SwiftUI에 적용한다면 다음과 같은 구조가 만들어진다.  
+> 
+> ![](./src/architecture_09.png)  
+> 
+> 
+> ## Composable Architecture
+> 
+> [Composable Architecture](https://green1229.tistory.com/138)  
+> 
+> Composable Architecture는 선언형 프레임워크인 SwiftUI에 적합한 View 업데이트 방식에 맞는 아키텍처이다. View의 변화를 작은 도메인으로 나누어 보여줄 수 있다. Combine 프레임 워크에 의존하기 때문에 iOS13 이상에서 가능하다.  
+> 
+> ### Composable Architecture 기본구성
+> 
+> - State : 기능 수행 및 UI 렌더링을 위한 데이터 타입
+> - Action : 사용자 작업, 알림, 이벤트 소스 기능에서 발생할 수 있는 모든 작업을 나타내는 타입
+> - Environment : API 클라이언트, 분석 클라이언트 등과 같이 기능에 필요한 종속성을 보유하는 타입
+> - Reducer : 액션으로 상태 업데이트를 해주는 로직 함수로 모든 결과가 Effect 타입으로 반환
+> - Store : 실제로 기능을 구동하는 런타임으로 스토어가 리듀서와 이펙트를 실행하도록 사용자의 액션을 스토어에 보내고 스토어에서 상태를 관찰하여 UI를 업데이트함
+> 
+> 
+
 ## 22.09.25 : MVC, MVP, MVVM 비교
 
 > [[디자인 패턴] MVC, MVP, MVVM 비교](https://beomy.tistory.com/43)  
 > 
 > 유명하고 많이 쓰이는 디자인 패턴인 MVC 패턴과 MVC에서 파생된 MVP와 MVVM 패턴을 비교하며 어떤 패턴을 사용해야 하는지 생각해본다.  
-> 디자인 패턴의 목적은 `역할의 분리`이다. 각각의 역할을 나누어 코드를 관리하면 유지보수와 개발 효츌이 좋아지기 때문이다.  
+> 디자인 패턴의 목적은 `역할의 분리`이다. 각각의 역할을 나누어 코드를 관리하면 유지보수와 개발 효율이 좋아지기 때문이다.  
 > 
 > ### MVC
 > 
