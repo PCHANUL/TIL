@@ -8,7 +8,7 @@
 * [Projects](projects/README.md)
   * [Gridot](projects/Gridot.md)
   * [Philosophers](projects/Philosophers.md)
-  * [CppModule](projects/CppModule.md)
+  <!-- * [CppModule](projects/CppModule.md) -->
   * [Cub3d](projects/Cub3D.md)
   * [NetPractice](projects/NetPractice.md)
 * [Swift](swift/README.md)
