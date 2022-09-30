@@ -27,15 +27,15 @@ $font-size-10-sm: 48px !default;
 // Colors
 
 $white: #fff !default;
-$grey-dk-000: #959396 !default;
-$grey-dk-100: #5c5962 !default;
-$grey-dk-200: #44434d !default;
-$grey-dk-250: #302d36 !default;
-$grey-dk-300: #27262b !default;
-$grey-lt-000: #f5f6fa !default;
-$grey-lt-100: #eeebee !default;
-$grey-lt-200: #ecebed !default;
-$grey-lt-300: #e6e1e8 !default;
+$grey-dk-000: #939695 !default;
+$grey-dk-100: #59625e !default;
+$grey-dk-200: #434d48 !default;
+$grey-dk-250: #2d3631 !default;
+$grey-dk-300: #262b29 !default;
+$grey-lt-000: #f7f7f7 !default;
+$grey-lt-100: #ebeeec !default;
+$grey-lt-200: #ebedec !default;
+$grey-lt-300: #e1e8e5 !default;
 $purple-000: #7253ed !default;
 $purple-100: #5e41d0 !default;
 $purple-200: #4e26af !default;
@@ -44,9 +44,9 @@ $blue-000: #2c84fa !default;
 $blue-100: #2869e6 !default;
 $blue-200: #264caf !default;
 $blue-300: #183385 !default;
-$green-000: #41d693 !default;
-$green-100: #11b584 !default;
-$green-200: #009c7b !default;
+$green-000: #41d6ae !default;
+$green-100: #11b597 !default;
+$green-200: #009c8a !default;
 $green-300: #026e57 !default;
 $yellow-000: #ffeb82 !default;
 $yellow-100: #fadf50 !default;
@@ -66,8 +66,8 @@ $body-text-color: $grey-dk-100 !default;
 $body-heading-color: $grey-dk-300 !default;
 $search-result-preview-color: $grey-dk-000 !default;
 $nav-child-link-color: $grey-dk-100 !default;
-$link-color: $purple-000 !default;
-$btn-primary-color: $purple-100 !default;
+$link-color: $green-300 !default;
+$btn-primary-color: $green-300 !default;
 $base-button-color: #f7f7f7 !default;
 
 // Spacing
