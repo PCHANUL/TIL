@@ -1,3 +1,16 @@
+---
+layout: default
+title: interface
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/interface
+---
+
+* [interface](#interface)
+	* [순수 가상 함수와 추상 클래스](#순수-가상-함수와-추상-클래스)
+		* [인터페이스](#인터페이스)
+	* [interface를 사용하는 이유](#interface를-사용하는-이유)
+
 # interface
 
 `interface`는 특정 기능 구현을 약속하는 추상 형식이다.  

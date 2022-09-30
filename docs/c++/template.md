@@ -1,3 +1,17 @@
+---
+layout: default
+title: template
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/template
+---
+
+* [template](#template)
+    * [Function Template](#function-template)
+    * [Class Template](#class-template)
+    * [Template specialization](#template-specialization)
+    * [템플릿에 대한 비유형 매개변수](#템플릿에-대한-비유형-매개변수)
+
 # template
 
 template는 함수나 클래스를 개별적으로 다시 작성하지 않아도, 여러 자료형으로 사용할 수 있도록 만들어 놓은 틀이다.  

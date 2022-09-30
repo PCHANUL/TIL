@@ -1,3 +1,14 @@
+---
+layout: default
+title: new
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/new
+---
+
+* [new](#new)
+	* [객체 생성 방법](#객체-생성-방법)
+
 # new
 
 ## 객체 생성 방법

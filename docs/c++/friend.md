@@ -1,3 +1,13 @@
+---
+layout: default
+title: friend
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/friend
+---
+
+* [friend 키워드](#friend-키워드)
+
 # friend 키워드
 
 `friend`키워드는 접근 지정자를 무시하는 예외 기능을 가진 키워드이다. 이는 객체 지향 개념의 정보 은닉 개념에 정면으로 위배된다.  

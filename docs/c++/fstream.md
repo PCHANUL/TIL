@@ -1,3 +1,28 @@
+---
+layout: default
+title: fstream
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/fstream
+---
+
+* [파일 입출력 - fstream](#파일-입출력---fstream)
+  * [(constructor)](#constructor)
+    * [mode](#mode)
+    * [Example](#example)
+  * [open](#open)
+    * [Example](#example-1)
+  * [is_open : 파일이 열려있는지 확인](#is_open--파일이-열려있는지-확인)
+  * [close : 파일 닫기](#close--파일-닫기)
+  * [swap : 데이터 교환](#swap--데이터-교환)
+    * [Example](#example-2)
+* [istream](#istream)
+  * [getline : 한 줄을 읽는다.](#getline--한-줄을-읽는다)
+    * [Example](#example-3)
+* [ostream](#ostream)
+  * [write : 데이터 쓰기](#write--데이터-쓰기)
+  * [Example](#example-4)
+
 # 파일 입출력 - fstream
 
 ## (constructor)

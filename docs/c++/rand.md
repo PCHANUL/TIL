@@ -1,3 +1,14 @@
+---
+layout: default
+title: rand
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/rand
+---
+
+* [rand 함수](#rand-함수)
+	* [srand 함수](#srand-함수)
+
 # rand 함수
 
 ```cpp

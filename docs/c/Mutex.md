@@ -3,7 +3,10 @@ layout: default
 title: Mutex
 parent: c
 nav_order: 6
+permalink: /docs/c/Mutex
 ---
+
+* [뮤텍스 (Mutex)](#뮤텍스-mutex)
 
 # 뮤텍스 (Mutex)
 

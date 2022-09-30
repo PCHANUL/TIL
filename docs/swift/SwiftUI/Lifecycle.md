@@ -1,4 +1,17 @@
-# SwiftUI Lifecycle
+---
+layout: default
+title: SwiftUI Lifecycle
+nav_order: 1
+parent: SwiftUI
+grand_parent: Swift
+---
+
+* [SwiftUI Lifecycle](#swiftui-lifecycle)
+  * [SwiftUI App Protocol : 새로운 시작점](#swiftui-app-protocol--새로운-시작점)
+  * [Scene의 라이프 사이클 상태](#scene의-라이프-사이클-상태)
+  * [AppDelegate를 SwiftUI App Protocol과 함께 사용하는 방법](#appdelegate를-swiftui-app-protocol과-함께-사용하는-방법)
+
+# SwiftUI Lifecycle 
 
 SwiftUI는 iOS 14부터 UIKit에서 벗어나는 새로운 라이프 사이클을 가지게 되었다. UIKit의 AppDelegate와 SceneDelegate를 사용하는 대신에 App Protocol과 SceneBuilder, scenePhase enumerator, UIApplicationDelegateAdapter가 제공된다. 먼저 SceneDelegate를 빠르게 훑어본 다음에 새로운 라이프 사이클에 대해서 살펴본다.  
 

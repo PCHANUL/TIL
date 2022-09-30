@@ -1,3 +1,13 @@
+---
+layout: default
+title: reference
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/reference
+---
+
+* [참조자 - reference](#참조자---reference)
+
 # 참조자 - reference
 
 포인터 변수는 메모리에 주소값을 저장하고, 읽어서 실제 데이터에 접근한다. C 언어에서는 변수나 상수를 가리키는 방법으로 포인터를 사용하였지만 c++에서는 포인터와 함께 참조자라는 방법을 사용할 수 있다.

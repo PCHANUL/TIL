@@ -1,3 +1,20 @@
+---
+layout: default
+title: typecast
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/typecast
+---
+
+* [c++ 타입 캐스팅](#c-타입-캐스팅)
+	* [static_cast 연산자](#static_cast-연산자)
+		* [부모 -> 자식 형변환](#부모---자식-형변환)
+		* [Errors](#errors)
+	* [dynamic_cast 연산자](#dynamic_cast-연산자)
+	* [reinterpret_cast 연산자](#reinterpret_cast-연산자)
+	* [const_cast 연산자](#const_cast-연산자)
+		* [Errors](#errors-1)
+
 # c++ 타입 캐스팅
 
 c 언어에서 사용하는 타입 캐스팅 방식을 c++에서 사용할 수 있지만 타입 캐스팅을 위한 연산자가 따로 제공된다. (static_cast, dynamic_cast, reinterpret_cast, const_cast)  

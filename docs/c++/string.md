@@ -1,3 +1,13 @@
+---
+layout: default
+title: string
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/string
+---
+
+* [std::string](#stdstring)
+
 # std::string
 
 

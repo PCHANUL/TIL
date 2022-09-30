@@ -1,10 +1,32 @@
-# Today I Learned
+---
+layout: default
+title: Today I Learned
+nav_order: 1
+has_children: true
+child_nav_order: desc
+permalink: /
+---
 
-[![Gitbook](https://img.shields.io/badge/Gitbook-chanul.gitbook.io/til-blue.svg?style=for-the-badge\&logo=gitbook)](https://chanul.gitbook.io/til/)
+# Today I Learned <!-- omit in toc -->
+
+
+* [22.09.27 : SwiftUI Architecture](#220927--swiftui-architecture)
+* [22.09.25 : MVC, MVP, MVVM 비교](#220925--mvc-mvp-mvvm-비교)
+* [22.09.20 : Clean Architecture](#220920--clean-architecture)
+* [22.09.19 : MVVM](#220919--mvvm)
+* [22.09.18 : 프로그래밍 패러다임, Swift View UnitTest](#220918--프로그래밍-패러다임-swift-view-unittest)
+* [22.09.14 : Swift Map, Filter, Reduce](#220914--swift-map-filter-reduce)
+* [22.09.13 : safe index, Generic](#220913--safe-index-generic)
+* [22.09.12 : UITest](#220912--uitest)
+* [22.09.11 : @Binding](#220911--binding)
+* [22.09.07 : 테스트 빌드](#220907--테스트-빌드)
+* [22.09.06 : 테스트 케이스 및 테스트 방법 정의](#220906--테스트-케이스-및-테스트-방법-정의)
+* [22.09.04 : VoiceOver와 친해지기](#220904--voiceover와-친해지기)
+* [22.09.03 : Test](#220903--test)
 
 <hr>
 
-### 22.09.27 : SwiftUI Architecture
+## 22.09.27 : SwiftUI Architecture
 > 
 > [SwiftUI를 위한 클린 아키텍처](https://gon125.github.io/posts/SwiftUI%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%81%B4%EB%A6%B0-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98/)
 > 
@@ -61,7 +83,7 @@
 > 
 > 위의 예시는 View가 화면에 나타나면 onAppear callback이 ViewModel의 loadContries()를 호출하고, WebService에 있는 데이터를 가져온다. ViewModel이 callback에 주어진 데이터를 받아서 @Published 변수인 contries에 업데이트를 하고, View가 변화를 알아차린다.  
 > 
-> ![](./src/architecture_08.png)  
+> ![](./docs/src/architecture_08.png)  
 > 
 > 
 > #### SwiftUI 클린 아키텍처
@@ -80,7 +102,7 @@
 > 
 > 클린 아키텍처의 요구사항을 SwiftUI에 적용한다면 다음과 같은 구조가 만들어진다.  
 > 
-> ![](./src/architecture_09.png)  
+> ![](./docs/src/architecture_09.png)  
 > 
 > 
 > ## Composable Architecture
@@ -114,7 +136,7 @@
 > - Controller : 유저의 입력 처리
 > - Model : 데이터 처리
 > 
-> ![](./src/architecture_01.png)  
+> ![](./docs/src/architecture_01.png)  
 > 
 > MVC 패턴의 동작 순서는 다음과 같다.  
 > - Controller에 유저의 Action이 들어온다.
@@ -137,7 +159,7 @@
 > - Presenter : Model을 가공하여 View에 전달하며 이어주는 역할
 > - Model : 데이터 처리
 > 
-> ![](./src/architecture_02.png)  
+> ![](./docs/src/architecture_02.png)  
 > 
 > MVP 패턴의 동작 순서는 다음과 같다.  
 > - View에 유저의 Action이 들어온다.
@@ -155,7 +177,7 @@
 > - ViewModel : View를 표현하기 위한 데이터를 처리하는 Model
 > - Model : 데이터 처리
 > 
-> ![](./src/architecture_03.png)  
+> ![](./docs/src/architecture_03.png)  
 > 
 > MVVM 패턴의 동작 순서는 다음과 같다.  
 > - View에 유저의 Action이 들어온다.
@@ -175,7 +197,7 @@
 > 
 > `행위(Behavioral) 패턴`의 하나이다. 실행될 기능을 캡슐화하여 기능의 실행을 요구하는 호출자 클래스와 실제 기능을 실행하는 수신자 클래스 사이의 의존성을 제거한다.  
 > 
-> ![](./src/architecture_04.png)
+> ![](./docs/src/architecture_04.png)
 > 
 > - Command : 실행될 기능에 대한 인터페이스, 기능을 execute 메소드로 선언
 > - ConcreteCommand : 실제로 실행되는 기능을 구현, Command 인터페이스를 구현
@@ -261,7 +283,7 @@
 > 
 > Command 패턴을 사용하여 실행될 기능을 캡슐화한다면 이러한 문제를 해결할 수 있다. `Button` 객체의 `pressed()` 메소드가 구체적인 기능을 구현하는 대신에 실행될 기능을 외부에서 제공받는다.  
 > 
-> ![](./src/architecture_05.png)  
+> ![](./docs/src/architecture_05.png)  
 > 
 > ```cpp
 > public interface Command { public abstract void execute(); }
@@ -332,7 +354,7 @@
 > 
 > iOS에서 ViewController는 View의 LifeCycle과 깊게 연관되어 있기 때문에 View와 Controller의 책임을 나누기가 어렵다. 그래서 새로운 애플만의 MVC 패턴이 나오기까지 한다.  
 > 
-> ![](./src/architecture_06.png)  
+> ![](./docs/src/architecture_06.png)  
 > 
 > iOS의 VIPER 패턴은 View, Interactor, Presenter, Entity, Router로 이루어진다.  
 > 
@@ -344,7 +366,7 @@
 > - Entity : 일반적인 데이터 객체
 > - Router : 화면 표시같은 Navigation 로직을 가진다. 
 > 
-> ![](./src/architecture_07.png)  
+> ![](./docs/src/architecture_07.png)  
 > 
 > VIPER 패턴의 동작 순서는 다음과 같다.  
 > - 새롭게 View를 Router로 부터 가져온다.
@@ -364,7 +386,7 @@
 > [The Clean Architecture 번역](https://blog.coderifleman.com/2017/12/18/the-clean-architecture/)  
 > [주니어 개발자의 클린 아키텍처 맛보기](https://techblog.woowahan.com/2647/)  
 > 
-> ![](./src/architecture.jpeg)  
+> ![](./docs/src/architecture.jpeg)  
 > 
 > 시스템 아키텍처에 대한 다양한 아이디어가 있지만 모두 공통적으로 관심사의 분리에 목적을 두고 있다. 이들은 소프트웨어를 계층으로 나누어서 관심사를 분리하며, 각각 비즈니스 계층과 인터페이스 계층을 최소 하나씩 두고 있다. 그리고 다음과 같은 시스템을 만든다.  
 > 
@@ -411,7 +433,7 @@
 > 
 > Model, View, View Model로 구성되어 있다. 이 3가지 구성 요소의 역할과 책임을 이해하기 위해서는 이들 사이의 관계를 알아야 한다. View는 ViewModel을 알고, ViewModel은 Model을 알고 있다. 그러나 반대 방향으로는 모르는 상태이다. Model은 ViewModel을 모르고, ViewModel은 View를 모른다. 이런 관계의 구조는 ViewModel과 Model이 독립적인 형태를 만들어서 View로부터 분리되는 목적을 이룬다.  
 > 
-> ![](./src/mvvm_01.png)  
+> ![](./docs/src/mvvm_01.png)  
 > 
 > ### View 
 > 

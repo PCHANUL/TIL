@@ -1,3 +1,15 @@
+---
+layout: default
+title: iostream
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/iostream
+---
+
+* [iostream](#iostream)
+	* [cout](#cout)
+	* [cin](#cin)
+
 # iostream
 
 ## cout

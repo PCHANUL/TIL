@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.github_repo }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: dev.chanul
+title: Dev.chanul
 description: A Jekyll theme for documentation
 baseurl: "/TIL" # the subpath of your site, e.g. /blog
 url: "https://pchanul.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
@@ -41,7 +41,6 @@ exclude:
    - package.json
    - package-lock.json
    - Rakefile
-   - README.md
 
 # Set a path/url to a logo that will be displayed instead of the title
 #logo: "/assets/images/just-the-docs.png"
@@ -88,20 +87,20 @@ heading_anchors: true
 
 # Aux links for the upper right navigation
 aux_links:
-  "Just the Docs on GitHub":
-    - "//github.com/just-the-docs/just-the-docs"
+  "GitHub":
+    - "https://github.com/PCHANUL"
 
 # Makes Aux links open in a new tab. Default is false
-aux_links_new_tab: false
+aux_links_new_tab: true
 
 # Sort order for navigation links
 # nav_sort: case_insensitive # default, equivalent to nil
 nav_sort: case_sensitive # Capital letters sorted before lowercase
 
 # External navigation links
-nav_external_links:
-  - title: Just the Docs on GitHub
-    url: https://github.com/just-the-docs/just-the-docs
+# nav_external_links:
+#   - title: GitHub
+#     url: https://github.com/PCHANUL
 
 # Footer content
 # appears at the bottom of every page's main content
@@ -153,6 +152,13 @@ ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (t
 
 plugins:
   - jekyll-seo-tag
+  
+# Conversion
+markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
 
 kramdown:
   syntax_highlighter_opts:

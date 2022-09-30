@@ -1,3 +1,16 @@
+---
+layout: default
+title: classDeconstructor
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/classDeconstructor
+---
+
+* [c++ 소멸자](#c-소멸자)
+  * [소멸자 선언](#소멸자-선언)
+  * [소멸자 사용](#소멸자-사용)
+  * [파괴 순서](#파괴-순서)
+
 # c++ 소멸자
 
 소멸자란 개체가 범위를 벗어나거나 호출에 의해 명시적으로 제거될 때 자동으로 호출되는 멤버 함수이다. 소멸자의 이름은 클래스와 같고, 앞에 `~`가 붙는다.  

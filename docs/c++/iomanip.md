@@ -1,3 +1,13 @@
+---
+layout: default
+title: iomanip
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/iomanip
+---
+
+* [iomanip](#iomanip)
+
 # iomanip
 
 iomanip(Input Output Manipulator)는 입출력 조정자로 cout의 출력을 조정할 수 있다. 사용 함수는 다음과 같다.

@@ -1,11 +1,20 @@
-# String, Character
+---
+layout: default
+title: String, Character
+parent: Swift
+nav_order: 1
+---
+
+
+* [String, Character](#string-character)
+	* [String Indices](#string-indices)
+	* [Inserting and Removing](#inserting-and-removing)
+	* [Substrings](#substrings)
+
+
+# String, Character 
 
 문자열은 "Hello word"와 같이 문자들이 연속되어 있다. Swift의 문자열은 `String` 타입으로 표현되며 `Character` 값의 집합을 포함하고 있다. 문자열은 언제나 독립적인 유니코드 문자로 구성되며, 다양한 유니코드 문자들을 지원한다. Swift의 `String` 타입은 구문이 단순하며 빠르고 현대적인 문자열을 구현하고 있다.  
-
-- [String, Character](#string-character)
-	- [String Indices](#string-indices)
-	- [Inserting and Removing](#inserting-and-removing)
-	- [Substrings](#substrings)
 
 ## String Indices
 Swift에서는 문자열의 인덱스를 표현하기 위해 `String.Index` 라는 타입을 사용한다. 문자들이 저장하는 메모리 양이 다를 수 있으며, 어떤 `Character` 가 특정 위치에 있는지 결정하기 위해서 시작이나 끝으로 각 유니코드 스칼라를 반복한다. 그러므로 Swift 문자열은 정수형 값으로 인덱스될 수 없다.

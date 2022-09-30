@@ -1,3 +1,20 @@
+---
+layout: default
+title: line 2D
+parent: Graphics
+nav_order: 3
+permalink: /docs/graphics/line_2D
+use_math: true
+---
+
+* [2D 직선](#2d-직선)
+* [DDA 알고리즘 (Digital Differential Analyzer Algorithm)](#dda-알고리즘-digital-differential-analyzer-algorithm)
+	* [1. 초기화](#1-초기화)
+	* [2. 연산](#2-연산)
+* [브레젠헴 알고리즘 (Bresenham's Algorithm)](#브레젠헴-알고리즘-bresenhams-algorithm)
+	* [1. 초기화](#1-초기화-1)
+	* [2. 연산](#2-연산-1)
+
 # 2D 직선
 
 픽셀로 이루어진 화면에 직선을 그리기 위한 알고리즘이다. 만약에 직선을 그린다면 연속된 픽셀이 끊기지 않고 최대한 직선에 가깝게 표현되어야 한다. 픽셀의 중심이 좌표의 정수 부분이 된다.  
@@ -7,7 +24,7 @@
 
 DDA 알고리즘은 양 끝점이 주어졌을 때 화면 위 직선을 그릴 수 있는 알고리즘이다.  
 
-선의 양끝 점인 \begin{align}(X_a, Y_a)\end{align}, $$(X_b, Y_b)$$에서 다음과 같은 공식을 구하게 된다. 
+선의 양끝 점인 $(X_a, Y_a)$, $(X_b, Y_b)$에서 다음과 같은 공식을 구하게 된다. 
 
 $$
 y = mx + c \\

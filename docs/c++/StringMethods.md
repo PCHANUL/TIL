@@ -1,3 +1,29 @@
+---
+layout: default
+title: StringMethods
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/StringMethods
+---
+
+* [String Methods](#string-methods)
+  * [Element access](#element-access)
+  * [Modifiers](#modifiers)
+  * [Example](#example)
+  * [Example](#example-1)
+  * [Example](#example-2)
+  * [Example](#example-3)
+  * [Example](#example-4)
+  * [Example](#example-5)
+  * [Iterators](#iterators)
+  * [Example](#example-6)
+  * [Example](#example-7)
+  * [Capacity](#capacity)
+  * [Example](#example-8)
+  * [String operations](#string-operations)
+  * [Example](#example-9)
+  * [Example](#example-10)
+
 # String Methods
 
 

@@ -1,3 +1,15 @@
+---
+layout: default
+title: const
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/const
+---
+
+* [const](#const)
+	* [const 포인터](#const-포인터)
+	* [const class overloading](#const-class-overloading)
+
 # const
 
 `const` 키워드는 값을 상수로 선언하여 변경할 수 없도록 한다. 한번 설정된 값이 read-only 메모리에 올라가게되어 변경하지 못하고 계속 유지하게 된다.

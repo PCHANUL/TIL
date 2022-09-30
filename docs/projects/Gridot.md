@@ -1,4 +1,23 @@
-# Gridot  
+---
+layout: default
+title: Gridot
+parent: Projects
+nav_order: 1
+permalink: /docs/projects/Gridot
+---
+
+* [Gridot](#gridot)
+  * [Todos](#todos)
+  * [DevLog](#devlog)
+    * [22.09.25 : 아키텍처](#220925--아키텍처)
+    * [22.09.13 : 테스트 케이스](#220913--테스트-케이스)
+    * [22.08.20 : drag and drop View](#220820--drag-and-drop-view)
+    * [22.07.23 : 초기화](#220723--초기화)
+    * [22.07.21 : 준비](#220721--준비)
+    * [22.06.30 : 문제 찾음](#220630--문제-찾음)
+
+# Gridot 
+
 
 ## Todos
 
@@ -43,7 +62,7 @@ UIKit에서 사용했던 CollectionView가 구현되어 있지 않다. 그래서
 
 SwiftUI로 변환하는 과정에서 중요한 점은 의존성 정리이다. 조그마한 기능을 가지고 있는 애플리케이션임에도 의존성이 복잡하게 얽혀있어서 클래스를 다른 곳에서 사용하기 어렵다. 최대한 유연하게 클래스 간의 의존성을 해결해야 한다.  
 
-![](../src/gridot/lines.png)  
+![](../src/projects/gridot/lines.png)  
 
 
 ### 22.06.30 : 문제 찾음
@@ -57,4 +76,4 @@ SwiftUI로 변환하는 과정에서 중요한 점은 의존성 정리이다. �
 그리닷은 아이폰으로 픽셀 아트를 그리는 앱이다.  
 하지만 데이터를 보니 아이패드에서 다운받는 유저가 더 많다.  
 
-![](../src/gridot/problem.png)  
+![](../src/projects/gridot/problem.png)  

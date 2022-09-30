@@ -1,3 +1,14 @@
+---
+layout: default
+title: exception
+nav_order: 2
+parent: c++ 
+permalink: /docs/c++/exception
+---
+
+* [exception](#exception)
+  * [왜 예외를 쓰는 게 좋을까요?](#왜-예외를-쓰는-게-좋을까요)
+
 # exception
 
 ## 왜 예외를 쓰는 게 좋을까요?

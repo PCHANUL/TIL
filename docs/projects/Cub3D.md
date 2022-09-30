@@ -1,4 +1,28 @@
-# Cub3D
+---
+layout: default
+title: Cub3D
+parent: Projects
+nav_order: 3
+permalink: /docs/projects/Cub3D
+---
+
+* [Cub3D](#cub3d)
+  * [Constraints](#constraints)
+  * [Implements](#implements)
+  * [Logics](#logics)
+    * [Flow chart](#flow-chart)
+      * [Initial](#initial)
+      * [Frame Loop](#frame-loop)
+    * [Ray Casting](#ray-casting)
+    * [DDA Algorithm](#dda-algorithm)
+    * [Perpendicular Distance](#perpendicular-distance)
+    * [Textured Walls](#textured-walls)
+    * [미니맵 선 그리기](#미니맵-선-그리기)
+
+
+# Cub3D 
+
+<br/>
 
 90년대에 세계적으로 유명했던 FPS게임인 [Wolfenstein 3D game](http://users.atw.hu/wolf3d/)에서 영감을 받은 프로젝트이다. Ray-Casting으로 1인칭 시점의 현실적인 3D 그래픽 표현을 만든다.  
 
