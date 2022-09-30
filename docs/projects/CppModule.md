@@ -1,3 +1,12 @@
+---
+layout: default
+title: CppModule
+parent: Projects
+nav_order: 3
+permalink: /docs/projects/CppModule
+nav_exclude: true
+---
+
 # cpp03 - Class inheritance
 
 cpp module 03에서는 클래스 상속을 구현한다. 클래스 상속은 기존 클래스를 속성을 다른 클래스가 받고 의도에 맞게 수정하여 사용하거나 클래스 간의 종속 관계를 형성하여 객체를 조직화한다.  

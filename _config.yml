@@ -14,7 +14,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Dev.chanul
-description: A Jekyll theme for documentation
+description: Today I Learned
 baseurl: "/TIL" # the subpath of your site, e.g. /blog
 url: "https://pchanul.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 
