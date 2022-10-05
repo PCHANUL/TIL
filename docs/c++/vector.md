@@ -6,10 +6,11 @@ parent: c++
 permalink: /docs/c++/vector
 ---
 
-* [vector](#vector)
-	* [정의](#정의)
-	* [속성](#속성)
-	* [맴버 타입](#맴버-타입)
+- [vector](#vector)
+	- [정의](#정의)
+	- [속성](#속성)
+	- [맴버 타입](#맴버-타입)
+	- [맴버 함수](#맴버-함수)
 
 # vector
 
@@ -26,13 +27,13 @@ permalink: /docs/c++/vector
 ```cpp
 template<
 	class T,
-	class Allocator = std::allocator<T>
+	class Alloc = std::allocator<T>
 > class vector;
 ```
 
 - `T` : 요소의 타입
   - 반드시 [CopyAssignable](https://en.cppreference.com/w/cpp/named_req/CopyAssignable), [CopyConstructible](https://en.cppreference.com/w/cpp/named_req/CopyConstructible) 조건을 충족해야 한다.
-- `Allocator` : 저장공간 할당 모델을 정의하는데 사용되는 할당 모델
+- `Alloc` : 저장공간 할당 모델을 정의하는데 사용되는 할당 모델
   - 기본으로 `allocator` 클래스 템플릿이 사용된다. 
   - 컨테이너는 저장공간이 필요한 경우에 `allocator`를 사용하여 배열을 재할당한다. 
 
@@ -45,6 +46,27 @@ template<
 
 ## 맴버 타입
 
+| member type            | definition                                                                             | notes                                        |
+| ---------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------- |
+| value_type             | The first template parameter (T)                                                       |                                              |
+| allocator_type         | The second template parameter (Alloc)                                                  | defaults to: allocator<value_type>           |
+| reference              | allocator_type::reference                                                              | for the default allocator: value_type&       |
+| const_reference        | allocator_type::const_reference                                                        | for the default allocator: const value_type& |
+| pointer                | allocator_type::pointer                                                                | for the default allocator: value_type*       |
+| const_pointer          | allocator_type::const_pointer                                                          | for the default allocator: const value_type* |
+| iterator               | a random access iterator to value_type                                                 | convertible to const_iterator                |
+| const_iterator         | a random access iterator to const value_type                                           |                                              |
+| reverse_iterator       | reverse_iterator<iterator>                                                             |                                              |
+| const_reverse_iterator | reverse_iterator<const_iterator>                                                       |                                              |
+| difference_type        | a signed integral type, identical to: iterator_traits<iterator>::difference_type       | usually the same as ptrdiff_t                |
+| size_type              | an unsigned integral type that can represent any non-negative value of difference_type | usually the same as size_t                   |
+
+
+## 맴버 함수
+
+- [(constructor)](https://cplusplus.com/reference/vector/vector/vector/) : vector 생성자
+- [(destructor)](https://cplusplus.com/reference/vector/vector/~vector/) : vector 소멸자
+- 
 
 
 
