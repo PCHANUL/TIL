@@ -4,7 +4,7 @@ title: Problems
 nav_order: 1
 parent: Gridot
 grand_parent: Projects
-permalink: /docs/projects/Problems
+permalink: /docs/projects/Gridot/Problems
 ---
 
 * [Problems](#problems)

@@ -4,7 +4,7 @@ title: Architecture
 nav_order: 2
 parent: Gridot
 grand_parent: Projects
-permalink: /docs/projects/Architecture
+permalink: /docs/projects/Gridot/Architecture
 ---
 
 * [Architecture](#architecture)

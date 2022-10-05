@@ -4,7 +4,7 @@ title: TestCase
 nav_order: 2
 parent: Gridot
 grand_parent: Projects
-permalink: /docs/projects/TestCase
+permalink: /docs/projects/Gridot/TestCase
 ---
 
 # TestCase
