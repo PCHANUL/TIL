@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Containers
+title: 2022
 nav_order: 3
-parent: TodayILearned
+parent: Today I Learned
 has_children: true
-permalink: /docs/TodayILearned/2022
+permalink: /docs/TodayILearned/2022/README
 ---
 
 # 2022
