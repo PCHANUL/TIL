@@ -7,17 +7,17 @@ grand_parent: Swift
 ---
 
 * [SwiftUI Data Flow](#swiftui-data-flow)
-	* [1. View에서 데이터를 읽을 때마다, View에는 데이터에 대한 의존이 발생된다.](#1-view에서-데이터를-읽을-때마다-view에는-데이터에-대한-의존이-발생된다)
-	* [2. View의 계층에서 읽어들이는 모든 데이터들은 Source of Truth를 가진다.](#2-view의-계층에서-읽어들이는-모든-데이터들은-source-of-truth를-가진다)
+  * [1. View에서 데이터를 읽을 때마다, View에는 데이터에 대한 의존이 발생된다.](#1-view에서-데이터를-읽을-때마다-view에는-데이터에-대한-의존이-발생된다)
+  * [2. View의 계층에서 읽어들이는 모든 데이터들은 Source of Truth를 가진다.](#2-view의-계층에서-읽어들이는-모든-데이터들은-source-of-truth를-가진다)
 * [@State](#state)
 * [@Binding](#binding)
 * [ObservableObject Protocol](#observableobject-protocol)
-	* [@ObservedObject](#observedobject)
-	* [@EnvironmentObject](#environmentobject)
-	* [언제 무엇을 사용해야 하는가?](#언제-무엇을-사용해야-하는가)
+  * [@ObservedObject](#observedobject)
+  * [@EnvironmentObject](#environmentobject)
+  * [언제 무엇을 사용해야 하는가?](#언제-무엇을-사용해야-하는가)
 * [Source of Truth](#source-of-truth)
 * [Reusable Components](#reusable-components)
-* [참조 링크](#참조-링크)
+* [References](#references)
 
 # SwiftUI Data Flow
 
@@ -115,7 +115,7 @@ SwiftUI에서 Source of Truth로 데이터를 관리하는 방법은 다음과 �
 
 ![](../../src/projects/gridot/reusableComponents.png)  
 
-# 참조 링크
+# References
 
 - [Data Flow Though SwiftUI](https://wlaxhrl.tistory.com/91)  
 

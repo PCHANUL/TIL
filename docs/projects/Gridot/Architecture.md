@@ -10,7 +10,7 @@ permalink: /docs/projects/Gridot/Architecture
 * [Architecture](#architecture)
 * [SwiftUI Architecture](#swiftui-architecture)
 * [The Composable Architecture](#the-composable-architecture)
-* [참조 링크](#참조-링크)
+* [References](#references)
 
 # Architecture
 
@@ -34,7 +34,8 @@ TCA는 State를 관리하여 효율적으로 View의 변화를 관리할 수 있
 - State : 비즈니스 로직을 수행하거나 UI를 그릴 때 필요한 데이터를 나타내는 타입이다.
 - Action : 유저의 행동이나 알림 등 어플리케이션에서 발생할 수 있는 모든 행동을 나타내는 타입이다.
 - Environment : API 클라이언트나 애널리틱스 클라이언트와 같이 어플리케이션이 필요로하는 의존성을 가지고 있는 타입이다.
-- Reducer : 어떤 Action이 주어졌을 때, 지금 State를 다음 State로 변화시키는 방법을 가지는 함수이다.. Reducer는 보통 실행할 수 있는 Effect 값을 반환한다.
+- Reducer : 어떤 Action이 주어졌을 때, 지금 State를 다음 State로 변화시키는 방법을 가지는 함수이다. Reducer는 보통 실행할 수 있는 Effect 값을 반환한다.
+- Store : 실제로 기능이 작동하는 공간이다. Store는 사용자 Action을 보내서 Reducer와 Effect를 실행할 수 있고, Store에서 일어나는 State 변화를 observe하여 UI를 업데이트할 수도 있다.  
 
 
 
@@ -43,7 +44,7 @@ TCA는 State를 관리하여 효율적으로 View의 변화를 관리할 수 있
 
 
 
-# 참조 링크
+# References
 - [더 나은 객체지향 개발을 위한 아이디어: 관심사의 분리부터 제어의 역전까지](https://teamdable.github.io/techblog/SoC-to-IoC#:~:text=%ED%8A%B9%EC%A0%95%ED%95%9C%20%EA%B4%80%EC%8B%AC%EC%82%AC%EC%97%90%20%EB%94%B0%EB%9D%BC%20%EA%B8%B0%EB%8A%A5,concerns%2C%20SoC)  
 - [SwiftUI에서 MVVM 사용을 멈춰야 하는가?](https://green1229.tistory.com/267)  
 - [iOS 아키텍처 패턴 VIPER](https://bugle.tistory.com/48)  
