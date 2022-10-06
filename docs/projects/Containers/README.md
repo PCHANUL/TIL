@@ -34,7 +34,7 @@ permalink: /docs/projects/Containers
 - [allocator](../../c%2B%2B/allocator.md)
   - allocator는 동적 메모리 할당을 관리하는데 필요한 기능이 정의된 객체이다.
   - STL은 사용자 지정 allocator가 제공되지 않으면 `std::allocator`를 사용한다.
-- iterator
+- [iterator](../../c%2B%2B/iterator.md)
   - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.
 
 

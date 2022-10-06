@@ -66,7 +66,35 @@ template<
 
 - [(constructor)](https://cplusplus.com/reference/vector/vector/vector/) : vector 생성자
 - [(destructor)](https://cplusplus.com/reference/vector/vector/~vector/) : vector 소멸자
-- 
+- operator= : 컨텐츠 할당
+
+- begin : 반복자의 시작점을 반환
+- end : 반복자의 마지막을 반환
+- rbegin : 역행 반복자의 시작점을 반환
+- rend : 역행 반복자의 마지막을 반환
+
+- size : 크기를 반환
+- max_size : 최대 크기를 반환
+- resize : 사이즈를 변환
+- capacity : 할당된 저장 용량의 크기 반환
+- empty : 벡터가 비어 있는지 확인
+- reserve : 요청된 용량으로 변환
+
+- operator[] : 요소 접근
+- at : 요소 접근
+- front : 첫번째 요소 접근
+- back : 마지막 요소 접근
+- data : 데이터 접근
+
+- assign : 벡터 컨텐츠 할당
+- push_back : 요소를 마지막에 추가
+- pop_back : 마지막 요소를 제거
+- insert : 요소 삽입
+- erase : 요소 제거
+- swap : 컨텐츠 교환
+- clear : 컨텐트 지우기
+
+- get_allocator : 할당자 가져오기
 
 
 
