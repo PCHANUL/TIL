@@ -9,8 +9,8 @@ permalink: /docs/c++/vector
 - [vector](#vector)
 	- [정의](#정의)
 	- [속성](#속성)
-	- [맴버 타입](#맴버-타입)
-	- [맴버 함수](#맴버-함수)
+	- [멤버 타입](#멤버-타입)
+	- [멤버 함수](#멤버-함수)
 
 # vector
 
@@ -44,7 +44,7 @@ template<
 - Dynamic array : 포인터 연산을 통해서 시퀀스의 모든 요소에 직접 접근할 수 있으며 시퀀스 끝에 요소를 빠르게 추가/제거할 수 있다. 
 - Allocator-aware : 컨테이너는 할당자 개체를 사용하여 저장공간 요구 사항을 동적으로 처리한다. 
 
-## 맴버 타입
+## 멤버 타입
 
 | member type            | definition                                                                             | notes                                        |
 | ---------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------- |
@@ -62,7 +62,7 @@ template<
 | size_type              | an unsigned integral type that can represent any non-negative value of difference_type | usually the same as size_t                   |
 
 
-## 맴버 함수
+## 멤버 함수
 
 - [(constructor)](https://cplusplus.com/reference/vector/vector/vector/) : vector 생성자
 - [(destructor)](https://cplusplus.com/reference/vector/vector/~vector/) : vector 소멸자

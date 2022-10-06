@@ -8,7 +8,7 @@ permalink: /docs/c++/allocator
 
 * [std::allocator](#stdallocator)
 	* [정의](#정의)
-	* [맴버 함수](#맴버-함수)
+	* [멤버 함수](#멤버-함수)
 	* [예시](#예시)
 
 # std::allocator
@@ -27,7 +27,7 @@ struct allocator;
 
 - `T` : 개체에 의해 할달된 요소의 유형
 
-## 맴버 함수
+## 멤버 함수
 
 - [(constructor)](https://cplusplus.com/reference/memory/allocator/allocator/) : 할당자 객체 생성
 - [(destructor)](https://cplusplus.com/reference/memory/allocator/~allocator/) : 할당자 소멸자

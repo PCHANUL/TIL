@@ -26,7 +26,7 @@ permalink: /docs/projects/Containers
 - 표준 컨테이너에서 제공되는 것보다 더 많은 public 기능을 구현할 수 없다.
 - 컨테이너에 iterator 시스템이 있다면 구현해야 한다.
 - std::allocator를 사용해야 한다.
-- 비맴버 오버로드의 경우에 friend 키워드가 허용된다. 각 friend 키워드의 사용은 정당화되어야 한다.  
+- 비멤버 오버로드의 경우에 friend 키워드가 허용된다. 각 friend 키워드의 사용은 정당화되어야 한다.  
 - map::value_compare를 구현해야하며 friend 키워드가 허용된다. 
 
 ## Implements

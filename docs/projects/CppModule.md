@@ -346,7 +346,7 @@ explicit stack (const container_type& ctnr = container_type());
 stack<int, list<int>>   s;
 ```
 
-새로운 클래스를 정의하는 경우에 stack이 가진 맴버 함수를 모두 구현한다면 stack을 적용할 수 있다. stack의 기능이 제한된 이유는 여러 컨테이너에 적용할 수 있게 하기 위함이다. 이러한 이유 때문에 stack은 반복자를 사용할 수 없다. 과제에서는 반복자를 사용할 수 있는 stack을 구현하는 것이 목표이다. 
+새로운 클래스를 정의하는 경우에 stack이 가진 멤버 함수를 모두 구현한다면 stack을 적용할 수 있다. stack의 기능이 제한된 이유는 여러 컨테이너에 적용할 수 있게 하기 위함이다. 이러한 이유 때문에 stack은 반복자를 사용할 수 없다. 과제에서는 반복자를 사용할 수 있는 stack을 구현하는 것이 목표이다. 
 
 멤버 함수
 - empty() : 스택이 비어있으면 true, 아니면 false를 반환
@@ -355,7 +355,7 @@ stack<int, list<int>>   s;
 - push() : 스택의 가장 상단에 요소를 삽입
 - pop() : 스택의 가장 상단에 있는 요소를 삭제
 
-stack의 맴버 함수를 모두 구현한다. 
+stack의 멤버 함수를 모두 구현한다. 
 stack에서 iterator를 사용할 수 있도록 해야한다.  
 
 ### iterator
