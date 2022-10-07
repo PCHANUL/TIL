@@ -3,14 +3,15 @@ layout: default
 title: iterator
 nav_order: 2
 parent: c++ 
+has_children: true
 permalink: /docs/c++/iterator
 ---
 
-- [iterator](#iterator)
-	- [iterator categories](#iterator-categories)
-	- [iterator range](#iterator-range)
-	- [end()](#end)
-- [References](#references)
+* [iterator](#iterator)
+	* [iterator categories](#iterator-categories)
+	* [iterator range](#iterator-range)
+	* [end()](#end)
+* [References](#references)
 
 # iterator
 

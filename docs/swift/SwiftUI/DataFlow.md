@@ -43,13 +43,13 @@ Property Wrapper인 `@State`가 있다. 프로퍼티에 적용하면 시스템�
 
 이전에는 직접적으로 View 계층을 변경하는 방법으로 이벤트에 응답했었다. 예를 들어 유저 인터랙션이 발생될 때마다 직접 subView을 추가, 제거하거나 View의 알파값을 변경하는 코드를 실행하는 방식이었다. SwiftUI는 단순히 상태(State)를 변경하면 View가 업데이트된다. 
 
-![](../../src/projects/gridot/dataFlow.png)  
+![](/TIL/docs/src/projects/gridot/dataFlow.png)  
 
 # ObservableObject Protocol
 
 SwiftUI 외부의 이벤트도 State를 변화시킨다. 외부에서 발생하더라도 결과적으로 유저의 인터랙션과 차이가 없다. SwiftUI에서는 외부 이벤트를 Pulisher라고 하며, `Combine` 프레임 워크로부터 발생된다.  
 
-![](../../src/projects/gridot/publisher.png)  
+![](/TIL/docs/src/projects/gridot/publisher.png)  
 
 `ObservableObject`는 관리 중인 Model이 있을 경우, Model과 View의 동기화를 편하게 만들어주는 프로토콜들이다. 만약에 데이터가 변경되고, 그 상태를 외부에서 감지할 필요가 있는 모델이라면 `ObservableObject` 프로토콜을 따르도록 하면 된다. 예를 들어 팟캐스트 플레이어를 아이폰과 아이패드에서 이어서 들을 수 있도록하는 경우에 `ObservableObject`를 사용하면 간단하게 구현될 수 있다. 다음 코드에서는 `objectWillChange` 프로퍼티에 `PassthroughSubject`라는 `Publisher`를 정의하였고, 데이터가 변경되는 `advance()` 메소드 안에서 `Publisher`의 `send()`를 호출해주고 있다. 이 `Publisher`를 `subscribe`하여 데이터의 변경 시점을 정확히 알 수 있게 된다.  
 
@@ -87,7 +87,7 @@ MyView(model: modelInstance)
 
 SwiftUI의 `@EnvironmentObject`는 View 계층에 데이터를 넣어주는 캡슐화 방법이다.  
 
-![](../../src/projects/gridot/environmentObject.png)  
+![](/TIL/docs/src/projects/gridot/environmentObject.png)  
 
 `.environmentObject(_:)`를 통해서 Model을 Environment로 만들고, View에서 `@Environment` Property Wrapper를 붙여서 Model에 대한 의존성을 정의할 수 있다. `ObservedObject`와 마찬가지로 상태가 변경될 때마다 자동으로 View를 업데이트한다.  
 
@@ -95,25 +95,25 @@ SwiftUI의 `@EnvironmentObject`는 View 계층에 데이터를 넣어주는 캡�
 
 기본적으로 `@ObservedObject`를 사용하지만, Model의 변경이 여러 View를 거쳐서 전달되는 경우에는 `@EnvironmentObject`를 사용한다. 예를 들면 다음과 같은 View 계층이 있을 수 있다.  
 
-![](../../src/projects/gridot/views_01.png)  
+![](/TIL/docs/src/projects/gridot/views_01.png)  
 
 Model의 변경을 알아야하는 View에 `@EnvironmentObject`를 사용하여 처리할 수 있다.  
 
-![](../../src/projects/gridot/views_02.png)  
+![](/TIL/docs/src/projects/gridot/views_02.png)  
 
 
 # Source of Truth
 
 SwiftUI에서 Source of Truth로 데이터를 관리하는 방법은 다음과 같이 나누어 볼 수 있다. View에서 소유하고 관리하는 데이터를 `@State`로 구현하고, 외부에서 관리하는 데이터를 `ObservableObject`로 구현한다.  
 
-![](../../src/projects/gridot/sourceOfTruth.png)  
+![](/TIL/docs/src/projects/gridot/sourceOfTruth.png)  
 
 
 # Reusable Components
 
 재사용 가능한 컴포넌트를 만드는 경우에는 사용하는 데이터의 성격에 따라서 나뉠 수 있다.  
 
-![](../../src/projects/gridot/reusableComponents.png)  
+![](/TIL/docs/src/projects/gridot/reusableComponents.png)  
 
 # References
 

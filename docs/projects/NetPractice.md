@@ -97,7 +97,7 @@ OSI 7 계층은 통신이 일어나는 과정을 7단계로 크게 구분하여 
 
 데이터 캡슐화는 사용자 데이터가 각 계층을 지나면서 하위 계층은 상위 계층으로 부터 온 정보를 데이터로 취급하며, 자신의 계층 특성을 담은 제어정보를 헤더화 시켜서 붙이는 일련의 과정을 말한다. 데이터를 보낼 때는 응용 계층에서 시작되어 OSI 계층을 차례로 내려오며 물리 계층으로 간다. 이 과정에서 캡슐화를 하게 되는데 각 계층은 다른 계층과 통신할 때 데이터에 특정 정보가 들어 있는 머리말과 꼬리말을 추가한 후 다른 계층으로 전달한다.  
 
-![](../src/projects/network/network_25.jpeg)  
+![](/TIL/docs/src/projects/network/network_25.jpeg)  
 
 ### 1계층 물리 계층(Physical Layer)
 
@@ -111,7 +111,7 @@ OSI 7 계층은 통신이 일어나는 과정을 7단계로 크게 구분하여 
 
 네트워크 계층은 경로를 선택하고, 주소를 정하며 경로에 따라 패킷을 전달하는 역할을 한다. 데이터를 다른 네트워크를 통해 전달하기 때문에 인터넷이 가능하게 만드는 계층이다. 가장 중요한 기능은 데이터를 목적지까지 안전하고 빠르게 전달하는 기능이다. 네트워크 관리자가 직접 주소를 할당하는 구조인 논리적인 주소 구조(IP)를 가지며, 계층적이다.  
 
-![](../src/projects/network/network_22.png)  
+![](/TIL/docs/src/projects/network/network_22.png)  
 
 ### 4계층 전송 계층(Transport Layer)
 
@@ -119,7 +119,7 @@ OSI 7 계층은 통신이 일어나는 과정을 7단계로 크게 구분하여 
 
 |   3-웨이 핸드셰이킹 과정   |     TCP 연결 해제 과정     |
 | :------------------------: | :------------------------: |
-| ![](../src/projects/network/network_23.png) | ![](../src/projects/network/network_24.png) |
+| ![](/TIL/docs/src/projects/network/network_23.png) | ![](/TIL/docs/src/projects/network/network_24.png) |
 
 ### 5계층 세션 계층(Session Layer)
 
@@ -161,7 +161,7 @@ OSI 7 계층은 통신이 일어나는 과정을 7단계로 크게 구분하여 
 
 #### - 경로 지정
 
-![](../src/projects/network/network_14.png)
+![](/TIL/docs/src/projects/network/network_14.png)
 
 라우터에 패킷이 들어오면 패킷의 도착지 IP를 확인하여 경로를 지정한다. 패킷의 경로 정보를 얻고, 패킷을 포워딩하는 방법은 다음과 같이 세분화할 수 있다. 
 
@@ -239,10 +239,10 @@ TCP/IP는 유연한 네트워킹 도구이기 때문에 특정 요구에 맞게 
 
 |                                    TCP                                    |                                 UDP                                 |
 | :-----------------------------------------------------------------------: | :-----------------------------------------------------------------: |
-|                        ![](../src/projects/network/network_10.png)                         |                     ![](../src/projects/network/network_11.png)                      |
+|                        ![](/TIL/docs/src/projects/network/network_10.png)                         |                     ![](/TIL/docs/src/projects/network/network_11.png)                      |
 |                   연결형 서비스로 가상 회선 방식을 제공                   |              비연결형 서비스로 데이터그램 방식을 제공               |
 | 3way handshaking 과정을 통해 연결을 설정하고 4way handshaking을 통해 해제 | 정보를 주고 받을 때 정보를 보내거나 받는다는 신호절차를 거치지 않음 |
-|                        ![](../src/projects/network/network_12.png)                         |                     ![](../src/projects/network/network_13.png)                      |
+|                        ![](/TIL/docs/src/projects/network/network_12.png)                         |                     ![](/TIL/docs/src/projects/network/network_13.png)                      |
 
 ### TCP/IP 프로토콜
 
@@ -250,7 +250,7 @@ TCP/IP는 유연한 네트워킹 도구이기 때문에 특정 요구에 맞게 
 수신 호스트가 메시지를 이해하려면 통신에 관련된 각 시스템이 이러한 규칙을 준수해야 한다.  
 TCP/IP 프로토콜은 계층이라는 관점에서 이해할 수 있다. 계층은 애플리케이션 계층, 전송 계층, 네트워크 계층, 네트워크 인터페이스 계층, 하드웨어로 구성된다.  
 
-![TCP/IP 프로토콜 스위트](../src/projects/network/network_02.jpeg)  
+![TCP/IP 프로토콜 스위트](/TIL/docs/src/projects/network/network_02.jpeg)  
 
 ### TCP/IP 4 계층
 
@@ -281,12 +281,12 @@ TCP/UDP 기반의 응용 프로그램을 구현할 때 사용한다. 사용자�
 - 인터넷 네트워크 계층은 패킷을 IP(Internet Protocol) 데이터그램에 포함한 후 데이터그램 헤더 및 트레일러에 넣고 데이터그램 전송 위치를 결정한 후 네트워크 인터페이스 계층으로 데이터그램을 패스한다. 
 - 네트워크 계층은 IP 데이터그램을 승인하고 이더넷이나 토큰 링 네트워크와 같은 특정 네트워크 하드웨어를 통해 이들을 프레임으로 전송한다.  
 
-![전송자 애플리케이션에서 수신자 호스트로의 정보 이동](../src/projects/network/network_03.jpeg)
+![전송자 애플리케이션에서 수신자 호스트로의 정보 이동](/TIL/docs/src/projects/network/network_03.jpeg)
 
 위 그림을 보면 정보가 전송자에서 호스트로의 TCP/IP 프로토콜 계층에 따라 아래로 흐른다.
 호스트가 수신한 프레임은 역 방향으로 프로토콜 계층을 이동한다. 각 계층은 데이터가 애플리케이션 계층에 다시 도달할 때까지 해당 헤더 정보를 스트립한다. 
 
-![호스트에서 애플리케이션으로 정보 이동](../src/projects/network/network_04.jpeg)
+![호스트에서 애플리케이션으로 정보 이동](/TIL/docs/src/projects/network/network_04.jpeg)
 
 위 그림을 보면 정보가 호스트에서 전송자로 TCP/IP 프로토콜 계층에 따라 위로 흐른다.  
 - 프레임은 네트워크 인터페이스 계층에서 수신한다.  
@@ -296,7 +296,7 @@ TCP/UDP 기반의 응용 프로그램을 구현할 때 사용한다. 사용자�
 
 네트워크의 호스트는 정보의 전송과 수신을 동시에 수행한다. 아래의 그림은 TCP/IP 계층에 따라 양방향으로 데이터가 흐르는 것을 보여준다.  
 
-![호스트 데이터 전송 및 수신](../src/projects/network/network_05.jpeg)
+![호스트 데이터 전송 및 수신](/TIL/docs/src/projects/network/network_05.jpeg)
 
 
 ### TCP/IP 주소 지정
@@ -336,7 +336,7 @@ TCP/IP는 인터넷 주소의 세 가지 클래스인 클래스 A, 클래스 B, 
     - 클래스 C는 192.0.0.0 ~ 223.255.255.255까지로 규정된다.
 - 0을 사용하는 인터넷 주소 : C 클래스 인터넷 주소가 호스트 주소 부분에 0을 포함하면 TCP/IP는 네트워크의 와일드 카드 주소를 전송한다.  
 
-![](../src/projects/network/network_26.jpeg)  
+![](/TIL/docs/src/projects/network/network_26.jpeg)  
 
 ### 서브넷 주소
 
@@ -344,13 +344,13 @@ TCP/IP는 인터넷 주소의 세 가지 클래스인 클래스 A, 클래스 B, 
 TCP/IP의 서브 네트워크 기능은 단일 네트워크를 여러개의 논리적 네트워크(서브넷)로 분할할 수 있다.  
 하나의 인터넷 네트워크 주소를 서브넷에 내부적으로 구성하면 더 적은 인터넷 네트워크 주소가 필요하면서 로컬 라우팅 기능은 개선된다.  
 
-![](../src/projects/network/network_16.png)  
+![](/TIL/docs/src/projects/network/network_16.png)  
 
 표준 인터넷 프로토콜 주소 필드에는 네트워크 주소와 로컬 주소의 두 부분이 있다.  
 서브넷이 사용되도록 하기 위해 인터넷 주소의 로컬 주소 부분이 서브넷 번호와 호스트 번호로 분할된다.  
 서브넷은 로컬 자율 시스템이 메시지를 확실하게 라우트할 수 있도록 식별된다.  
 
-![클래스 A 주소](../src/projects/network/network_06.jpeg)
+![클래스 A 주소](/TIL/docs/src/projects/network/network_06.jpeg)
 
 이 그림은 전형적인 클래스 A 주소 구조를 보여준다.  
 처음 8비트는 네트워크 주소를 포함하고 나머지 24비트는 로컬 호스트 주소를 포함한다.  
@@ -359,7 +359,7 @@ TCP/IP의 서브 네트워크 기능은 단일 네트워크를 여러개의 논�
 전송인은 알려진 네트워크 주소로 메시지를 라우트하고, 로컬 시스템이 해당 서브넷과 호스트에 메시지를 라우트한다.  
 로컬 주소를 서브넷 주소와 호스트 주소로 분할하는 방법을 결정할 때, 서브넷 수와 해당 서브넷의 호스트 수를 고려해야 한다.  
 
-![해당 서브넷 주소가 있는 클래스 A 주소](../src/projects/network/network_07.jpeg)
+![해당 서브넷 주소가 있는 클래스 A 주소](/TIL/docs/src/projects/network/network_07.jpeg)
 
 서브넷 주소와 호스트 주소를 유연하게 지정할 수 있고, 다음과 같은 제한사항이 있다. 
 - network_address는 네트워크의 인터넷 주소이다.
@@ -379,11 +379,11 @@ subnet_address 필드의 폭이 0인 경우 네트워크는 서브넷으로 구�
 
 모든 IP 주소에는 서브넷 마스크가 있다. IP 주소를 서브네팅하지 않고 전부 쓰더라도 서브넷 마스크은 따라 다닌다. 주어진 네트워크를 나누어서 사용하는 경우에는 디폴트 서브넷 마스크를 고쳐서 사용한다.  
 
-![해당 서브넷 주소가 있는 클래스 A 주소](../src/projects/network/network_08.jpeg)
+![해당 서브넷 주소가 있는 클래스 A 주소](/TIL/docs/src/projects/network/network_08.jpeg)
 
 서브넷 마스크는 인터넷 주소처럼 4바이트 세트이다. 서브넷 마스크는 네트워크 및 서브네트워크 주소의 비트 위치에 해당하는 상위 비트와 호스트 주소의 비트 위치에 해당하는 하위 비트로 구성된다. 서브넷 마스크는 다음 그림과 유사하다.  
 
-![서브넷 마스크 예제](../src/projects/network/network_09.jpeg)  
+![서브넷 마스크 예제](/TIL/docs/src/projects/network/network_09.jpeg)  
 
 ### 서브넷 마스크 예시
 
@@ -442,27 +442,27 @@ IP주소 뒤에는 서브넷 마스크의 bit수를 표시된다. 예를 들어 
 
 IP주소를 할당하여 네트워크를 구성한다. 
 
-![](../src/projects/network/network_15.png)  
+![](/TIL/docs/src/projects/network/network_15.png)  
 
 위의 그림을 보면 인터넷, 라우터, 스위치, 클라이언트가 네트워크를 구성하고 있다. 서브넷팅으로 각각의 호스트가 통신할 수 있도록 IP주소를 할당해야 한다. 먼저, 서브넷이 어떻게 구성되어야 하는지 구분한다.  
 
-![](../src/projects/network/network_17.png)  
+![](/TIL/docs/src/projects/network/network_17.png)  
 
 클라이언트와 연결된 라우터는 동일한 서브넷 주소를 가진다. 그리고 스위치로 연결된 클라이언트들이 하나의 서브넷에 포함된다. 스위치는 OSI 2계층 네트워크 장치로써 네트워크 상의 주변 장치들 간의 데이터를 전송하는 역할을 한다. 그렇기 때문에 스위치 주변 클라이언트들은 동일한 서브넷에 포함된다.  
 
 구분된 서브넷과 인터넷은 라우터로 연결된다. 라우터는 OSI 3계층 네트워크 장치로써 패킷이 들어오면 목적지 IP 주소를 확인하고, 해당 주소의 경로를 지정해준다. 라우터는 패킷을 최적의 경로로 목적지까지 도달시키기 위해 라우팅 테이블에 경로 정보를 수집한다.  
 
-![](../src/projects/network/network_18.png)  
+![](/TIL/docs/src/projects/network/network_18.png)  
 
 라우터는 네트워크를 한 단계씩 뛰어넘으며 전달되는 방식으로 패킷을 전달하기 때문에 목적지와 다음 라우터의 IP 주소를 가지고 있다. 위의 그림을 보면, 라우팅 테이블의 오른쪽에 다음 라우터 IP 주소인 `163.172.250.12`가 입력되어 있다. 그렇기 때문에 왼쪽에는 목적지 네트워크의 IP 주소를 입력하면 된다. 즉, 서브넷의 IP 주소를 입력하면 된다.  
 
-![](../src/projects/network/network_19.png)  
+![](/TIL/docs/src/projects/network/network_19.png)  
 
-![](../src/projects/network/network_20.png)  
+![](/TIL/docs/src/projects/network/network_20.png)  
 
 인터넷 라우팅 테이블의 `68.58.0.0/16`은 하나의 라우터에 연결된 두 서브넷을 한 번에 처리하기 위한 네트워크 주소이다. 두 서브넷은 서로의 네트워크를 구분하기 위해 서브넷 마스크를 사용하게 된다.  
 
-![](../src/projects/network/network_21.png)  
+![](/TIL/docs/src/projects/network/network_21.png)  
 
 이렇게 정해진 IP 주소 범위 안에서 장치의 IP 주소를 정해주면 네트워크가 연결된다. 
 

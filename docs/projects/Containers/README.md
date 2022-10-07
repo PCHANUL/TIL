@@ -7,9 +7,9 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-- [Containers](#containers)
-  - [Requirements](#requirements)
-  - [Implements](#implements)
+* [Containers](#containers)
+  * [Requirements](#requirements)
+  * [Implements](#implements)
 
 
 # Containers
@@ -31,14 +31,14 @@ permalink: /docs/projects/Containers
 
 ## Implements
 
-- [allocator](../../c%2B%2B/allocator.md)
+- [allocator](../../docs/c%2B%2B/allocator)
   - allocator는 동적 메모리 할당을 관리하는데 필요한 기능이 정의된 객체이다.
   - STL은 사용자 지정 allocator가 제공되지 않으면 `std::allocator`를 사용한다.
-- [iterator](../../c%2B%2B/iterator.md)
+- [iterator](../../docs/c%2B%2B/iterator)
   - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.
 
 
-- [vector](../../c%2B%2B/vector.md)
+- [vector](../../docs/c%2B%2B/vector)
   - 순차적으로 엑세스할 수 있는 시퀀스 컨테이너이다.
 - map
   - 빠르게 검색할 수 있도록 정렬된 연관 컨테이너이다.

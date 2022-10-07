@@ -8,29 +8,37 @@ permalink: /docs/c++/StringMethods
 
 * [String Methods](#string-methods)
   * [Element access](#element-access)
+    * [operator[] : 해당 위치의 문자 참조를 반환](#operator--해당-위치의-문자-참조를-반환)
+    * [at : 해당 위치의 문자 참조를 반환](#at--해당-위치의-문자-참조를-반환)
+    * [back : 마지막 위치의 문자 참조를 반환](#back--마지막-위치의-문자-참조를-반환)
+    * [front : 첫번째 위치의 문자 참조를 반환](#front--첫번째-위치의-문자-참조를-반환)
   * [Modifiers](#modifiers)
-  * [Example](#example)
-  * [Example](#example-1)
-  * [Example](#example-2)
-  * [Example](#example-3)
-  * [Example](#example-4)
-  * [Example](#example-5)
+    * [operator+= : 문자열에 추가](#operator--문자열에-추가)
+    * [append : 문자열에 추가](#append--문자열에-추가)
+    * [push_back : 문자열 마지막에 문자를 추가](#push_back--문자열-마지막에-문자를-추가)
+    * [assign : 문자열에 새로운 값을 할당](#assign--문자열에-새로운-값을-할당)
+    * [insert : 문자열에서 지정하는 위치 앞에 문자를 삽입](#insert--문자열에서-지정하는-위치-앞에-문자를-삽입)
+    * [erase : 문자열에서 지정하는 위치의 문자를 제거](#erase--문자열에서-지정하는-위치의-문자를-제거)
+    * [replace : 문자열에서 지정하는 위치의 문자를 다른 문자열로 변경](#replace--문자열에서-지정하는-위치의-문자를-다른-문자열로-변경)
+    * [swap : 문자열의 내용을 다른 문자열과 교환한다.](#swap--문자열의-내용을-다른-문자열과-교환한다)
+    * [pop_back : 문자열의 마지막을 지운다](#pop_back--문자열의-마지막을-지운다)
   * [Iterators](#iterators)
-  * [Example](#example-6)
-  * [Example](#example-7)
+    * [begin : 문자열의 첫번째 문자를 가리키는 반복자를 반환](#begin--문자열의-첫번째-문자를-가리키는-반복자를-반환)
+    * [end : 문자열의 마지막 문자를 가리키는 반복자를 반환](#end--문자열의-마지막-문자를-가리키는-반복자를-반환)
   * [Capacity](#capacity)
-  * [Example](#example-8)
+    * [size & length : 문자열 길이](#size--length--문자열-길이)
+    * [resize : 문자열 길이 재설정](#resize--문자열-길이-재설정)
+    * [empty : 문자열이 비었는지 반환](#empty--문자열이-비었는지-반환)
   * [String operations](#string-operations)
-  * [Example](#example-9)
-  * [Example](#example-10)
+    * [substr : 부분 문자열 생성](#substr--부분-문자열-생성)
+    * [compare : 문자열을 비교](#compare--문자열을-비교)
 
 # String Methods
 
 
 ## Element access
 
-<details>
-<summary>operator[] : 해당 위치의 문자 참조를 반환</summary>
+### operator[] : 해당 위치의 문자 참조를 반환
 
 ```cpp
 char& operator[] (size_t pos);
@@ -39,10 +47,7 @@ char& operator[] (size_t pos);
 // 반환 : 문자열의 지정된 위치에 있는 문자
 ```
 
-</details>  
-
-<details>
-<summary>at : 해당 위치의 문자 참조를 반환</summary>
+### at : 해당 위치의 문자 참조를 반환
 
 ```cpp
 char& at (size_t pos);
@@ -51,10 +56,7 @@ char& at (size_t pos);
 // 반환 : 문자열의 지정된 위치에 있는 문자
 ```
 
-</details>  
-
-<details>
-<summary>back : 마지막 위치의 문자 참조를 반환</summary>
+### back : 마지막 위치의 문자 참조를 반환
 
 ```cpp
 char& back ();
@@ -62,10 +64,7 @@ char& back ();
 // 반환 : 문자열의 마지막 위치에 있는 문자
 ```
 
-</details>  
-
-<details>
-<summary>front : 첫번째 위치의 문자 참조를 반환</summary>
+### front : 첫번째 위치의 문자 참조를 반환
 
 ```cpp
 char& front ();
@@ -73,13 +72,10 @@ char& front ();
 // 반환 : 문자열의 첫번째 위치에 있는 문자
 ```
 
-</details>  
-
 
 ## Modifiers
 
-<details>
-<summary>operator+= : 문자열에 추가</summary>
+### operator+= : 문자열에 추가
 
 ```cpp
 string& operator+= (const string& str); // string (1)
@@ -92,10 +88,7 @@ string& operator+= (char c); // character (3)
 // 반환 : *this
 ```
 
-</details>  
-
-<details>
-<summary>append : 문자열에 추가</summary>
+### append : 문자열에 추가
 
 ```cpp
 // string (1)	
@@ -129,7 +122,7 @@ template <class InputIterator>
 
 ```
 
-## Example
+**Example**
 
 ```cpp
 // appending to string
@@ -162,10 +155,7 @@ Writing 10 dots here: .......... and then 5 more.....
 */
 ```
 
-</details>  
-
-<details>
-<summary>push_back : 문자열 마지막에 문자를 추가</summary>
+### push_back : 문자열 마지막에 문자를 추가
 
 ```cpp
 void push_back (char c);
@@ -174,12 +164,7 @@ void push_back (char c);
 // 반환 : 없음
 ```
 
-</details>
-
-</details>  
-
-<details>
-<summary>assign : 문자열에 새로운 값을 할당</summary>
+### assign : 문자열에 새로운 값을 할당
 
 ```cpp
 // string (1)	
@@ -212,7 +197,7 @@ template <class InputIterator>
 // 반환 : *this
 ```
 
-## Example  
+**Example**
 
 ```cpp
 // string::assign
@@ -262,10 +247,8 @@ fox jumps over
 
 */
 ```
-</details>
 
-<details>
-<summary>insert : 문자열에서 지정하는 위치 앞에 문자를 삽입</summary>
+### insert : 문자열에서 지정하는 위치 앞에 문자를 삽입
 
 ```cpp
 // string (1)	
@@ -303,7 +286,7 @@ template <class InputIterator>
 // 반복자를 반환하는 경우에는 삽입된 첫번째 문자를 가리키는 반복자
 ```
 
-## Example
+**Example**
 
 ```cpp
 // inserting into a string
@@ -338,10 +321,7 @@ to be, or not to be: that is the question...
 */
 ```
 
-</details>
-
-<details>
-<summary>erase : 문자열에서 지정하는 위치의 문자를 제거</summary>
+### erase : 문자열에서 지정하는 위치의 문자를 제거
 
 ```cpp
 // sequence (1)	
@@ -359,10 +339,7 @@ iterator erase (iterator p);
 // first, last : 제거할 문자열 내의 범위를 지정하는 반복자
 ```
 
-</details>
-
-<details>
-<summary>replace : 문자열에서 지정하는 위치의 문자를 다른 문자열로 변경</summary>
+### replace : 문자열에서 지정하는 위치의 문자를 다른 문자열로 변경
 
 ```cpp
 // string (1)	
@@ -403,7 +380,7 @@ template <class InputIterator>
 // 반환 : *this
 ```
 
-## Example
+**Example**
 
 ```cpp
 // replacing in a string
@@ -444,10 +421,7 @@ replace is useful.
 */
 ```
 
-</details>
-
-<details>
-<summary>swap : 문자열의 내용을 다른 문자열과 교환한다.</summary>
+### swap : 문자열의 내용을 다른 문자열과 교환한다.
 
 ```cpp
 void swap (string& str);
@@ -456,7 +430,7 @@ void swap (string& str);
 // 반환 : 없음
 ```
 
-## Example
+**Example**
 
 ```cpp
 // swap strings
@@ -487,10 +461,7 @@ Before the swap, buyer has money and seller has goods
 */
 ```
 
-</details>
-
-<details>
-<summary>pop_back : 문자열의 마지막을 지운다</summary>
+### pop_back : 문자열의 마지막을 지운다
 
 ```cpp
 void pop_back();
@@ -498,7 +469,7 @@ void pop_back();
 // 반환 : 없음
 ```
 
-## Example
+**Example**
 
 ```cpp
 // string::pop_back
@@ -520,12 +491,9 @@ hello world
 */
 ```
 
-</details>
-
 ## Iterators
 
-<details>
-<summary>begin : 문자열의 첫번째 문자를 가리키는 반복자를 반환</summary>
+### begin : 문자열의 첫번째 문자를 가리키는 반복자를 반환
 
 ```cpp
 iterator begin();
@@ -533,7 +501,7 @@ iterator begin();
 // 반환 : 문자열의 첫번째 문자를 가리키는 반복자
 ```
 
-## Example
+**Example**
 
 ```cpp
 // string::begin/end
@@ -557,10 +525,7 @@ Test string
 */
 ```
 
-</details>
-
-<details>
-<summary>end : 문자열의 마지막 문자를 가리키는 반복자를 반환</summary>
+### end : 문자열의 마지막 문자를 가리키는 반복자를 반환
 
 ```cpp
 iterator end();
@@ -568,7 +533,7 @@ iterator end();
 // 반환 : 문자열의 마지막 문자를 가리키는 반복자
 ```
 
-## Example
+**Example**
 
 ```cpp
 // string::begin/end
@@ -592,12 +557,9 @@ Test string
 */
 ```
 
-</details>
-
 ## Capacity
 
-<details>
-<summary>size & length : 문자열 길이</summary>
+### size & length : 문자열 길이
 
 string::size와 string::length는 정확히 동일한 값을 반환한다.
 
@@ -608,7 +570,7 @@ size_t length() const;
 // 반환 : 문자열 바이트 수
 ```
 
-## Example
+**Example**
 
 ```cpp
 // string::size
@@ -627,10 +589,7 @@ The size of str is 11 bytes
 */
 ```
 
-</details>
-
-<details>
-<summary>resize : 문자열 길이 재설정</summary>
+### resize : 문자열 길이 재설정
 
 문자열의 길이를 변경한다.  
 n이 현재 문자열 길이보다 작으면 n번째 이후의 문자는 제거되며 길이가 줄어든다.  
@@ -646,10 +605,7 @@ void resize (size_t n, char c);
 // 반환 : 없음
 ```
 
-</details>
-
-<details>
-<summary>empty : 문자열이 비었는지 반환</summary>
+### empty : 문자열이 비었는지 반환
 
 ```cpp
 bool empty() const;
@@ -657,12 +613,9 @@ bool empty() const;
 // 반환 : 문자열 길이가 0이라면 true, 아니라면 false
 ```
 
-</details>
-
 ## String operations
 
-<details>
-<summary>substr : 부분 문자열 생성</summary>
+### substr : 부분 문자열 생성
 
 ```cpp
 string substr (size_t pos = 0, size_t len = npos) const;
@@ -674,7 +627,7 @@ string substr (size_t pos = 0, size_t len = npos) const;
 // 반환 : 부분 문자열인 문자열
 ```
 
-## Example
+**Example**
 
 ```cpp
 // string::substr
@@ -702,10 +655,7 @@ think live in details.
 */
 ```
 
-</details>
-
-<details>
-<summary>compare : 문자열을 비교</summary>
+### compare : 문자열을 비교
 
 ```cpp
 // string (1)	
@@ -732,7 +682,7 @@ int compare (size_t pos, size_t len, const char* s, size_t n) const;
 // 반환 : 문자열 간의 관계를 나타내는 부호있는 정수
 ```
 
-## Example
+**Example**
 
 ```cpp
 // comparing apples with apples
@@ -766,8 +716,6 @@ and red apple is also an apple
 therefore, both are apples
 */
 ```
-
-</details>
 
 ---
 

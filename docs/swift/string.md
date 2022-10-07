@@ -71,7 +71,7 @@ welcome.removeSubrange(range)
 ## Substrings
  문자열에서 부분 문자열을 얻고자 할때 `Substring`의 인스턴스가 된다. Swift에서 부분 문자열은 대부분 문자열과 같은 메소드를 가지고 있으며, 문자열을 작업하는 같은 방법으로 부분 문자열을 작업할 수 있다. 문자열과 부분 문자열의 다른점은 성능 최적화이다. 부분 문자열은 원본 문자열의 저장소를 재사용하기 때문에 수정되기 전까지 메모리에 복사하는 성능 비용을 지불하지 않는다. 부분 문자열이 사용되는 동안은 전체 원본 문자열은 반드시 메모리에 유지되어야 한다. 아래의 그림은 `String`과 `Substring`의 관계를 보여준다.
 
- ![substring](/src/string01.png)
+ ![substring](/TIL/docs/src/string01.png)
 
  ```swift
  let greeting = "Hello, world!" 

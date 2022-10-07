@@ -20,16 +20,16 @@ permalink: /docs/projects/Gridot/Architecture
 
 # SwiftUI Architecture
 
-SwiftUI에 맞는 아키텍처를 선택하기 위해서 [SwiftUI Data Flow](../../swift/SwiftUI/DataFlow.md)를 알아보았다. UIKit에서 사용하던 아키텍처는 리액티브한 View를 구현하기위해 설계되었다. 하지만 SwiftUI에서는 View의 State가 변경될 때 자동으로 View가 업데이트되는 선언적 프레임 워크이기 때문에 UIKit의 아키텍처를 그대로 사용할 필요가 없다. 덕분에 다음의 그림과 같이 단방향의 데이터 흐름으로 이해하기 쉬운 설계가 가능하다.  
+SwiftUI에 맞는 아키텍처를 선택하기 위해서 [SwiftUI Data Flow](../../swift/SwiftUI/DataFlow)를 알아보았다. UIKit에서 사용하던 아키텍처는 리액티브한 View를 구현하기위해 설계되었다. 하지만 SwiftUI에서는 View의 State가 변경될 때 자동으로 View가 업데이트되는 선언적 프레임 워크이기 때문에 UIKit의 아키텍처를 그대로 사용할 필요가 없다. 덕분에 다음의 그림과 같이 단방향의 데이터 흐름으로 이해하기 쉬운 설계가 가능하다.  
 
-![](../../src/projects/gridot/architecture_01.png)  
+![](/TIL/docs/src/projects/gridot/architecture_01.png)  
 
 
 # The Composable Architecture
 
 TCA는 State를 관리하여 효율적으로 View의 변화를 관리할 수 있는 아키텍처이다. 이 아키텍처의 데이터 흐름을 보면 SwiftUI 프레임 워크에 적합하다는 사실을 알 수 있다.  
 
-![](../../src/projects/gridot/architecture_02.png)  
+![](/TIL/docs/src/projects/gridot/architecture_02.png)  
 
 - State : 비즈니스 로직을 수행하거나 UI를 그릴 때 필요한 데이터를 나타내는 타입이다.
 - Action : 유저의 행동이나 알림 등 어플리케이션에서 발생할 수 있는 모든 행동을 나타내는 타입이다.

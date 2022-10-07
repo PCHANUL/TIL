@@ -19,13 +19,13 @@ permalink: /docs/projects/Philosophers
 
 # 식사하는 철학자
 
-![](../src/projects/philosophers/philo_05.png)  
+![](/TIL/docs/src/projects/philosophers/philo_05.png)  
 
 원탁에 둘러 앉아있는 철학자들이 최대한 굶어 죽지 않도록 구현하는 과제이다. 철학자는 2개의 포크를 가지고 식사를 해야한다. 그러나 두 철학자 사이에는 1개의 포크만 있기 때문에 철학자는 옆에 있는 철학자가 식사 중이라면 포크를 내려놓기 전까지 기다려야 한다. 만약에 철학자가 주어진 시간 안에 2개의 포크를 가지고 식사를 시작하지 않으면 굶어 죽게 되는 것이다.  
 
 ## 교착 상태 (deadlock)
 
-![](../src/projects/philosophers/philo_06.png)  
+![](/TIL/docs/src/projects/philosophers/philo_06.png)  
 
 철학자 과제에서 해결해야하는 문제는 교착상태로 철학자들이 옆사람의 식사가 끝나기를 기다리다가 아무런 동작을 하지 못하고 굶어 죽게된다. 교착 상태는 다중 프로그래밍의 주요 난점 중 하나로써 두 개 이상의 작업이 상대방의 작업이 끝나기만을 기다리다가 아무것도 완료되지 못하는 상태를 말한다. 교착 상태가 일어나려면 다음과 같은 네 가지 조건을 충족시켜야 한다.  
 
@@ -47,7 +47,7 @@ permalink: /docs/projects/Philosophers
 
 ## 교착 상태 해결
 
-![](../src/projects/philosophers/philo_03.png)  
+![](/TIL/docs/src/projects/philosophers/philo_03.png)  
 
 효율적인 예방 방법인 순환 대기를 막는 방법을 사용한다. 철학자에게 고유 번호를 부여하고 번호가 홀수인 경우에는 오른쪽 포크를 먼저 가져가며 짝수인 경우에는 왼쪽 포크를 먼저 가져가도록 한다. 만약에 1번 철학자가 오른쪽 포크를 가져가면, 2번 철학자는 1번 철학자가 그 포크를 내려놓기 전까지 기다려야 한다. 그리고 1번 철학자는 왼쪽 포크를 가져가며 식사를 시작한다. 만약에 철학자의 수가 홀수라면 마지막 번호의 철학자가 오른쪽 포크를 가져가려해도 먼저 포크를 잡기 시작한 1번 철학자가 가지고 있기 때문에 기다리게 된다.  
 
@@ -55,8 +55,8 @@ permalink: /docs/projects/Philosophers
 
 ## 과제 규칙
 - 원탁에 앉아있는 각 철학자는 스레드로 구현되어야 하고, 철학자가 포크를 복제하는 것을 막기 위해서 뮤텍스를 이용해야한다.  
-  - [스레드(Thread)](../../Thread.md)
-  - [뮤텍스(Mutex)](../../Mutex.md)
+  - [스레드(Thread)](../c/Thread)
+  - [뮤텍스(Mutex)](../c/Mutex)
 - 한 명 이상의 철학자가 둥근 테이블에 앉아 다음과 같은 세 행동 중 하나를 취한다. (식사, 생각, 수면)  
 - 철학자는 식사를 마치면 포크를 내려놓고 잠자기 시작한다. 잠을 다 잤으면 생각하기 시작한다.  
 - 철학자는 반드시 2개의 포크를 사용하여 식사를 해야한다.
@@ -70,7 +70,7 @@ permalink: /docs/projects/Philosophers
 
 ## 코드 구조
 
-![](../src/projects/philosophers/philo_01.png)
+![](/TIL/docs/src/projects/philosophers/philo_01.png)
 
 프로그램은 초기화, 생성, 잠금, 해제 순서로 실행된다. 
 1. data 구조체를 생성하고, 입력받은 인자를 할당한다. mutex 배열을 생성하여 data 구조체에 할당한다.
@@ -82,7 +82,7 @@ permalink: /docs/projects/Philosophers
 
 ## 스레드 동작
 
-![](../src/projects/philosophers/philo_02.png)
+![](/TIL/docs/src/projects/philosophers/philo_02.png)
 
 메인 스레드에서 철학자 스레드와 옵저버 스레드를 생성한다. 철학자의 수만큼 스레드가 생성되면 스레드는 철학자의 동작을 반복하여 진행한다.  
 
@@ -92,7 +92,7 @@ permalink: /docs/projects/Philosophers
 
 ## 교착 상태 문제
 
-![](../src/projects/philosophers/philo_03.png)  
+![](/TIL/docs/src/projects/philosophers/philo_03.png)  
 
 스레드가 교착 상태에 빠지지 않도록 고유한 번호를 할당하고 번호에 따라서 순서를 정하였다. `lock_fork`과 `unlock_fork` 함수에서 스레드의 id 값이 홀수이면 오른쪽 포크를 먼저 집고, 짝수이면 왼쪽 포크를 먼저 집도록 한다. 이로 인해 스레드들이 순서대로 2개의 포크를 가져가게 되었으므로 교착 상태에 빠지지 않게 되었다. 
 
@@ -150,7 +150,7 @@ void	unlock_fork(t_philo *philo)
 
 ## usleep 정확도 문제  
 
-![](../src/projects/philosophers/philo_04.png)  
+![](/TIL/docs/src/projects/philosophers/philo_04.png)  
 
 `usleep` 함수를 테스트해보면 정확하지 않음을 확인할 수 있다. ( [usleep 정확도 문제](https://www.notion.so/philosophers-VM-c60be9c836084edfbcd9c07e29b429c4) )  
 usleep man 페이지를 보면 usleep 함수가 받는 인자는 잠을 자는 최소 값이라고 나와있다. 하지만 철학자 과제에서는 정확히 주어진 시간만큼 잠을 자야 하므로 다른 방법을 사용해야 한다.  
