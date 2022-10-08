@@ -8,7 +8,7 @@ permalink: /docs/projects/Gridot/Architecture
 ---
 
 * [Architecture](#architecture)
-* [SwiftUI Architecture](#swiftui-architecture)
+* [SwiftUI](#swiftui)
 * [The Composable Architecture](#the-composable-architecture)
 * [References](#references)
 
@@ -18,11 +18,12 @@ permalink: /docs/projects/Gridot/Architecture
 
 `관심사 분리`로 기능을 관심사에 따라서 독립적으로 개발한 뒤에 조합한다. 독립된 특정 기능에 집중하기 때문에 코드를 파악하기 수월하고, 기능을 변경하거나 추가하기 쉽다. 기능을 조합할 때에는 의존성이 저수준에서 고수준으로 향하는 `의존성 규칙`을 지켜야 한다. 이를 통해서 업무 로직(고수준 정책)은 세부 사항(저수준 정책)의 변경에 영향을 받지 않도록 할 수 있다.  
 
-# SwiftUI Architecture
+# SwiftUI
 
-SwiftUI에 맞는 아키텍처를 선택하기 위해서 [SwiftUI Data Flow](../../swift/SwiftUI/DataFlow)를 알아보았다. UIKit에서 사용하던 아키텍처는 리액티브한 View를 구현하기위해 설계되었다. 하지만 SwiftUI에서는 View의 State가 변경될 때 자동으로 View가 업데이트되는 선언적 프레임 워크이기 때문에 UIKit의 아키텍처를 그대로 사용할 필요가 없다. 덕분에 다음의 그림과 같이 단방향의 데이터 흐름으로 이해하기 쉬운 설계가 가능하다.  
+SwiftUI는 선언적 프레임 워크이다. 명령형인 UIKit에서는 리액티브한 View를 구현하기 위한 아키텍처가 필요했다. 하지만 UIKit과 다르게 SwifUI는 View의 State가 변경되면 자동으로 View도 업데이트된다. WWDC 2019 세션에서 SwiftUI가 어떠한 데이터 플로우 툴을 지원하고 있는지 알려주었다. 세션에서는 [SwiftUI Data Flow](../../swift/SwiftUI/DataFlow)를 알 수 있고, 다음의 그림과 같은 단방향의 데이터 흐름을 볼 수 있다.
 
 ![](/TIL/docs/src/projects/gridot/architecture_01.png)  
+
 
 
 # The Composable Architecture
