@@ -9,22 +9,26 @@ permalink: /docs/projects/Gridot/Architecture
 
 * [Architecture](#architecture)
 * [SwiftUI](#swiftui)
+* [SwiftUI Data Flow](#swiftui-data-flow)
 * [The Composable Architecture](#the-composable-architecture)
 * [References](#references)
 
 # Architecture
 
-프로젝트에 맞는 아키텍처를 선택하기 위해 검색해보니 다양한 아키텍처가 있었다. 이들은 모두 `관심사 분리`라는 공통된 목적을 가지고 있으며 `의존성 규칙`으로 기능하게 된다.  
-
-`관심사 분리`로 기능을 관심사에 따라서 독립적으로 개발한 뒤에 조합한다. 독립된 특정 기능에 집중하기 때문에 코드를 파악하기 수월하고, 기능을 변경하거나 추가하기 쉽다. 기능을 조합할 때에는 의존성이 저수준에서 고수준으로 향하는 `의존성 규칙`을 지켜야 한다. 이를 통해서 업무 로직(고수준 정책)은 세부 사항(저수준 정책)의 변경에 영향을 받지 않도록 할 수 있다.  
+프로젝트에 맞는 아키텍처를 선택하기 위해 검색해보니 다양한 아키텍처가 있었다. 이들은 모두 `관심사 분리`라는 공통된 목적을 가지고 있으며 `의존성 규칙`으로 기능하게 된다. `관심사 분리`로 기능을 관심사에 따라서 독립적으로 개발한 뒤에 조합한다. 독립된 특정 기능에 집중하기 때문에 코드를 파악하기 수월하고, 기능을 변경하거나 추가하기 쉽다. 기능을 조합할 때에는 의존성이 저수준에서 고수준으로 향하는 `의존성 규칙`을 지켜야 한다. 이를 통해서 업무 로직(고수준 정책)은 세부 사항(저수준 정책)의 변경에 영향을 받지 않도록 할 수 있다.  
 
 # SwiftUI
 
-SwiftUI는 선언적 프레임 워크이다. 명령형인 UIKit에서는 리액티브한 View를 구현하기 위한 아키텍처가 필요했다. 하지만 UIKit과 다르게 SwifUI는 View의 State가 변경되면 자동으로 View도 업데이트된다. WWDC 2019 세션에서 SwiftUI가 어떠한 데이터 플로우 툴을 지원하고 있는지 알려주었다. 세션에서는 [SwiftUI Data Flow](../../swift/SwiftUI/DataFlow)를 알 수 있고, 다음의 그림과 같은 단방향의 데이터 흐름을 볼 수 있다.
+SwiftUI에서는 View와 데이터의 동기화가 자동으로 이루어진다. 명령형인 UIKit에서는 리액티브한 View를 구현하기 위한 아키텍처가 필요했지만 SwifUI는 View의 State가 변경되면 자동으로 View도 업데이트된다. WWDC 2019에서 SwiftUI를 발표하며 진행한 세션 중에 데이터 플로우에 대한 세션이 있었다. 이 세션을 통해 어떠한 데이터 플로우로 앱을 구현해야하는지 알 수 있었다.  
 
-![](/TIL/docs/src/projects/gridot/architecture_01.png)  
+# [SwiftUI Data Flow](../../swift/SwiftUI/DataFlow)
 
+1. Data Access as a Dependency
+2. Source of Truth
 
+위의 두가지 개념으로 SwiftUI가 설명된다. View가 데이터에 의존하기 때문에 데이터가 변경되면 새로운 값으로 UI가 업데이트되며, Source of Truth를 가지고 View 계층의 여러 View를 일관되게 유지할 수 있다. `@State`라는 Property Wrapper를 지원하여 이들이 가능하게 하였다. 만약에 어떠한 프로퍼티 값이 `@State`로 선언되면 시스템은 프로퍼티를 영구적인 저장공간에 할당한다. View가 업데이트되더라도 저장공간에 유지되며 의존성으로써 값이 변경될 때 View를 다시 렌더링한다. 선언된 State가 Source of Truth로 동작하여 프로퍼티를 참조하는 다른 View에서 값을 변경하는 경우에도 State가 선언된 View가 업데이트 된다. 다른 View에서 State를 참조하는 방법으로 `@Binding` Property Wrapper가 제공된다. 이제는 데이터 값이 변경되었을 때 모든 subView를 새로운 값으로 변경하는 ViewController가 사라졌고, View의 데이터 의존성만 정의하면 프레임 워크에서 알아서 해준다.  
+
+![](/TIL/docs/src/projects/gridot/architecture_03.png)
 
 # The Composable Architecture
 

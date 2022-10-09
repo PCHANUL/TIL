@@ -4,11 +4,12 @@ title: SwiftUI Data Flow
 nav_order: 1
 parent: SwiftUI
 grand_parent: Swift
+permalink: /docs/swift/SwiftUI/DataFlow
 ---
 
 * [SwiftUI Data Flow](#swiftui-data-flow)
-  * [1. View에서 데이터를 읽을 때마다, View에는 데이터에 대한 의존이 발생된다.](#1-view에서-데이터를-읽을-때마다-view에는-데이터에-대한-의존이-발생된다)
-  * [2. View의 계층에서 읽어들이는 모든 데이터들은 Source of Truth를 가진다.](#2-view의-계층에서-읽어들이는-모든-데이터들은-source-of-truth를-가진다)
+  * [1. Data Access as a Dependency](#1-data-access-as-a-dependency)
+  * [2. Source of Truth](#2-source-of-truth)
 * [@State](#state)
 * [@Binding](#binding)
 * [ObservableObject Protocol](#observableobject-protocol)
@@ -23,13 +24,13 @@ grand_parent: Swift
 
 두 가지 개념을 통해서 SwiftUI를 이해할 수 있다.  
 
-## 1. View에서 데이터를 읽을 때마다, View에는 데이터에 대한 의존이 발생된다.
+## 1. Data Access as a Dependency
 
-SwiftUI 프레임 워크는 데이터가 변경을 감지하고, 새로운 값으로 UI를 업데이트한다. 그렇기 때문에 더 이상 데이터와 뷰의 동기화를 따로 해줄 필요가 없다.  
+View에서 데이터를 읽을 때마다, View에는 데이터에 대한 의존이 발생된다. SwiftUI 프레임 워크는 데이터가 변경을 감지하고, 새로운 값으로 UI를 업데이트한다. 그렇기 때문에 더 이상 데이터와 뷰의 동기화를 따로 해줄 필요가 없다.  
 
-## 2. View의 계층에서 읽어들이는 모든 데이터들은 Source of Truth를 가진다.
+## 2. Source of Truth
 
-View에서 읽는 데이터들은 결국 하나의 원천을 가진다. 만약에 하위의 여러 View에서 사용되는 데이터가 중복되어 존재한다면 직접 싱크를 맞추어야 한다. 이는 일관된 UI를 유지하기 힘들다. 그러므로 상위의 View에 데이터를 모으고, 하위의 View들이 그 데이터를 참조하게 만들면 데이터의 일관성을 지킬 수 있다.  
+View의 계층에서 읽는 데이터들은 결국 하나의 원천을 가진다. 만약에 하위의 여러 View에서 사용되는 데이터가 중복되어 존재한다면 직접 싱크를 맞추어야 한다. 이는 일관된 UI를 유지하기 힘들다. 그러므로 상위의 View에 데이터를 모으고, 하위의 View들이 그 데이터를 참조하게 만들면 데이터의 일관성을 지킬 수 있다.  
 
 # @State
 
