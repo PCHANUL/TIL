@@ -10,6 +10,7 @@ permalink: /docs/projects/Containers
 * [Containers](#containers)
   * [Requirements](#requirements)
   * [Implements](#implements)
+  * [iterator](#iterator)
 
 
 # Containers
@@ -31,18 +32,35 @@ permalink: /docs/projects/Containers
 
 ## Implements
 
-- [allocator](../../docs/c%2B%2B/allocator)
+- [allocator](../../../docs/c%2B%2B/allocator)
   - allocator는 동적 메모리 할당을 관리하는데 필요한 기능이 정의된 객체이다.
   - STL은 사용자 지정 allocator가 제공되지 않으면 `std::allocator`를 사용한다.
-- [iterator](../../docs/c%2B%2B/iterator)
+- [iterator](../../../docs/c%2B%2B/iterator/README)
   - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.
 
 
-- [vector](../../docs/c%2B%2B/vector)
+- [vector](../../../docs/c%2B%2B/vector)
   - 순차적으로 엑세스할 수 있는 시퀀스 컨테이너이다.
 - map
   - 빠르게 검색할 수 있도록 정렬된 연관 컨테이너이다.
 - stack
   - 시퀀스 컨테이너에 대해 다른 인터페이스를 제공하는 컨테이너 어댑터이다.
+
+## iterator
+
+iterator는 컨테이너에 있는 요소를 가리키는 객체이다.  
+기능에 따라서 5가지 iterator가 있으며 동일한 맴버 함수를 사용할 수 있다.  
+맴버 함수는 모든 iterator 타입을 받지만 다르게 동작해야 하므로 컴파일 시점에 조건 처리를 한다.  
+이때 속성 정보 클래스라는 개념을 사용한다.  
+iterator_traits라는 속성 정보 클래스로 컴파일 시점에 iterator의 속성을 확인할 수 있다.  
+컴파일 시점에 iterator_traits로 확인하는 속성을 모든 iterator가 가지고 있어야 한다.  
+iterator_traits로 분별된 iterator는 각각의 iterator로 오버로드된 맴버함수를 호출한다.  
+
+이 프로젝트에서 구현하는 컨테이너는 vector와 map이다.  
+vector는 random_access iterator를 사용하고, map은 bidirectional iterator를 사용한다.  
+
+
+
+
 
 
