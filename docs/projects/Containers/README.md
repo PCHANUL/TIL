@@ -36,8 +36,8 @@ permalink: /docs/projects/Containers
   - allocator는 동적 메모리 할당을 관리하는데 필요한 기능이 정의된 객체이다.
   - STL은 사용자 지정 allocator가 제공되지 않으면 `std::allocator`를 사용한다.
 - [iterator](../../../docs/c%2B%2B/iterator/README)
-  - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.
-
+  - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.  
+  - 컨테이너의 반복자는 iterator_category로 구별되며 5가지의 반복자 타입이 있다.  
 
 - [vector](../../../docs/c%2B%2B/vector)
   - 순차적으로 엑세스할 수 있는 시퀀스 컨테이너이다.
@@ -57,10 +57,6 @@ iterator_traits라는 속성 정보 클래스로 컴파일 시점에 iterator의
 iterator_traits로 분별된 iterator는 각각의 iterator로 오버로드된 맴버함수를 호출한다.  
 
 이 프로젝트에서 구현하는 컨테이너는 vector와 map이다.  
-vector는 random_access iterator를 사용하고, map은 bidirectional iterator를 사용한다.  
-
-
-
-
-
+vector의 iterator_category는 random_access_iterator_tag이고,  
+map의 iterator_category는 bidirectional_iterator_tag이다.  
 
