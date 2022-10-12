@@ -26,7 +26,11 @@ SwiftUI에서는 View와 데이터의 동기화가 자동으로 이루어진다.
 1. Data Access as a Dependency
 2. Source of Truth
 
-위의 두가지 개념으로 SwiftUI가 설명된다. View가 데이터에 의존하기 때문에 데이터가 변경되면 새로운 값으로 UI가 업데이트되며, Source of Truth를 가지고 View 계층의 여러 View를 일관되게 유지할 수 있다. `@State`라는 Property Wrapper를 지원하여 이들이 가능하게 하였다. 만약에 어떠한 프로퍼티 값이 `@State`로 선언되면 시스템은 프로퍼티를 영구적인 저장공간에 할당한다. View가 업데이트되더라도 저장공간에 유지되며 의존성으로써 값이 변경될 때 View를 다시 렌더링한다. 선언된 State가 Source of Truth로 동작하여 프로퍼티를 참조하는 다른 View에서 값을 변경하는 경우에도 State가 선언된 View가 업데이트 된다. 다른 View에서 State를 참조하는 방법으로 `@Binding` Property Wrapper가 제공된다. 이제는 데이터 값이 변경되었을 때 모든 subView를 새로운 값으로 변경하는 ViewController가 사라졌고, View의 데이터 의존성만 정의하면 프레임 워크에서 알아서 해준다.  
+두가지 개념으로 SwiftUI가 설명된다. 첫번째는 데이터 의존성이다. SwiftUI의 View가 데이터에 의존하여 데이터가 변경될 때 새로운 값으로 UI가 업데이트된다. 두번째는 하나의 원천 데이터이다. 상위의 View의 데이터를 계층의 여러 View가 참조하면 일관되게 데이터를 유지할 수 있다. 이러한 개념들을 위해 SwiftUI는 몇가지 데이터 플로우 툴을 제공한다.  
+
+`@State`는 Property Wrapper로써 View가 State로 선언된 속성에 의존하도록 한다. 만약에 State 값이 변경되면 SwiftUI는 값에 의존하는 View 계층 구조의 부분이 업데이트된다. 그리고 State 값은 Source of Truth로써 View 계층에서 사용된다. 부모 View에서 선언된 State가 변경되면 계층에 있는 자식 View도 업데이트되지만 자식은 State 값을 변경하지 못한다. 이때 `@Binding`이라는 Property Wrapper로 State를 바인딩하여 수정할 수 있다. 자식이 부모의 State를 바인딩하여 수정하면 계층이 업데이트 될 것이다.  
+
+결국 프레임워크가 의존성을 관리해주는 SwiftUI에서는 State만 변경하면 된다. 그래서 이는 다음과 같이 이해하기 쉬운 단방향 데이터 흐름으로 나타난다.  
 
 ![](/TIL/docs/src/projects/gridot/architecture_03.png)
 

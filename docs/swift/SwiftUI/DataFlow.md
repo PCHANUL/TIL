@@ -1,6 +1,6 @@
 ---
 layout: default
-title: SwiftUI Data Flow
+title: Data Flow
 nav_order: 1
 parent: SwiftUI
 grand_parent: Swift

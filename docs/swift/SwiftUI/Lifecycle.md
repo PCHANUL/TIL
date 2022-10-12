@@ -1,6 +1,6 @@
 ---
 layout: default
-title: SwiftUI Lifecycle
+title: Lifecycle
 nav_order: 1
 parent: SwiftUI
 grand_parent: Swift
