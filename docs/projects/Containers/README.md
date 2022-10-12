@@ -7,10 +7,11 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-* [Containers](#containers)
-  * [Requirements](#requirements)
-  * [Implements](#implements)
-  * [iterator](#iterator)
+- [Containers](#containers)
+  - [Requirements](#requirements)
+  - [Implements](#implements)
+  - [allocator](#allocator)
+  - [iterator](#iterator)
 
 
 # Containers
@@ -38,6 +39,7 @@ permalink: /docs/projects/Containers
 - [iterator](../../../docs/c%2B%2B/iterator/README)
   - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.  
   - 컨테이너의 반복자는 iterator_category로 구별되며 5가지의 반복자 타입이 있다.  
+- enable_if
 
 - [vector](../../../docs/c%2B%2B/vector)
   - 순차적으로 엑세스할 수 있는 시퀀스 컨테이너이다.
@@ -45,6 +47,11 @@ permalink: /docs/projects/Containers
   - 빠르게 검색할 수 있도록 정렬된 연관 컨테이너이다.
 - stack
   - 시퀀스 컨테이너에 대해 다른 인터페이스를 제공하는 컨테이너 어댑터이다.
+
+## allocator
+
+사용자 정의 allocator가 들어와도 std::allocator를 사용하는 경우와 같은 동작을 할 수 있는가?
+
 
 ## iterator
 
