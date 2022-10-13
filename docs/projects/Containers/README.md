@@ -7,11 +7,12 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-- [Containers](#containers)
-  - [Requirements](#requirements)
-  - [Implements](#implements)
-  - [allocator](#allocator)
-  - [iterator](#iterator)
+* [Containers](#containers)
+  * [Requirements](#requirements)
+  * [Implements](#implements)
+  * [allocator](#allocator)
+  * [iterator](#iterator)
+  * [vector](#vector)
 
 
 # Containers
@@ -39,7 +40,7 @@ permalink: /docs/projects/Containers
 - [iterator](../../../docs/c%2B%2B/iterator/README)
   - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.  
   - 컨테이너의 반복자는 iterator_category로 구별되며 5가지의 반복자 타입이 있다.  
-- enable_if
+- [enable_if](../../../docs/c%2B%2B/enable_if.md)
 
 - [vector](../../../docs/c%2B%2B/vector)
   - 순차적으로 엑세스할 수 있는 시퀀스 컨테이너이다.
@@ -66,4 +67,11 @@ iterator_traits로 분별된 iterator는 각각의 iterator로 오버로드된 �
 이 프로젝트에서 구현하는 컨테이너는 vector와 map이다.  
 vector의 iterator_category는 random_access_iterator_tag이고,  
 map의 iterator_category는 bidirectional_iterator_tag이다.  
+
+## vector 
+
+vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로 메모리를 재할당한다.  
+
+- [벡터의 용량과 크기](https://thebook.io/006842/ch02/03/02/)  
+
 
