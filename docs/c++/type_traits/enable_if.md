@@ -1,9 +1,10 @@
 ---
 layout: default
-title: const
+title: enable_if
 nav_order: 2
-parent: c++ 
-permalink: /docs/c++/const
+grand_parent: c++ 
+parent: type_traits
+permalink: /docs/c++/type_traits/enable_if
 ---
 
 - [SFINAE](#sfinae)

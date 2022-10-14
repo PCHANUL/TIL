@@ -7,12 +7,15 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-* [Containers](#containers)
-  * [Requirements](#requirements)
-  * [Implements](#implements)
-  * [allocator](#allocator)
-  * [iterator](#iterator)
-  * [vector](#vector)
+- [Containers](#containers)
+  - [Requirements](#requirements)
+  - [Implements](#implements)
+  - [allocator](#allocator)
+  - [iterator](#iterator)
+  - [vector](#vector)
+  - [Problems](#problems)
+    - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
+      - [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
 
 
 # Containers
@@ -40,7 +43,7 @@ permalink: /docs/projects/Containers
 - [iterator](../../../docs/c%2B%2B/iterator/README)
   - STL 컨테이너에 저장된 요소를 순회하며, 각각의 요소에 대한 접근을 제공한다.  
   - 컨테이너의 반복자는 iterator_category로 구별되며 5가지의 반복자 타입이 있다.  
-- [enable_if](../../../docs/c%2B%2B/enable_if.md)
+- [enable_if](../../../docs/c%2B%2B/type_traits/enable_if.md)
 
 - [vector](../../../docs/c%2B%2B/vector)
   - 순차적으로 엑세스할 수 있는 시퀀스 컨테이너이다.
@@ -73,5 +76,52 @@ map의 iterator_category는 bidirectional_iterator_tag이다.
 vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로 메모리를 재할당한다.  
 
 - [벡터의 용량과 크기](https://thebook.io/006842/ch02/03/02/)  
+
+
+## Problems
+
+### 1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인
+  - 템플릿 인자에 `iterator_category`가 정의되어 있는지 확인하면 된다. 
+  - `iterator`는 `iterator_category`로 구분된다.
+  - `T::iterator_category`로 확인하면 맴버가 없는 경우에 오류가 발생된다.  
+  - 맴버를 확인하면 오류가 발생되므로 타입별로 오버로딩하는 방법을 사용할 수 없다. 
+
+#### is_class : class 타입인지 확인하는 메타 함수
+
+- 참조 링크 : [템플릿 프로그래밍](https://modoocode.com/295)  
+
+`<type_traits>`에 있는 메타 함수 중에 `is_class`가 있다. 이 함수는 어떤 타입 `T`가 클래스인지 아닌지 확인한다.  
+
+```cpp
+namespace detail {
+template <class T>
+char test(int T::*);
+struct two {
+  char c[2];
+};
+template <class T>
+two test(...);
+}  // namespace detail
+
+template <class T>
+struct is_class
+    : std::integral_constant<bool, sizeof(detail::test<T>(0)) == 1 &&
+                                     !std::is_union<T>::value> {};
+```
+
+위의 예제 코드에서 `std::integral_constant`의 값은 템플릿 인자에 따라서 달라진다. 만약에 두번째 인자가 `true`가 되어서 `std::integral_constant<bool, true>`이면 `true`인 클래스가 된다.  
+
+```cpp 
+sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
+```
+
+즉, 위의 부분이 `true`이면 타입이 클래스라고 할 수 있다. `sizeof(detail::test<T>(0)) == 1` 부분이 중요하며 여기에서 클래스인지 아닌지 나뉜다. `detail` 네임스페이스에는 두개의 `test` 함수가 오버로드되어 인자에 따라서 호출되는 함수가 다르게 된다.  
+
+첫번째 함수인 `char test(int T::*);`는 클래스가 아니라면 오버로드 후보에서 제외된다. `T::*`는 데이터 멤버를 가리키는 포인터이기 때문에 클래스에서만 사용할 수 있기 때문이다. 해당 클래스에 `int` 데이터 멤버가 없어도 유효한 문장이다.  
+
+두번째 함수인 `two test(...);`는 타입에 상관없이 인스턴스화되며 `struct two { char c[2] };`에 의해서 `sizeof`가 2가 된다. 그러므로 클래스가 아니라면 `sizeof(detail::test<T>(0)) == 1`에서 `false`가 된다.  
+
+
+
 
 
