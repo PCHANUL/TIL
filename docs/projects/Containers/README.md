@@ -7,15 +7,17 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-* [Containers](#containers)
-  * [Requirements](#requirements)
-  * [Implements](#implements)
-  * [allocator](#allocator)
-  * [iterator](#iterator)
-  * [vector](#vector)
-  * [Problems](#problems)
-    * [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
-      * [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
+- [Containers](#containers)
+  - [Requirements](#requirements)
+  - [Implements](#implements)
+  - [allocator](#allocator)
+  - [iterator](#iterator)
+  - [vector](#vector)
+  - [Problems](#problems)
+    - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
+      - [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
+    - [2. vector의 저장 공간 변경 방법](#2-vector의-저장-공간-변경-방법)
+      - [_TmpVector](#_tmpvector)
 
 
 # Containers
@@ -75,8 +77,14 @@ map의 iterator_category는 bidirectional_iterator_tag이다.
 
 vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로 메모리를 재할당한다.  
 - 생성자에서는 생성해야하는 크기만큼 메모리 공간을 확보한다.
+- 복사 할당자는 복사받는 데이터의 크기만큼 공간이 없는 경우에만 재할당한다.
 - push_back으로 요소를 추가하는 경우에 메모리 크기를 확인하고, 2배로 늘린다.
 - pop_back으로 요소를 제거하는 경우에는 메모리를 재할당하지 않는다.
+
+멤버 함수를 위한 함수
+- __destroy_end : new_end를 받고, old_end까지의 요소를 제거한다.
+- __construct_end : 새로운 공간을 할당받고, 요소들을 위치시킨다.
+
 
 - [벡터의 용량과 크기](https://thebook.io/006842/ch02/03/02/)  
 
@@ -84,10 +92,10 @@ vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로
 ## Problems
 
 ### 1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인
-  - 템플릿 인자에 `iterator_category`가 정의되어 있는지 확인하면 된다. 
-  - `iterator`는 `iterator_category`로 구분된다.
-  - `T::iterator_category`로 확인하면 맴버가 없는 경우에 오류가 발생된다.  
-  - 맴버를 확인하면 오류가 발생되므로 타입별로 오버로딩하는 방법을 사용할 수 없다. 
+- 템플릿 인자에 `iterator_category`가 정의되어 있는지 확인하면 된다. 
+- `iterator`는 `iterator_category`로 구분된다.
+- `T::iterator_category`로 확인하면 맴버가 없는 경우에 오류가 발생된다.  
+- 맴버를 확인하면 오류가 발생되므로 타입별로 오버로딩하는 방법을 사용할 수 없다. 
 
 #### is_class : class 타입인지 확인하는 메타 함수
 
@@ -123,6 +131,15 @@ sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
 첫번째 함수인 `char test(int T::*);`는 클래스가 아니라면 오버로드 후보에서 제외된다. `T::*`는 데이터 멤버를 가리키는 포인터이기 때문에 클래스에서만 사용할 수 있기 때문이다. 해당 클래스에 `int` 데이터 멤버가 없어도 유효한 문장이다.  
 
 두번째 함수인 `two test(...);`는 타입에 상관없이 인스턴스화되며 `struct two { char c[2] };`에 의해서 `sizeof`가 2가 된다. 그러므로 클래스가 아니라면 `sizeof(detail::test<T>(0)) == 1`에서 `false`가 된다.  
+
+
+### 2. vector의 저장 공간 변경 방법
+- 
+
+#### _TmpVector
+- _TmpVector : vector의 저장 공간을 변경하기 위한 임시 객체이다. 
+  - __begin, __end, __end_mem : 할당받은 메모리 주소를 저장한다.
+  - ~_TmpVector : 메모리의 데이터를 소멸시키고, 메모리 공간을 해제한다.
 
 
 
