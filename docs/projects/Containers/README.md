@@ -7,15 +7,15 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-- [Containers](#containers)
-  - [Requirements](#requirements)
-  - [Implements](#implements)
-  - [allocator](#allocator)
-  - [iterator](#iterator)
-  - [vector](#vector)
-  - [Problems](#problems)
-    - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
-      - [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
+* [Containers](#containers)
+  * [Requirements](#requirements)
+  * [Implements](#implements)
+  * [allocator](#allocator)
+  * [iterator](#iterator)
+  * [vector](#vector)
+  * [Problems](#problems)
+    * [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
+      * [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
 
 
 # Containers
@@ -74,6 +74,9 @@ map의 iterator_category는 bidirectional_iterator_tag이다.
 ## vector 
 
 vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로 메모리를 재할당한다.  
+- 생성자에서는 생성해야하는 크기만큼 메모리 공간을 확보한다.
+- push_back으로 요소를 추가하는 경우에 메모리 크기를 확인하고, 2배로 늘린다.
+- pop_back으로 요소를 제거하는 경우에는 메모리를 재할당하지 않는다.
 
 - [벡터의 용량과 크기](https://thebook.io/006842/ch02/03/02/)  
 
