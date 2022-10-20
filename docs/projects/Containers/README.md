@@ -16,8 +16,8 @@ permalink: /docs/projects/Containers
   - [Problems](#problems)
     - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
       - [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
-    - [2. vector의 저장 공간 변경 방법](#2-vector의-저장-공간-변경-방법)
-      - [_TmpVector](#_tmpvector)
+    - [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
+      - [_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
 
 
 # Containers
@@ -133,13 +133,21 @@ sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
 두번째 함수인 `two test(...);`는 타입에 상관없이 인스턴스화되며 `struct two { char c[2] };`에 의해서 `sizeof`가 2가 된다. 그러므로 클래스가 아니라면 `sizeof(detail::test<T>(0)) == 1`에서 `false`가 된다.  
 
 
-### 2. vector의 저장 공간 변경 방법
-- 
+### 2. vector의 저장 공간 관리
+- 새로운 요소를 추가하는 경우에 저장 공간을 확인하고, 저장 공간이 부족하다면 2배로 확장한다.
+- 저장 공간 크기를 변경하는 함수는 다음과 같다.
+- push_back, insert, resize, reserve, assign
+- 저장 공간 크기를 변경할 때마다 사용되는 변수와 함수를 포함하는 클래스를 구현한다.
 
-#### _TmpVector
-- _TmpVector : vector의 저장 공간을 변경하기 위한 임시 객체이다. 
+#### _TmpVector : vector의 메모리 재할당을 위한 클래스
+- _TmpVector : vector의 저장 공간 크기을 변경하기 위한 임시 객체이다. 
   - __begin, __end, __end_mem : 할당받은 메모리 주소를 저장한다.
+  - _TmpVector : 생성해야하는 저장 공간의 크기와 새로운 요소를 받아서 메모리를 할당받는다.
   - ~_TmpVector : 메모리의 데이터를 소멸시키고, 메모리 공간을 해제한다.
+  - insert_end(iter, iter) : 두 반복자를 인자로 받아서 끝에서 부터 요소를 추가한다.
+  - insert_end(ele) : 하나의 요소를 받아서 끝에 추가한다.
+  - move(vec) : vector와 메모리 주소를 교환한다.
+  - swap(ptr, ptr) : 두 주소를 교환한다.
 
 
 
