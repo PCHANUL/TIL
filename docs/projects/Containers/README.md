@@ -12,6 +12,7 @@ permalink: /docs/projects/Containers
   - [Implements](#implements)
   - [allocator](#allocator)
   - [iterator](#iterator)
+  - [reverse_iterator](#reverse_iterator)
   - [vector](#vector)
   - [Problems](#problems)
     - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
@@ -72,6 +73,11 @@ iterator_traits로 분별된 iterator는 각각의 iterator로 오버로드된 �
 이 프로젝트에서 구현하는 컨테이너는 vector와 map이다.  
 vector의 iterator_category는 random_access_iterator_tag이고,  
 map의 iterator_category는 bidirectional_iterator_tag이다.  
+
+## reverse_iterator
+
+역방향 반복자는 반복자의 방향을 바꾸는 반복자 어댑터이다. 양방향 반복자가 역방향 반복자가 되면 끝에서 시작으로 이동하는 새로운 반복자를 생성한다. 반복자 `i`에서 생성된 역방향 반복자 `r`의 경우에 `&*r == &*(i-1)` 관계가 항상 `true`이다. 
+
 
 ## vector 
 
@@ -148,6 +154,8 @@ sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
   - insert_end(ele) : 하나의 요소를 받아서 끝에 추가한다.
   - move(vec) : vector와 메모리 주소를 교환한다.
   - swap(ptr, ptr) : 두 주소를 교환한다.
+
+
 
 
 
