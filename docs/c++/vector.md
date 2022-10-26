@@ -7,10 +7,16 @@ permalink: /docs/c++/vector
 ---
 
 - [vector](#vector)
-	- [정의](#정의)
-	- [속성](#속성)
-	- [멤버 타입](#멤버-타입)
-	- [멤버 함수](#멤버-함수)
+	- [Definition](#definition)
+	- [Properties](#properties)
+	- [Member types](#member-types)
+	- [Member functions](#member-functions)
+		- [Iterators](#iterators)
+		- [Capacity](#capacity)
+		- [Element access](#element-access)
+		- [Modifiers](#modifiers)
+		- [Allocator](#allocator)
+		- [Non-member function overloads](#non-member-function-overloads)
 
 # vector
 
@@ -22,7 +28,7 @@ permalink: /docs/c++/vector
 
 따라서 `array`와 비교하면 `vector`는 저장공간을 효율적인 방식으로 관리하는 기능의 대가로 더 많은 메모리를 소비한다.  
 
-## 정의
+## Definition
 
 ```cpp
 template<
@@ -38,13 +44,13 @@ template<
   - 컨테이너는 저장공간이 필요한 경우에 `allocator`를 사용하여 배열을 재할당한다. 
 
 
-## 속성
+## Properties
 
 - Sequence : 시퀀스 컨테이너의 요소는 엄격한 선형 시퀀스로 정렬된다. 개별 요소는 이 순서에서 해당 위치로 액세스된다. 
 - Dynamic array : 포인터 연산을 통해서 시퀀스의 모든 요소에 직접 접근할 수 있으며 시퀀스 끝에 요소를 빠르게 추가/제거할 수 있다. 
 - Allocator-aware : 컨테이너는 할당자 개체를 사용하여 저장공간 요구 사항을 동적으로 처리한다. 
 
-## 멤버 타입
+## Member types
 
 | member type            | definition                                                                             | notes                                        |
 | ---------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------- |
@@ -61,18 +67,19 @@ template<
 | difference_type        | a signed integral type, identical to: iterator_traits<iterator>::difference_type       | usually the same as ptrdiff_t                |
 | size_type              | an unsigned integral type that can represent any non-negative value of difference_type | usually the same as size_t                   |
 
-
-## 멤버 함수
+## Member functions
 
 - [(constructor)](https://cplusplus.com/reference/vector/vector/vector/) : vector 생성자
 - [(destructor)](https://cplusplus.com/reference/vector/vector/~vector/) : vector 소멸자
 - operator= : 컨텐츠 할당
 
+### Iterators
 - begin : 반복자의 시작점을 반환
 - end : 반복자의 마지막을 반환
 - rbegin : 역행 반복자의 시작점을 반환
 - rend : 역행 반복자의 마지막을 반환
 
+### Capacity
 - size : 크기를 반환
 - max_size : 최대 크기를 반환
 - resize : 사이즈를 변환
@@ -80,12 +87,14 @@ template<
 - empty : 벡터가 비어 있는지 확인
 - reserve : 요청된 용량으로 변환
 
+### Element access
 - operator[] : 요소 접근
 - at : 요소 접근
 - front : 첫번째 요소 접근
 - back : 마지막 요소 접근
 - data : 데이터 접근
 
+### Modifiers
 - assign : 벡터 컨텐츠 할당
 - push_back : 요소를 마지막에 추가
 - pop_back : 마지막 요소를 제거
@@ -94,7 +103,12 @@ template<
 - swap : 컨텐츠 교환
 - clear : 컨텐트 지우기
 
+### Allocator
 - get_allocator : 할당자 가져오기
+
+### Non-member function overloads
+- relational operators : 벡터에 대한 관계 연산자
+- swap : 벡터의 내용 교환
 
 
 
