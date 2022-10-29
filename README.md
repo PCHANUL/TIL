@@ -7,26 +7,28 @@ child_nav_order: desc
 permalink: /
 ---
 
-- [22.10.28](#221028)
-  - [Red-Black Tree](#red-black-tree)
-    - [Insertion](#insertion)
-      - [Recoloring](#recoloring)
-      - [Restructuring](#restructuring)
-        - [`G`노드 회전](#g노드-회전)
-        - [`P`노드 회전](#p노드-회전)
-    - [Deletion](#deletion)
-- [22.10.26](#221026)
-  - [c++ map](#c-map)
-  - [binary_function](#binary_function)
-  - [pair](#pair)
-- [22.10.25](#221025)
-  - [reverse_iterator](#reverse_iterator)
-  - [explicit keyword](#explicit-keyword)
-- [22.10.07](#221007)
-  - [type traits](#type-traits)
-  - [iterator_traits](#iterator_traits)
-
 # Today I Learned <!-- omit in toc -->
+
+* [22.10.28](#221028)
+  * [Red-Black Tree](#red-black-tree)
+    * [Insertion](#insertion)
+      * [Recoloring](#recoloring)
+      * [Restructuring](#restructuring)
+        * [`G`노드 회전](#g노드-회전)
+        * [`P`노드 회전](#p노드-회전)
+    * [Deletion](#deletion)
+* [22.10.26](#221026)
+  * [c++ map](#c-map)
+  * [binary_function](#binary_function)
+  * [pair](#pair)
+* [22.10.25](#221025)
+  * [reverse_iterator](#reverse_iterator)
+  * [explicit keyword](#explicit-keyword)
+* [22.10.07](#221007)
+  * [type traits](#type-traits)
+  * [iterator_traits](#iterator_traits)
+
+---
 
 ## 22.10.28
 

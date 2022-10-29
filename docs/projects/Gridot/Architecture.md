@@ -34,7 +34,7 @@ SwiftUI에서는 View와 데이터의 동기화가 자동으로 이루어진다.
 
 ![](/TIL/docs/src/projects/gridot/architecture_03.png)
 
-# The Composable Architecture
+# [The Composable Architecture](../../swift/ExternalLibrary/TCA)
 
 TCA는 State를 관리하여 효율적으로 View의 변화를 관리할 수 있는 아키텍처이다. 이 아키텍처의 데이터 흐름을 보면 SwiftUI 프레임 워크에 적합하다는 사실을 알 수 있다.  
 
