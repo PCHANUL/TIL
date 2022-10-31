@@ -9,26 +9,134 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-* [22.10.28](#221028)
-  * [Red-Black Tree](#red-black-tree)
-    * [Insertion](#insertion)
-      * [Recoloring](#recoloring)
-      * [Restructuring](#restructuring)
-        * [`G`노드 회전](#g노드-회전)
-        * [`P`노드 회전](#p노드-회전)
-    * [Deletion](#deletion)
-* [22.10.26](#221026)
-  * [c++ map](#c-map)
-  * [binary_function](#binary_function)
-  * [pair](#pair)
-* [22.10.25](#221025)
-  * [reverse_iterator](#reverse_iterator)
-  * [explicit keyword](#explicit-keyword)
-* [22.10.07](#221007)
-  * [type traits](#type-traits)
-  * [iterator_traits](#iterator_traits)
+- [22.10.31](#221031)
+  - [Red-Black Tree](#red-black-tree)
+    - [Deletion](#deletion)
+  - [Allocator rebind](#allocator-rebind)
+- [22.10.28](#221028)
+  - [Red-Black Tree](#red-black-tree-1)
+    - [Insertion](#insertion)
+      - [Recoloring](#recoloring)
+      - [Restructuring](#restructuring)
+        - [`G`노드 회전](#g노드-회전)
+        - [`P`노드 회전](#p노드-회전)
+- [22.10.26](#221026)
+  - [c++ map](#c-map)
+  - [binary_function](#binary_function)
+  - [pair](#pair)
+- [22.10.25](#221025)
+  - [reverse_iterator](#reverse_iterator)
+  - [explicit keyword](#explicit-keyword)
+- [22.10.07](#221007)
+  - [type traits](#type-traits)
+  - [iterator_traits](#iterator_traits)
 
 ---
+
+## 22.10.31
+
+### Red-Black Tree
+
+#### Deletion
+
+레드-블랙 트리의 삭제는 기본적으로 이진 탐색 트리의 삭제를 기반한다.  
+이진 탐색 트리와 같이 노드를 삭제한 후에 레드-블랙 트리의 규칙을 복원하는 과정이 필요할 수 있다.  
+삭제되는 노드의 색상이 `Red`라면 아무 문제가 없지만 `Black`이라면 레드-블랙 트리 규칙에서 벗어나기 때문이다. 
+삭제하려는 노드를 `M`, 자리를 대체하는 노드를 `C`, 삭제하려는 노드의 형제를 `S`라고 나타내기로 한다.   
+`Black`노드를 제거하여 규칙에서 벗어나는 상황은 다음과 같다.  
+
+1. `C`가 `Red`인 경우 : `C`의 색상을 `Black`으로 변경
+2. `C`가 `Black`인 경우 : `Double Black` 처리
+
+`C`가 `Black`이라면 레드-블랙 트리의 다섯번째 조건를 위반하기 때문에 구조를 변경하여 조건을 충족시켜야 한다.  
+삭제하려는 노드의 형제인 `S`의 왼쪽 자식을 `SL`, 오른쪽 자식을 `SR`이라고 나타내기로 하며, `C`가 `S`의 왼쪽에 있다고 가정한다.  
+다음과 같이 상황에 따라서 `Double Black`를 해결하는 방법이 다르다. 또한, 밸런스를 복구하는 작업은 루트에 도달하기 전까지 계속될 수 있다.  
+
+1. `S`가 `Red`인 경우
+
+```cpp
+if (s.color == RED)
+    s.color = BLACK
+    c.p.color = RED
+    left_rotate(x.p)
+    s = x.p.right
+```
+
+2. `S`가 `Black`이고, `SL`, `SR`이 모두 `Black`인 경우
+
+```cpp
+if (s.left.color == BLACK && s.right.color == BLACK)
+    s.color = RED
+    c = c.p
+```
+
+3. `S`가 `Black`이고, `SL`은 `Red`, `SR`은 `Black`인 경우
+
+```cpp
+if (s.right.color == BLACK)
+    s.left.color = BLACK
+    s.color = RED
+    right_rotate(s)
+    s = c.p.right
+```
+
+4. `S`가 `Black`이고, `SR`이 `Red`인 경우
+
+```cpp
+s.color = c.p.color
+c.p.color = BLACK
+s.right.color = BLACK
+left_rotate(c.p)
+c = root
+```
+
+### Allocator rebind
+
+중첩 템플릿 구조체인 `rebind`는 STL allocator를 만들 때 반드시 제공해야 한다.  
+만약에 노드 기반 컨테이너에 어떠한 자료 T를 저장한다면 컨테이너는 T를 노드 객체로 rebinding하여 저장한다.  
+이때 다른 객체를 할당하기 위해서 rebind를 사용한다. T 타입의 allocator로 할당한다면 컴파일시 에러가 발생된다.  
+vector를 제외한 나머지 컨테이너들은 해당 T 타입이 아닌 별도의 타입으로 저장하기 때문에 rebind를 사용한다.  
+list의 경우를 살펴보면 다음과 같다.  
+
+```cpp
+template <class T>
+class allocator {
+  
+// ...
+
+template <class U>
+  struct rebind { typedef allocator<U> other; };
+
+// ...
+
+template <class U>
+  allocator(const allocator<U>&);
+};
+
+template <class T, class Allocator = allocator<T> >
+class list {
+private:
+typedef  . . .  listnode;
+typedef typename Allocator::rebind<listnode>::other Node_allocator;
+
+Node_allocator alloc_;
+
+list_node* make_node() 
+  { return new(alloc_.allocate(1)) list_node; }
+
+public:
+list(const Allocator& a = Allocator())
+  : alloc_(a) { }  // implicit conversion
+. . .
+
+};
+
+```
+
+
+- 참조 : http://egloos.zum.com/sweeper/v/2966785, https://rookiecj.tistory.com/118
+
+
 
 ## 22.10.28
 
@@ -101,20 +209,7 @@ permalink: /
 2. 만약에 기존 `N`노드의 오른쪽에 자식이 있었다면 `P`노드의 왼쪽에 연결
 3. `N`노드를 `P`노드가 연결되어 있던 `G`노드의 오른쪽에 연결
 
-위의 과정을 마치면 `G`노드 회전을 해야하는 조건이 만들어지므로 다시 한번 회전시킨다.  
-
-
-#### Deletion
-
-레드-블랙 트리의 삭제는 기본적으로 이진 탐색 트리의 삭제를 기반한다.  
-하지만 노드를 삭제한 후에 레드-블랙 트리의 규칙을 복원하는 과정이 필요할 수 있다.    
-삭제되는 노드의 색상이 `Red`라면 아무 문제가 없지만 `Black`이라면 레드-블랙 트리 규칙에서 벗어나기 때문이다.  
-`Black`노드를 제거하여 규칙에서 벗어나는 상황은 다음과 같다.  
-
-1. 자리를 대체하는 노드가 `Red`인 경우 : 대체하는 노드의 색상을 `Black`으로 변경
-2. 자리를 대체하는 노드가 `Black`인 경우 : `Double Black` 처리
-
-대체하는 노드가 `Black`이라면 레드-블랙 트리의 다섯번째 조건를 위반하기 때문에 노드의 회전이 필요하다.  
+위의 과정을 마치면 `G`노드 회전을 해야하는 조건이 만들어지므로 다시 한번 회전시킨다.   
 
 
 - 참조 : https://ko.wikipedia.org/wiki/%EB%A0%88%EB%93%9C-%EB%B8%94%EB%9E%99_%ED%8A%B8%EB%A6%AC, https://zeddios.tistory.com/237, https://www.youtube.com/watch?v=5IBxA-bZZH8&list=RDCMUCzDJwLWoYCUQowF_nG3m5OQ&index=2, https://www.youtube.com/watch?v=iw8N1_keEWA&list=RDCMUCzDJwLWoYCUQowF_nG3m5OQ&index=6, https://assortrock.com/88

@@ -6,10 +6,10 @@ parent: c++
 permalink: /docs/c++/allocator
 ---
 
-* [std::allocator](#stdallocator)
-	* [Member functions](#member-functions)
-	* [Example](#example)
-* [References](#references)
+- [std::allocator](#stdallocator)
+	- [Member functions](#member-functions)
+	- [Example](#example)
+- [References](#references)
 
 # std::allocator
 
@@ -61,6 +61,8 @@ int main()
 	alloc.deallocate(p, size);
 }
 ```
+
+
 
 # References
 
