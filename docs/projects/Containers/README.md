@@ -7,27 +7,28 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-- [Containers](#containers)
-	- [Requirements](#requirements)
-	- [Implements](#implements)
-	- [allocator](#allocator)
-	- [iterator](#iterator)
-	- [reverse_iterator](#reverse_iterator)
-	- [vector](#vector)
-	- [map](#map)
-	- [Red-Black Tree](#red-black-tree)
-		- [Rotation](#rotation)
-		- [Insertion](#insertion)
-			- [Recoloring](#recoloring)
-			- [Restructuring](#restructuring)
-				- [`G`노드 회전](#g노드-회전)
-				- [`P`노드 회전](#p노드-회전)
-		- [Deletion](#deletion)
-	- [Problems](#problems)
-		- [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
-			- [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
-		- [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
-			- [_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
+* [Containers](#containers)
+  * [Requirements](#requirements)
+  * [Implements](#implements)
+  * [allocator](#allocator)
+  * [iterator](#iterator)
+  * [reverse_iterator](#reverse_iterator)
+  * [vector](#vector)
+  * [map](#map)
+  * [Red-Black Tree](#red-black-tree)
+    * [Rotation](#rotation)
+    * [Insertion](#insertion)
+      * [Recoloring](#recoloring)
+      * [Restructuring](#restructuring)
+        * [`P`노드 회전](#p노드-회전)
+        * [`G`노드 회전](#g노드-회전)
+    * [Deletion](#deletion)
+  * [map iterator](#map-iterator)
+  * [Problems](#problems)
+    * [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
+      * [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
+    * [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
+      * [_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
 
 
 # Containers
@@ -103,11 +104,14 @@ vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로
 - [벡터의 용량과 크기](https://thebook.io/006842/ch02/03/02/)  
 
 ## map
-
+9 38 42
 map은 key 값과 mapped 값이 쌍으로 저장되는 연관 컨테이너이다.  
 두개의 값은 pair 타입으로 연결되며, compare 객체로 비교하여 정렬된다.  
 각각의 pair는 key 값을 기준으로 정렬되어 저장된다.  
 내부적으로 map은 red-black tree 구조로 요소들을 저장한다.  
+
+tree 클래스의 Compare는 map의 value_compare이다.  
+tree는 템플릿 인자로 value_type, Compare, Alloc을 받는다.  
 
 ## Red-Black Tree
 
@@ -216,17 +220,9 @@ RBnode* RotateDirRoot(
 
 `Restructuring`은 부모인 `P`노드의 어느 쪽에 `N`노드가 연결되어 있는지에 따라서 달라진다.  
 
-1. `N`노드가 `P`노드의 오른쪽인 경우 : `G`노드 회전
-2. `N`노드가 `P`노드의 왼쪽인 경우 : `P`노드 회전 후 `G`노드 회전
+1. `N`노드가 `P`노드의 왼쪽인 경우 : `P`노드 회전 후 `G`노드 회전
+2. `N`노드가 `P`노드의 오른쪽인 경우 : `G`노드 회전
 
-##### `G`노드 회전
-
-`G`노드는 `U`노드의 위치로 이동하고, `P`노드는 기존 `G`노드의 위치로 이동하여 반시계 방향으로 회전하듯이 위치가 변경된다.  
-
-1. `G`노드를 `P`노드의 왼쪽 자식으로 연결
-2. 기존 `P`노드의 왼쪽 자식은 `G`노드의 오른쪽 자식으로 연결
-3. 노드의 색상을 변경한다. `G`노드는 `Red`, `P`노드는 `Black`
-   
 ##### `P`노드 회전
 
 `P`노드는 `N`노드의 오른쪽으로 이동하고, `N`노드는 기존 `P`노드의 위치로 이동하여 시계 방향으로 회전하듯이 위치가 변경된다.
@@ -237,6 +233,14 @@ RBnode* RotateDirRoot(
 
 위의 과정을 마치면 `G`노드 회전을 해야하는 조건이 만들어지므로 다시 한번 회전시킨다.  
 
+##### `G`노드 회전
+
+`G`노드는 `U`노드의 위치로 이동하고, `P`노드는 기존 `G`노드의 위치로 이동하여 반시계 방향으로 회전하듯이 위치가 변경된다.  
+
+1. `G`노드를 `P`노드의 왼쪽 자식으로 연결
+2. 기존 `P`노드의 왼쪽 자식은 `G`노드의 오른쪽 자식으로 연결
+3. 노드의 색상을 변경한다. `G`노드는 `Red`, `P`노드는 `Black`
+   
 
 ### Deletion
 
@@ -290,6 +294,15 @@ s.right.color = BLACK
 left_rotate(c.p)
 c = root
 ```
+
+## map iterator
+
+map 컨테이너의 반복자는 bidirectional iterator이다.  
+map은 tree로 구현되어 있기 때문에 
+map의 반복자는 템플릿 인자로 node를 받는다.  
+그리고 반복자에서 node에 대한 연산자를 제공한다.  
+
+
 
 
 ## Problems
