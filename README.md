@@ -9,10 +9,69 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.11.13](#221113)
+  * [포인터의 레퍼런스](#포인터의-레퍼런스)
 * [22.11.10](#221110)
   * [Tree iterator](#tree-iterator)
 
 ---
+
+## 22.11.13
+
+map 컨테이너의 메서드 중에서 `insert`는 삽입하려는 값이 존재하는지 먼저 확인한다. 이후에 값을 특정 위치에 삽입한다. 이 과정은 불필요하게 컨테이너의 요소를 두번 탐색한다. 한번의 탐색으로 동작이 완료되도록 최적화가 필요하다.  
+삽입하려는 값의 존재를 확인하는 과정에서 삽입되어야하는 위치를 얻을 수 있다. 값이 존재하지 않으면 그 위치에 새로운 요소를 연결한다. 새로운 요소를 연결하는 과정에서 포인터의 레퍼런스를 사용하면 포인터 값을 깔끔하게 정리할 수 있다.  
+
+### 포인터의 레퍼런스
+
+포인터의 레퍼런스는 이중 포인터와 비슷하다.  
+만약에 함수 내에서 인자를 이중 포인터로 받으면 두가지를 변경할 수 있다.  
+
+- 이중 포인터가 가리키는 포인터의 값
+- 이중 포인터가 가리키는 포인터가 가리키는 값
+
+이중 포인터 대신에 포인터의 레퍼런스를 인자로 받는 경우에도 마찬가지로 두가지를 변경할 수 있다.  
+
+- 포인터 레퍼런스가 가리키는 포인터의 값
+- 포인터 레퍼런스가 가리키는 포인터가 가리키는 값
+
+```cpp
+void	func(int*& x, int* y)
+{
+	x = y;
+}
+
+int main(void) 
+{
+	int   a = nullptr;
+	int*  b = 10;
+
+	func(a, &b);
+
+	std::cout << *a << ' ' << b << std::endl;
+}
+
+/* prints
+10 10
+*/
+```
+
+다음은 이진 트리에 노드를 삽입하는 함수이다.  
+`new_node`의 `parent` 포인터를 변경하고, `child` 포인터 값을 `new_node`로 변경한다.  
+포인터 레퍼런스를 사용하였기 때문에 `new_node`가 `parent`의 `left`인지 `right`인지 몰라도 된다.  
+
+```cpp
+void insert_node_at(__node_pointer parent, __node_pointer& child, __node_pointer new_node)
+{
+	new_node->left = nullptr;
+	new_node->right = nullptr;
+	new_node->parent = parent;
+	child = new_node;
+}
+```
+
+
+
+
 
 ## 22.11.10
 
