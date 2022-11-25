@@ -9,12 +9,48 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-* [22.11.13](#221113)
-  * [포인터의 레퍼런스](#포인터의-레퍼런스)
-* [22.11.10](#221110)
-  * [Tree iterator](#tree-iterator)
+- [22.11.25](#221125)
+	- [변환 생성자의 묵시적 변환](#변환-생성자의-묵시적-변환)
+- [22.11.24](#221124)
+	- [exception guarantees](#exception-guarantees)
+- [22.11.13](#221113)
+	- [포인터의 레퍼런스](#포인터의-레퍼런스)
+- [22.11.10](#221110)
+	- [Tree iterator](#tree-iterator)
 
 ---
+
+## 22.11.25
+
+### 변환 생성자의 묵시적 변환
+
+c++에서는 변환 생성자에서 묵시적으로 형변환이 일어나는 경우가 있다. 컴파일러가 자동으로 임시 객체를 생성하여 형변환을 일으킨다. 묵시적 변환 생성자가 사용자 모르게 호출될 가능성을 차단하려면 explict 키워드를 사용하면 된다.  
+
+const 변수를 사용하다보면 non-const 변수와 함께 함수의 인자로 들어가는 경우가 있다. 
+
+
+
+
+참조 : https://swblossom.tistory.com/12
+
+
+## 22.11.24
+
+### exception guarantees
+
+1. No-throw Guarantee
+	함수가 예외를 발생하지 않음을 보장하고 항상 성공적으로 수행을 마친다.
+	
+2. Strong Guarantee
+   데이타베이스에서 rollback 하는 것과 같이 예외가 발생했을때, 객체의 상태가 함수 수행 전과 같이 보존되는것을 보장한다. Transactional Guarantee라고도 한다. 
+
+3. Basic Guarantee
+	예외가 발생했을때 객체가 함수 수행 이전과 다른 값을 가질 수 있고, side effects 가 있을 수 있다. 하지만 오브젝트의 invariants 가 보존되고 resource leak 이 없는 상태이다.
+
+4. No Guarantee (exception unsafe)
+	이것은 exception 발생시 resource leak 을 포함하여 오브젝트의 상태에 대해서 어떤 보증도 없는 상태이다.
+
+참조 : https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=mug896&logNo=140168091611
 
 ## 22.11.13
 

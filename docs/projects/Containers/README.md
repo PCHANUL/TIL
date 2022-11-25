@@ -7,28 +7,29 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-* [Containers](#containers)
-  * [Requirements](#requirements)
-  * [Implements](#implements)
-  * [allocator](#allocator)
-  * [iterator](#iterator)
-  * [reverse_iterator](#reverse_iterator)
-  * [vector](#vector)
-  * [map](#map)
-  * [Red-Black Tree](#red-black-tree)
-    * [Rotation](#rotation)
-    * [Insertion](#insertion)
-      * [Recoloring](#recoloring)
-      * [Restructuring](#restructuring)
-        * [`P`노드 회전](#p노드-회전)
-        * [`G`노드 회전](#g노드-회전)
-    * [Deletion](#deletion)
-  * [map iterator](#map-iterator)
-  * [Problems](#problems)
-    * [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
-      * [is_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
-    * [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
-      * [_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
+- [Containers](#containers)
+  - [Requirements](#requirements)
+  - [Implements](#implements)
+  - [allocator](#allocator)
+  - [iterator](#iterator)
+  - [reverse\_iterator](#reverse_iterator)
+  - [vector](#vector)
+  - [map](#map)
+  - [Red-Black Tree](#red-black-tree)
+    - [Rotation](#rotation)
+    - [Insertion](#insertion)
+      - [Recoloring](#recoloring)
+      - [Restructuring](#restructuring)
+        - [`P`노드 회전](#p노드-회전)
+        - [`G`노드 회전](#g노드-회전)
+    - [Deletion](#deletion)
+  - [map iterator](#map-iterator)
+  - [Problems](#problems)
+    - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
+      - [is\_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
+    - [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
+      - [\_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
+  - [TODO](#todo)
 
 
 # Containers
@@ -104,7 +105,7 @@ vector는 추가적인 메모리가 필요한 경우에 기존 크기의 2배로
 - [벡터의 용량과 크기](https://thebook.io/006842/ch02/03/02/)  
 
 ## map
-9 38 42
+
 map은 key 값과 mapped 값이 쌍으로 저장되는 연관 컨테이너이다.  
 두개의 값은 pair 타입으로 연결되며, compare 객체로 비교하여 정렬된다.  
 각각의 pair는 key 값을 기준으로 정렬되어 저장된다.  
@@ -263,8 +264,8 @@ RBnode* RotateDirRoot(
 if (s.color == RED)
     s.color = BLACK
     c.p.color = RED
-    left_rotate(x.p)
-    s = x.p.right
+    left_rotate(c.p)
+    s = c.p.right
 ```
 
 2. `S`가 `Black`이고, `SL`, `SR`이 모두 `Black`인 경우
@@ -294,6 +295,8 @@ s.right.color = BLACK
 left_rotate(c.p)
 c = root
 ```
+
+참조 - https://www.youtube.com/watch?v=iw8N1_keEWA&list=RDCMUCzDJwLWoYCUQowF_nG3m5OQ&index=17
 
 ## map iterator
 
@@ -367,6 +370,16 @@ sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
 
 
 
+## TODO
+
+ - [x] makefile
+ - [ ] tester
+ - [ ] header include 
+ - [ ] check member functions
+ - [ ] Orthodox Canonical form
+ - [ ] Exception
+ - [ ] Memory leaks
+ - [ ] set container
 
 
 
