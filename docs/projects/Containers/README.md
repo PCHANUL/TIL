@@ -373,10 +373,10 @@ sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
 ## TODO
 
  - [x] makefile
- - [ ] tester
- - [ ] header include 
- - [ ] check member functions
- - [ ] Orthodox Canonical form
+ - [x] tester
+ - [x] header include 
+ - [x] Orthodox Canonical form
+ - [x] check member functions
  - [ ] Exception
  - [ ] Memory leaks
  - [ ] set container
