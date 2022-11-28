@@ -9,18 +9,19 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-- [22.11.25](#221125)
-  - [변환 생성자의 묵시적 변환](#변환-생성자의-묵시적-변환)
-- [22.11.24](#221124)
-  - [exception guarantees](#exception-guarantees)
-- [22.11.17](#221117)
-- [Red-Black Tree Removal](#red-black-tree-removal)
-- [22.11.13](#221113)
-  - [포인터의 레퍼런스](#포인터의-레퍼런스)
-- [22.11.10](#221110)
-  - [Tree iterator](#tree-iterator)
+* [22.11.25](#221125)
+  * [변환 생성자의 묵시적 변환](#변환-생성자의-묵시적-변환)
+* [22.11.24](#221124)
+  * [exception guarantees](#exception-guarantees)
+* [22.11.17](#221117)
+* [Red-Black Tree Removal](#red-black-tree-removal)
+* [22.11.13](#221113)
+  * [포인터의 레퍼런스](#포인터의-레퍼런스)
+* [22.11.10](#221110)
+  * [Tree iterator](#tree-iterator)
 
 ---
+
 
 ## 22.11.25
 
@@ -29,9 +30,6 @@ permalink: /
 c++에서는 변환 생성자에서 묵시적으로 형변환이 일어나는 경우가 있다. 컴파일러가 자동으로 임시 객체를 생성하여 형변환을 일으킨다. 묵시적 변환 생성자가 사용자 모르게 호출될 가능성을 차단하려면 explict 키워드를 사용하면 된다.  
 
 const 변수를 사용하다보면 non-const 변수와 함께 함수의 인자로 들어가는 경우가 있다. 
-
-
-
 
 참조 : https://swblossom.tistory.com/12
 

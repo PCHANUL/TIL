@@ -7,29 +7,29 @@ has_children: true
 permalink: /docs/projects/Containers
 ---
 
-- [Containers](#containers)
-  - [Requirements](#requirements)
-  - [Implements](#implements)
-  - [allocator](#allocator)
-  - [iterator](#iterator)
-  - [reverse\_iterator](#reverse_iterator)
-  - [vector](#vector)
-  - [map](#map)
-  - [Red-Black Tree](#red-black-tree)
-    - [Rotation](#rotation)
-    - [Insertion](#insertion)
-      - [Recoloring](#recoloring)
-      - [Restructuring](#restructuring)
-        - [`P`노드 회전](#p노드-회전)
-        - [`G`노드 회전](#g노드-회전)
-    - [Deletion](#deletion)
-  - [map iterator](#map-iterator)
-  - [Problems](#problems)
-    - [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
-      - [is\_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
-    - [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
-      - [\_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
-  - [TODO](#todo)
+* [Containers](#containers)
+  * [Requirements](#requirements)
+  * [Implements](#implements)
+  * [allocator](#allocator)
+  * [iterator](#iterator)
+  * [reverse\_iterator](#reverse_iterator)
+  * [vector](#vector)
+  * [map](#map)
+  * [Red-Black Tree](#red-black-tree)
+    * [Rotation](#rotation)
+    * [Insertion](#insertion)
+      * [Recoloring](#recoloring)
+      * [Restructuring](#restructuring)
+        * [`P`노드 회전](#p노드-회전)
+        * [`G`노드 회전](#g노드-회전)
+    * [Deletion](#deletion)
+  * [map iterator](#map-iterator)
+  * [Problems](#problems)
+    * [1. 템플릿 함수에서 템플릿 인자가 `iterator`인지 확인](#1-템플릿-함수에서-템플릿-인자가-iterator인지-확인)
+      * [is\_class : class 타입인지 확인하는 메타 함수](#is_class--class-타입인지-확인하는-메타-함수)
+    * [2. vector의 저장 공간 관리](#2-vector의-저장-공간-관리)
+      * [\_TmpVector : vector의 메모리 재할당을 위한 클래스](#_tmpvector--vector의-메모리-재할당을-위한-클래스)
+  * [TODO](#todo)
 
 
 # Containers
@@ -377,8 +377,8 @@ sizeof(detail::test<T>(0)) == 1 && !std::is_union<T>::value
  - [x] header include 
  - [x] Orthodox Canonical form
  - [x] check member functions
- - [ ] Exception
- - [ ] Memory leaks
+ - [x] Exception
+ - [x] Memory leaks
  - [ ] set container
 
 
