@@ -34,7 +34,7 @@ permalink: /docs/projects/Inception
 - WordPress 웹 사이트 파일이 포함된 두 번째 볼륨
 - 컨테이너 간의 연결을 설정하는 Docker-network이며, 충돌이 발생할 경우 컨테이너를 다시 시작해야 한다.
   
-> Docker 컨테이너는 가상 머신이 아니다. 따라서 실행하여고 할 때 'tail -f' 등을 기반으로 하는 해키 패치를 사용하지 않는 것이 좋다. 데몬이 어떻게 동작하는지 읽어보고, 데몬을 사용하는 것이 좋은지 생각해보아야 한다.  
+> Docker 컨테이너는 가상 머신이 아니다. 따라서 실행하려고 할 때 'tail -f' 등을 기반으로 하는 해키 패치를 사용하지 않는 것이 좋다. 데몬이 어떻게 동작하는지 읽어보고, 데몬을 사용하는 것이 좋은지 생각해보아야 한다.  
 
 > 네트워크 라인은 docker-compose.yml 파일에 있어야 합니다. host 또는 -link, links를 사용하는 것은 금지되어 있다. 무한 루프를 실행하는 명령으로 컨테이너를 시작하면 안된다. 따라서 이는 entrypoint로 사용되거나 entrypoint script에서 사용되는 모든 명령에도 적용된다. 다음은 금지된 해키 패치이다. tail -f, bash, sleep infinity, while true.
 
@@ -56,3 +56,4 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 아래는 예상되는 결과의 디렉터리 구조이다.  
 
 ![](../../src/projects/inception/inception02.png) . 
+
