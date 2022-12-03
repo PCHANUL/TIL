@@ -9,6 +9,13 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.03](#221203)
+  * [Docker Compose](#docker-compose)
+  * [Key features of Docker Compose](#key-features-of-docker-compose)
+    * [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
+    * [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
+    * [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
+    * [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
 * [22.12.02](#221202)
   * [Docker](#docker)
     * [Docker Architecture](#docker-architecture)
@@ -54,6 +61,63 @@ permalink: /
   * [Tree iterator](#tree-iterator)
 
 ---
+
+## 22.12.03
+
+### Docker Compose
+
+Docker Compose란, 다중 컨테이너 Docker 애플리케이션을 정의하고 실행하기 위한 도구이다. Compose에서는 YAML 파일을 사용하여 애플리케이션 서비스를 구성한다. 그런 다음에 단일 명령으로 모든 서비스를 만들고 시작한다.  
+
+Compose를 사용하기 위해 기본적으로 3단계를 거친다.  
+1. 어디에서나 재현할 수 있도록 Dockerfile으로 애플리케이션의 환경을 정의한다.  
+2. 격리된 환경에서 함께 실행할 수 있도록 docker-compose.yml에서 앱을 구성하는 서비스를 정의한다.
+3. docker compose up을 실행하면 Docker compose command가 전체 앱을 시작하고 실행한다. 
+
+docker-compose.yml 파일은 다음과 같다.  
+
+```
+version: "3.9"  # optional since v1.27.0
+services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    volumes:
+      - .:/code
+      - logvolume01:/var/log
+    depends_on:
+      - redis
+  redis:
+    image: redis
+volumes:
+  logvolume01: {}
+```
+
+Compose 파일에 대한 자세한 내용은 다음을 참조하면 된다.  
+[Compose file reference](https://docs.docker.com/compose/compose-file/)  
+
+### Key features of Docker Compose
+
+#### 단일 호스트에 여러 개의 격리된 환경
+
+Compose는 프로젝트 이름을 사용하여 환경을 서로 격리한다. 여러 다른 컨텍스트에서 이 프로젝트 이름을 사용할 수 있다.  
+- 프로젝트의 각 기능 분기에 대한 안정적인 복사본을 실행하려는 경우처럼 개발 호스트에서 단일 환경의 여러 복사본을 만들기 위해 사용한다.
+- CI 서버에서 빌드가 서로 간섭하지 않도록 프로젝트 이름을 고유한 빌드 번호로 설정할 수 있다.
+- 공유 호스트 또는 개발 호스트에서 동일한 서비스 이름을 사용할 수 있는 서로 다른 프로젝트가 서로 간섭하지 않도록 한다. 
+
+#### 컨테이너 생성 시 볼륨 데이터 보존
+
+Compose는 서비스에서 사용하는 모든 볼륨을 보존한다. 실행 시 이전 컨테이너에서 새 컨테이너로 볼륨을 복사하여 볼륨에서 만든 모든 데이터가 손실되지 않도록 한다.  
+
+#### 변경된 컨테이너만 재생성
+
+Compose는 컨테이너를 만드는 데 사용되는 구성을 캐시한다. 변경되지 않은 서비스를 다시 시작하면 Compose는 기존 컨테이너를 재사용한다.  
+
+#### 변수 지원 및 환경 간 컴포지션 이동
+
+Compose는 Compose 파일의 변수를 지원한다. 이러한 변수를 사용하여 다양한 환경 또는 다양한 사용자에 맞게 구성을 사용자 지정할 수 있다.  
+
+
 
 ## 22.12.02
 
