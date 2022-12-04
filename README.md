@@ -9,6 +9,8 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.04](#221204)
+  * [Docker file](#docker-file)
 * [22.12.03](#221203)
   * [Docker Compose](#docker-compose)
   * [Key features of Docker Compose](#key-features-of-docker-compose)
@@ -61,6 +63,55 @@ permalink: /
   * [Tree iterator](#tree-iterator)
 
 ---
+
+## 22.12.04
+
+### Docker file
+
+컨테이너 이미지를 만들기 위해서 Dockerfile를 사용해야 한다. Dockerfile은 파일 확장자가 없는 단순한 텍스트 기반 파일이다. Dockerfile에는 Docker가 컨테이너 이미지를 생성하는 데 사용하는 명령 스크립트가 포함되어 있다.  
+
+1. app의 package.json 파일이 있는 위치와 같은 디렉터리에 Dockerfile이라는 이름의 파일을 생성한다.  
+
+```bash
+> cd /path/to/app
+> touch Dockerfile
+```
+
+2. 텍스트 편집기를 사용하여 Dockerfile에 다음과 같은 내용을 추가한다.  
+
+```
+FROM node:18-alpine
+WORKDIR /app
+COPY . .
+RUN yarn install --production
+CMD ["node", "src/index.js"]
+EXPOSE 3000
+```
+
+[Dockerfile reference](https://docs.docker.com/engine/reference/builder/)  
+- FROM : 베이스 이미지이다. node:18-alpine은 노드 18에 설치된 alpine 기반 이미지를 뜻한다.
+- WORKDIR : Dockerfile에 뒤따라 나오는 명령어의 작업 디렉터리를 정한다.
+- RUN : Docker image가 생성되기 전에 수행할 쉘 명령어이다.
+- COPY : Docker client의 현재 디렉토리에서 파일을 추가한다. (COPY (source) (dist))
+- CMD : 컨테이너 내에서 실행할 명령을 지정하며, Dockerfile 내에서 한 번만 사용할 수 있다. 
+- EXPOSE : 컨테이너가 런타임 시 지정된 네트워크 포트에서 수신을 대기하고 있음을 Docker에 알린다. 
+
+3. 다음과 같은 명령어로 컨테이너 이미지를 만든다. 
+
+/path/to/app으로 디렉터리 위치를 이동하고, 컨테이너 이미지를 만든다.  
+
+```bash
+> cd /path/to/app
+> docker build -t getting-started .
+```
+
+docker build 명령은 Dockerfile을 사용하여 새 컨테이너 이미지를 빌드한다. node:18-alpine 이미지에서 시작하겠다고 빌더에 지시했지만 머신에 해당 파일이 없기 때문에 Docker는 많은 이미지 레이어를 다운로드한다.  
+
+Docker가 이미지를 다운로드한 후에 Dockerfile의 지침이 애플리케이션에 복사되고, yarn으로 애플리케이션의 종속성을 설치한다. CMD 지시문은 이미지에서 컨테이너를 시작할 때 실행할 기본 명령을 지정한다.  
+
+-t 플래그는 이미지에 태그를 지정한다. 읽기 쉬운 이름으로 정하는 것이 좋다. 이미지 이름을 getting-started로 지정하였으므로 컨테이너를 실행할 때 해당 이미지를 참조할 수 있다.  
+
+docker build 명령의 마지막에 있는 . 은 Dockerfile을 현재 디렉터리에서 찾음을 뜻한다. 
 
 ## 22.12.03
 
