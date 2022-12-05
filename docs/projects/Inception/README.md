@@ -8,6 +8,7 @@ permalink: /docs/projects/Inception
 ---
 
 * [Inception](#inception)
+* [Todos](#todos)
 
 
 
@@ -47,7 +48,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 작업을 더 간단하게 하려면 로컬 IP 주소를 가리키도록 도메인 이름을 구성해야 한다.  
 이 도메인 이름은 login.42.ft이어야 한다. 반드시 자신의 로그인을 사용해야 한다. 예를 들어, 로그인인 wil인 경우에 wil.42.fr은 wil의 웹사이트를 가리키는 IP 주소로 리디렉션된다.  
 
-> 최신 태그는 금지되어 있다. Dockerfile에 암호가 없어야 한다. 환경 변수를 사용하는 것은 필수이다. 또한, .env 파일을 사용하여 환경 변수를 저장하는 것이 좋다. .env 파일을 srcs 디렉토리의 루트에 있어야 한다. NGINX 컨테이너는 TLSv1.2 또는 TLSv1.3 프로토콜을 사용하여 포트 443을 총해서만 인프라에 대한 유일한 진입점이어야 한다.
+> 최신 태그는 금지되어 있다. Dockerfile에 암호가 없어야 한다. 환경 변수를 사용하는 것은 필수이다. 또한, .env 파일을 사용하여 환경 변수를 저장하는 것이 좋다. .env 파일을 srcs 디렉토리의 루트에 있어야 한다. NGINX 컨테이너는 TLSv1.2 또는 TLSv1.3 프로토콜을 사용하여 포트 443가 인프라에 대한 유일한 진입점이어야 한다.
 
 다음은 예상되는 결과의 다이어그램이다.  
 
@@ -56,4 +57,20 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 아래는 예상되는 결과의 디렉터리 구조이다.  
 
 ![](../../src/projects/inception/inception02.png) . 
+
+
+# Todos
+
+- [ ] Dockerfile 작성
+  - [ ] MariaDB
+  - [ ] WordPress
+  - [ ] NGINX
+- [ ] docker.compose.yml 작성
+- [ ] Docker-network 컨테이너 간의 연결 설정
+- [ ] WordPress 데이터 베이스 사용자 이름 설정
+- [ ] 호스트 시스템 로그인 설정
+- [ ] NGINX 컨테이너 entrypoint port
+- [ ] Makefile 작성
+
+
 

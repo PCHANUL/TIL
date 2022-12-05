@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.05](#221205)
+  * [The Compose application model](#the-compose-application-model)
+    * [example](#example)
 * [22.12.04](#221204)
   * [Docker file](#docker-file)
 * [22.12.03](#221203)
@@ -63,6 +66,94 @@ permalink: /
   * [Tree iterator](#tree-iterator)
 
 ---
+
+## 22.12.05
+
+### The Compose application model
+
+참조 : https://docs.docker.com/compose/compose-file/  
+
+Compose 사양를 사용하면 플랫폼에 구애받지 않는 컨테이너 기반 애플리케이션을 정의할 수 있다. 애플리케이션은 적절한 공유 리소스 및 통신 채널과 함께 실행되어야 하는 컨테이너 집합으로 설계된다.  
+
+애플리케이션의 구성 요소는 services로 정의된다. services는 동일한 컨테이너 이미지를 한 번 이상 실행하여 플랫폼에서 구현되는 추상적인 개념이다.  
+
+services는 networks를 통해 서로 통신한다. networks는 함께 연결된 services 내의 컨테이너 간에 IP 경로를 설정하기 위한 플랫폼 기능 추상화이다. 
+
+services는 영구 데이터를 volumes에 저장하고 공유한다. volumes은 전역 옵션이 있는 상위 수준 파일 시스템 마운트와 같은 영구 데이터를 설명한다.  
+
+#### example
+
+다음 예제는 프런트엔드 웹 애플리케이션과 백엔드 서비스로 분할된 애플리케이션이다.  
+프런트엔드는 런타임에 인프라에서 관리하는 HTTP configuration 파일로 구성되어 외부 도메인 이름과 플랫폼의 보안 비밀 저장소에 삽입된 HTTPS server certificate를 제공한다.  
+백엔드는 persistent volume에 데이터를 저장한다.  
+두 서비스 모두 격리된 백티어 네트워크에서 서로 통신하지만 프런트엔드는 프런트 네트워크에 연결되어 외부 사용을 위해 포트 443을 노출한다.  
+
+```
+(External user) --> 443 [frontend network]
+                            |
+                  +--------------------+
+                  |  frontend service  |...ro...<HTTP configuration>
+                  |      "webapp"      |...ro...<server certificate> #secured
+                  +--------------------+
+                            |
+                        [backend network]
+                            |
+                  +--------------------+
+                  |  backend service   |  r+w   ___________________
+                  |     "database"     |=======( persistent volume )
+                  +--------------------+        \_________________/
+```
+
+예제 애플리케이션은 다음으로 구성된다.
+- Docker Image로 지원되는 2개의 services: webapp, database
+- 프런트엔트에 주입된 1개의 secured
+- 프런트엔트에 삽입된 1개의 configs
+- 백엔드에 연결된 1개의 영구 volumes
+- 2개의 networks
+
+```
+services:
+  frontend:
+    image: awesome/webapp
+    ports:
+      - "443:8043"
+    networks:
+      - front-tier
+      - back-tier
+    configs:
+      - httpd-config
+    secrets:
+      - server-certificate
+
+  backend:
+    image: awesome/database
+    volumes:
+      - db-data:/etc/data
+    networks:
+      - back-tier
+
+volumes:
+  db-data:
+    driver: flocker
+    driver_opts:
+      size: "10GiB"
+
+configs:
+  httpd-config:
+    external: true
+
+secrets:
+  server-certificate:
+    external: true
+
+networks:
+  # The presence of these objects is sufficient to define them
+  front-tier: {}
+  back-tier: {}
+```
+
+
+
 
 ## 22.12.04
 
