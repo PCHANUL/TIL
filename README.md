@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.06](#221206)
+  * [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
+  * [MariaDB](#mariadb)
 * [22.12.05](#221205)
   * [The Compose application model](#the-compose-application-model)
     * [example](#example)
@@ -66,6 +69,26 @@ permalink: /
   * [Tree iterator](#tree-iterator)
 
 ---
+
+## 22.12.06
+
+### container의 OS, Virtual Machine의 OS
+
+docker는 linux 위에서 구동된다. 만약에 Window와 MacOS docker를 설치하면 경량화된 linux 머신 위에서 docker가 구동된다. 여기에서 VM가 아닌 docker를 사용하는 이유에 대해 의문을 가질 수 있다. VM과 Docker Container의 차이를 살펴본다.  
+
+Virtual Machine은 x86 하드웨어를 가상화했다고 볼 수 있다. 그렇기 때문에 VM에는 다양한 OS를 설치할 수 있다. Docker Container는 Linux기반의 OS만 지원하며 Container 자체에는 Kernel 등의 OS 이미지가 들어있지 않다. Kernel은 Host OS를 그대로 사용하고, Host OS와 Container OS의 다른 부분만 Container 내에 같이 Packing된다. Container 내에서 명령어를 수행하면 실제로는 Host OS에서 명령어가 수행된다. 즉, Host OS의 Process 공간을 공유한다.  
+
+참조 : https://mosei.tistory.com/entry/Docker-Container%EC%9D%98-OS-vs-VM%EC%9D%98-OS, https://bcho.tistory.com/805  
+
+### MariaDB
+
+MariaDB는 관계형 데이터베이스 관리 시스템(RDBMS) 중 하나이다. MySQL을 제작한 AB사의 개발자들이 나와서 만든 오픈소스 RDBMS 소프트웨어이다. MySQL을 인수한 오라클의 정책에 반발하여 만들게 되었다고 한다.  
+
+관계형 데이터베이스란 최소한 두 여건을 만족하는 데이터베이스 시스템이다.  
+- 사용자에게 데이터를 관계로서 표현한다. 즉, 행과 열의 집합으로 구성된 테이블의 묶음 형식으로 데이터를 제공한다. 
+- 테이블 형식의 데이터를 조작할 수 있는 관계 연산자를 제공한다. 
+
+
 
 ## 22.12.05
 
