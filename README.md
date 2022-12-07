@@ -9,6 +9,8 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.07](#221207)
+  * [MariaDB Dockerfile](#mariadb-dockerfile)
 * [22.12.06](#221206)
   * [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
   * [MariaDB](#mariadb)
@@ -70,6 +72,49 @@ permalink: /
 
 ---
 
+## 22.12.07
+
+### MariaDB Dockerfile
+
+[alpine-mariadb](https://github.com/yobasystems/alpine-mariadb/blob/d01b296b1d63153011fee28cb1e0f9626afe9c38/alpine-mariadb-amd64/Dockerfile)  
+
+Docker hub에서 alpine을 베이스로한 MariaDB 이미지를 찾았다. 여기있는 Dockerfile을 참조하여 어떤 설정을 해야하는지 알아내려한다.  
+
+```
+FROM yobasystems/alpine:3.16.3-amd64
+
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL (생략)
+
+# MariaDB 설치
+RUN apk add --no-cache mariadb mariadb-client mariadb-server-utils pwgen && \
+    rm -f /var/cache/apk/*
+
+# run.sh 파일 복사
+ADD files/run.sh /scripts/run.sh
+
+# run.sh를 위한 폴더 생성
+RUN mkdir /docker-entrypoint-initdb.d && \
+    mkdir /scripts/pre-exec.d && \
+    mkdir /scripts/pre-init.d && \
+    chmod -R 755 /scripts
+
+# 네트워크 포트
+EXPOSE 3306
+
+# 볼륨 선언
+VOLUME ["/var/lib/mysql"]
+
+# run.sh 실행
+ENTRYPOINT ["/scripts/run.sh"]
+```
+
+- [pwgen](https://linuxconfig.org/how-to-use-a-command-line-random-password-generator-pwgen-on-linux) : 임의의 패스워드를 생성하기 위해 설치
+- [--no-cache](https://stackoverflow.com/questions/49118579/alpine-dockerfile-advantages-of-no-cache-vs-rm-var-cache-apk) : 캐시하지 않도록 하여 컨테이너를 작게 유지
+
+
 ## 22.12.06
 
 ### container의 OS, Virtual Machine의 OS
@@ -87,7 +132,6 @@ MariaDB는 관계형 데이터베이스 관리 시스템(RDBMS) 중 하나이다
 관계형 데이터베이스란 최소한 두 여건을 만족하는 데이터베이스 시스템이다.  
 - 사용자에게 데이터를 관계로서 표현한다. 즉, 행과 열의 집합으로 구성된 테이블의 묶음 형식으로 데이터를 제공한다. 
 - 테이블 형식의 데이터를 조작할 수 있는 관계 연산자를 제공한다. 
-
 
 
 ## 22.12.05

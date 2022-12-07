@@ -10,10 +10,15 @@ permalink: /docs/projects/Inception
 * [Inception](#inception)
 * [Todos](#todos)
 * [개발 환경](#개발-환경)
+* [Docker CLI](#docker-cli)
+	* [run](#run)
 * [Dockerfile reference](#dockerfile-reference)
 	* [FROM](#from)
-	* [RUN](#run)
+	* [RUN](#run-1)
 	* [ADD](#add)
+	* [VOLUME](#volume)
+	* [EXPOSE](#expose)
+	* [ENTRYPOINT](#entrypoint)
 
 
 
@@ -85,6 +90,23 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 위와 같은 조건을 충족하는 방법으로 구글 클라우드를 찾았다. 구글 클라우드는 VM에 연결하는 방법을 여러가지 제시한다. 그 중에서 브라우저에서 ssh를 통해 연결하는 방식이 가장 간편하다. 키를 생성하고 연결하는 과정을 알아서 처리하고, 파일 업로드와 다운로드도 가능하여 간편하게 사용할 수 있다. 또한 아이패드에서 구글 클라우드 앱을 다운받으면 알아서 VM 인스턴스에 연결해준다.  
 
+# Docker CLI
+
+https://docs.docker.com/engine/reference/commandline/docker/   
+
+## run 
+
+https://www.daleseo.com/docker-run/  
+
+```
+$ docker run (<옵션>) <이미지 식별자> (<명령어>) (<인자>)
+```
+
+컨테이너를 실행하기 위한 명령어이다. 이미지 식별자는 필수이며 이미지 ID나 레파지토리, 태그를 사용할 수 있다.  
+
+
+
+
 # Dockerfile reference
 
 https://docs.docker.com/engine/reference/builder/  
@@ -121,6 +143,46 @@ ADD [--chown=<user>:<group>] ["<src>",... "<dest>"]
 
 ADD 명령은 <src>에서 새 파일, 디렉터리 또는 원격 파일 URL을 복사하여 <dest> 경로에 있는 이미지의 파일 시스템에 추가한다.  
 
+## VOLUME
+
+```
+VOLUME ["/data"]
+```
+
+VOLUME에 지정된 이름으로 마운트 지점을 생성하고 기본 호스트 또는 다른 컨테이너에서 외부 마운트된 볼륨을 보유하는 것으로 표시한다. docker run 명령은 기본 이미지 내의 지정된 위치에 있는 데이터로 새로 생성된 불륨을 초기화한다.  
+
+[docker volume의 사용 방법](https://darkrasid.github.io/docker/container/volume/2017/05/10/docker-volumes.html)  
+
+container의 데이터 휘발성 때문에 volume을 사용하게 된다. Dockerfile에서 volume을 다음과 같이 선언할 수 있다.  
+
+```
+FROM ubuntu:latest
+
+VOLUME ["/volume/path"]
+```
+
+volume이 선언된 이미지는 container로 올라갈 때 자동으로 해당 경로를 host에 연결한다. 경로는 `/var/lib/docker/volumes/{volume_name}`에 생성된다. volume_name으로는 docker가 생성한 hash 값이 들어가기 때문에 어떤 container의 volume인지 알기 어렵다. 
+
+## EXPOSE
+
+```
+EXPOSE <port> [<port>/<protocol>...]
+```
+
+EXPOSE 명령은 컨테이너가 런타임에 지정된 네트워크 포트에서 수신 대기함을 Docker에 알린다. 포트가 TCP 또는 UDP에서 수신하는지 여부를 지정할 수 있으며 프로토콜이 지정되지 않은 경우 기본값은 TCP이다.  
+
+EXPOSE 명령이 실제로 포트를 게시하지 않지만 이미지를 빌드하는 사람과 컨테이너를 실행하는 사람 사이에서 게시할 포트에 대한 일종의 문서 역할을 한다. 실제로 포트를 게시하려면 docker run 명령어에 -p 플래그를 사용한다.  
+
+## ENTRYPOINT
+
+```
+ENTRYPOINT ["executable", "param1", "param2"]
+ENTRYPOINT command param1 param2
+```
+
+ENTRYPOINT를 사용하면 해당 컨테이너가 수행하게 될 실행 명령을 정의한다. 컨테이너 실행 시 받은 인자와 상관없이 실행 명령을 수행한다.   
+
+[ENTRYPOINT와 CMD의 차이점](https://bluese05.tistory.com/77)  
 
 
 
