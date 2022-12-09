@@ -9,9 +9,19 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.09](#221209)
+  * [Docker Container PID 1](#docker-container-pid-1)
+    * [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
+    * [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
+    * [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
+  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
+    * [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
+      * [PID 1의 Signal 문제](#pid-1의-signal-문제)
+    * [dumb-init](#dumb-init)
+    * [dumb-init 사용법](#dumb-init-사용법)
 * [22.12.08](#221208)
   * [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
-  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
+  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
     * [PID 1](#pid-1)
   * [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
 * [22.12.07](#221207)
@@ -77,6 +87,121 @@ permalink: /
 
 ---
 
+## 22.12.09
+
+### Docker Container PID 1
+
+#### Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록
+
+이 솔루션은 첫 번째 문제만 해결한다. 앱이 제어된 방식으로 하위 프로세스를 생성하면 두 번째 문제를 방지할 수 있다. 구현하는 방법은 Dockerfile에서 CMD 또는 ENTRYPOINT를 사용하여 프로세스를 실행하는 것이다.  
+
+```
+FROM debian:9
+
+RUN apt-get update && \
+    apt-get install -y nginx
+    
+EXPOSE 80
+
+CMD [ "nginx", "-g", "daemon off;" ]
+```
+
+때로는 프로세스가 제대로 실행될 수 있도록 컨테이너에서 환경을 준비해야 할 수 있다. 이 경우 컨테이너를 시작할 때 셸 스크립트를 실행하여 환경을 준비하고 기본 프로세스를 실행한다. 이 방법을 사용하는 경우 셸 스크립트는 프로세스가 아닌 PID 1을 가지므로 기본 exec 명령어를 사용하여 셸 스크립트에서 프로세스를 실행해야 한다. exec 명령어로 스크립트를 원하는 프로그램으로 바꾼다. 그 다음 프로세스에서 PID 1을 상속한다.  
+
+#### Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정
+
+pod에 프로세스 네임스페이스 공유를 사용 설정하면 Kubernetes는 해당 pod의 모든 컨테이너에 단일 프로세스 네임 스페이스를 사용한다. Kubernetes pod 인프라 컨테이너가 PID 1이 되고 분리된 프롯세스는 자동으로 다시 수거된다. 
+
+#### Solution 3 : 특수한 init 시스템 사용
+
+기본적인 Linux 환경처럼 init 시스템을 사용하여 문제를 처리할 수 있다. 하지만 systemd 같은 일반 init 시스템을 사용하기에는 너무 복잡하고 크기 때문에 컨테이너용으로 제작된 init 시스템을 사용하는 것이 좋다.  
+
+init 시스템을 사용하는 경우 init 프로세스는 PID 1을 가지며 다음을 수행한다.  
+- 올바른 신호 핸들러를 등록한다.
+- 앱에서 신호가 작동하는지 확인한다.
+- 최종 모든 좀비 프로세스를 수거한다.
+
+docker run 명령어의 --init 옵션을 사용하면 Docker 자체에서 init 시스템을 사용할 수 있다. Kubernetes에서 사용하려면 컨테이너 이미지에 init 시스템을 설치하고 컨테이너의 진입점으로 사용해야 한다.  
+
+
+### 컨테이너 환경을 위한 초기화 시스템
+
+https://swalloow.github.io/container-tini-dumb-init/  
+
+#### 컨테이너 내부에서의 프로세스 동작
+
+https://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html  
+
+docker는 ENTRYPOINT나 CMD에 명시된 프로세스를 PID 1로써 새로운 PID 네임 스페이스에 정의한다. 그리고 컨테이너 내부에 있는 PID 1 프로세스에만 신호를 보내 종료할 수 있다. 그렇기 때문에 컨테이너는 경량화 이미지를 기반으로 단일 프로세스만 실행하는 경우가 많다. 다음과 같은 두가지 상황이 있다.   
+
+1. PID 1인 shell
+
+Dockerfile은 컨테이너의 명령을 지정하면 실행을 위해 명령을 shell에 공급한다. 그 결과 가음과 같은 프로세스 트리가 생성된다.  
+
+```
+- docker run (on the host machine)
+  - /bin/sh (PID 1, inside container)
+    - python my_server.py (PID 2, inside container)
+```
+
+shell을 PID 1로 사용하면 2번 프로세스에 신호를 보낼 수 없다. shell로 보낸 신호는 하위 프로세스로 전달되지 않으며, 프로세스가 완료될 때까지 shell이 종료되지 않는다. 이 경우 컨테이너를 종료하기 위해 SIGKILL을 보내야 한다.  
+
+2. PID 1인 프로세스
+
+Dockerfile 구문을 사용하면 프로세스가 즉시 시작되고, 컨테이너의 초기화 시스템 역할을 하여 다음과 같은 프로세스 트리가 생성된다.  
+
+```
+- docker run (on the host machine)
+  - python my_server.py (PID 1, inside container)
+```
+
+프로세스가 신호를 수신하지만 PID 1이므로 예상대로 응답하지 않을 수 있다.  
+
+##### PID 1의 Signal 문제
+
+일반적인 프로세스는 TERM에 대한 자체 핸들러를 등록하여 종료하기 전 cleanup을 수행한다.  프로세스가 핸들러를 등록하지 않는 경우에 커널은 TERM 신호의 기본 동작인 프로세스 종료를 수행한다.  
+
+그러나 PID 1은 TERM 신호에 대해 기본 동작으로 실행되지 않는다. 핸들러를 등록하지 않은 경우, TERM 신호는 프로세스에 아무런 영향을 미치지 못한다. 만약에 자식 프로세스가 하위 프로세스를 생성하고 먼저 죽는다면 컨테이너에 좀비 프로세스가 계속 쌓일 수 있다.  
+
+docker run은 SIGTERM을 수신하면 컨테이너가 죽지 않더라도 신호를 컨테이너에 전달하고 종료된다. docker stop 명령을 사용하면 TERM 신호를 보내고 기다린 다음에 프로세스가 중지되지 않으면 KILL이 전송되어 즉시 중지된다.  
+
+#### dumb-init
+
+dumb-init은 경량화된 init 시스템이다. 서버 프로세스를 직접 실행하는 대신 Dockerfile에서 dumb-init을 사용하면 다음과 같은 프로세스 트리가 생성된다.  
+
+```
+CMD ["dumb-init", "python", "my_server.py"] 
+```
+
+```
+- docker run (on the host machine)
+  - dumb-init (PID 1, inside container)
+    - python my_server.py (PID 2, inside container)
+```
+
+dumb-init은 모든 신호에 대해 핸들러를 등록하고 해당 신호를 프로세스 세션으로 전달한다. python 프로세스는 PID 1으로 실행되지 않기 때문에 핸들러를 등록하지 않은 경우에도 dumb-init이 보내는 신호에 기본 동작을 적용한다.  
+
+dumb-init은 신호 처리를 할 뿐만 아니라 고아, 좀비 프로세스를 처리하는 init 시스템의 기능도 수행한다.  
+
+#### dumb-init 사용법
+
+dumb-init은 apline 패키지 레포에서 설치할 수 있다. [링크](https://pkgs.alpinelinux.org/package/edge/community/x86/dumb-init) Dockerfile에서 `apk add dumb-init`을 추가하여 패키지를 설치한다.  
+
+Docker 컨테이너 내부에 설치되면 간단하게 명령에 앞에 dumb-init을 붙이면 된다. Dockerfile 내에서 컨테이너의 진입점으로 dumb-init을 사용하는 것이 좋다. ENTRYPOINT는 CMD 명령 앞에 추가되는 부분 명령으로 dumb-init에 매우 적합하다.  
+
+```
+# Runs "/usr/bin/dumb-init -- /my/script --with --args"
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# or if you use --rewrite or other cli flags
+# ENTRYPOINT ["dumb-init", "--rewrite", "2:3", "--"]
+
+CMD ["/my/script", "--with", "--args"]
+```
+
+CMD 또는 ENTRYPOINT 같은 JSON 구문으로 사용하는 것이 중요하다. 그렇지 않으면 Docker가 shell을 호출하여 shell이 PID 1이 되기 때문이다.  
+
+
 ## 22.12.08
 
 ### Docker Container 백그라운드 실행
@@ -101,7 +226,6 @@ https://swalloow.github.io/container-tini-dumb-init/
 만약에 어떠한 프로세스가 예기치 못한 상황으로 종료되면 좀비 프로세스로 변한다. 좀비 프로세스는 부모 프로세스가 waitpid 시스템 명령을 수행할 때까지 존재하며 이후에 제거된다. 일반적으로 자식 프로세스가 종료되면 운영 체제에서 SIGCHLD 신호를 보내어 부모 프로세스를 깨우고 자식 프로세스를 거두게 되므로 문제가 되지 않는다.  
 
 그렇다면 부모 프로세스가 의도적으로 종료되거나 사용자가 프로세스를 종료시켰다고 가정한다면 자식 프로세스들은 고아 상태가 된다. init 프로세스는 고아 상태가 된 자식 프로세스를 거두는 역할을 한다. init 프로세스가 생성하지 않았지만 고아 프로세스가 좀비 프로세스가 되지 않도록 정리한다. 그러나 컨테이너 환경의 경우에는 다르다.
-
 
 ### PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기
 
