@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.12](#221212)
+  * [docker rmi 사용법](#docker-rmi-사용법)
+  * [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
 * [22.12.11](#221211)
   * [daemon](#daemon)
 * [22.12.09](#221209)
@@ -70,6 +73,20 @@ permalink: /
 
 ---
 
+## 22.12.12
+
+### docker rmi 사용법
+
+https://www.lainyzine.com/ko/article/docker-rmi-removing-docker-images/  
+
+### Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러 
+
+alpinelinux wiki : https://wiki.alpinelinux.org/wiki/Mysql#Installation  
+mysql.sock 에러 해결 : https://velog.io/@tok1324/MySQL-%EC%BD%94%EB%94%A9%EC%9D%91%EC%95%A0%EC%9D%98-mysql.sock-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0  
+mysql 일반적인 오류를 해결하는 유용한 정보들 : https://blog.naver.com/islove8587/221970366883  
+
+
+
 ## 22.12.11
 
 ### daemon
@@ -84,11 +101,7 @@ daemon은 서비스의 요청에 응답하기 위해 실행 중인 background �
 
 daemon 프로세스는 background 프로세스이며, 부모 프로세스가 PID 1이거나 다른 deamon인 프로세스를 말한다. 이를 알 수 있는 방법은 background 프로세스가 자신을 실행한 bash가 종료되었을 때 같이 종료되는지 확인하면 된다.  
 
-대표적인 daemon 프로세스는 웹서버 daemon이다. 웹서버 daemon 프로세스는 서버에서 터미널을 통해 실행될 수 있지만 사용자와 대화할 필요가 없기 때문에 background 프로세스로 생성되도록 만들어진다. 즉, 프로그램이 fork 함수를 통해 자식 프로세스를 생성하고 부모 프로세스는 죽는다. 그리고 생성된 자식은 부모 프로세스를 PID 1로 변경한 뒤 실제로 서비스를 수행할 자식 프로세스를 여러개 fork한다. 그리고 그 손자 프로세스들은 계정을 setuid 함수를 이용하여 웹서버가 실행되도록 설정된 계정을 바꾼다.
-
-
-
-
+대표적인 daemon 프로세스는 웹서버 daemon이다. 웹서버 daemon 프로세스는 서버에서 터미널을 통해 실행될 수 있지만 사용자와 대화할 필요가 없기 때문에 background 프로세스로 생성되도록 만들어진다. 즉, 프로그램이 fork 함수를 통해 자식 프로세스를 생성하고 부모 프로세스는 죽는다. 그리고 생성된 자식은 부모 프로세스를 PID 1로 변경한 뒤 실제로 서비스를 수행할 자식 프로세스를 여러개 fork한다. 그리고 그 손자 프로세스들은 계정을 setuid 함수를 이용하여 웹서버가 실행되도록 설정된 계정을 바꾼다.  
 
 
 
