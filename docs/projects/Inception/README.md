@@ -9,24 +9,8 @@ permalink: /docs/projects/Inception
 
 * [Inception](#inception)
 * [Todos](#todos)
-* [Docker CLI](#docker-cli)
-	* [run](#run)
-		* [-d : 컨테이너 백그라운드 실행](#-d--컨테이너-백그라운드-실행)
-		* [-it : 컨테이너를 종료하지 않고, 터미널 입력을 컨테이너에 전달](#-it--컨테이너를-종료하지-않고-터미널-입력을-컨테이너에-전달)
-		* [-name : 컨테이너 이름](#-name--컨테이너-이름)
-		* [-e : 환경변수 설정](#-e--환경변수-설정)
-		* [-p : 호스트와 컨테이너 간의 포트 설정](#-p--호스트와-컨테이너-간의-포트-설정)
-		* [-v : 호스트와 컨테이너 간의 볼륨 설정](#-v--호스트와-컨테이너-간의-볼륨-설정)
-		* [-w : 컨테이너의 작업 디렉터리 설정](#-w--컨테이너의-작업-디렉터리-설정)
-* [Dockerfile reference](#dockerfile-reference)
-	* [FROM](#from)
-	* [RUN](#run-1)
-	* [ADD](#add)
-	* [VOLUME](#volume)
-	* [EXPOSE](#expose)
-	* [ENTRYPOINT](#entrypoint)
-
-
+* [Dockerfile](#dockerfile)
+	* [Base image : alpine Linux](#base-image--alpine-linux)
 
 # Inception
 
@@ -77,7 +61,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 # Todos
 
-- [ ] Dockerfile 작성
+- [ ] [Dockerfile 작성](#dockerfile)
   - [ ] MariaDB
   - [ ] WordPress
   - [ ] NGINX
@@ -88,128 +72,13 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 - [ ] NGINX 컨테이너 entrypoint port
 - [ ] Makefile 작성
 
+# Dockerfile
 
-# Docker CLI
+## Base image : alpine Linux
 
-https://docs.docker.com/engine/reference/commandline/docker/   
+리눅스 커널을 기반으로 한 리눅스 배포판 가운데 하나이다. Musl과 BusyBox를 기반하고 있다. alpine linux는 작고, 보안이 뛰어나고, 간단함을 염두하여 만들어졌다. 이 장점이 두드러져서 배포판의 용량이 커널을 제외하고 8MB 밖에 되지 않으며, 수많은 패키지들을 설치할 수 있다.  
 
-## run 
-
-https://www.daleseo.com/docker-run/  
-
-```
-$ docker run (<옵션>) <이미지 식별자> (<명령어>) (<인자>)
-```
-
-컨테이너를 실행하기 위한 명령어이다. 이미지 식별자는 필수이며 이미지 ID나 레파지토리, 태그를 사용할 수 있다.  
-
-### -d : 컨테이너 백그라운드 실행
-
-컨테이너를 백그라운드에서 실행하는 옵션이다. -d 옵션을 사용하면 컨테이너가 detached 모드에서 실행된다.  
-
-### -it : 컨테이너를 종료하지 않고, 터미널 입력을 컨테이너에 전달
-
--i 옵션과 -t 옵션을 같이 사용하여 컨테이너를 종료하지 않고, 터미널의 입력을 컨테이너로 전달한다. 컨테이너의 shell이나 CLI 도구를 사용할 때 유용하게 사용된다.  
-
-### -name : 컨테이너 이름
-
---name 옵션으로 이름을 부여하여 컨테이너를 제어하기 쉽게한다. docker kill이나 docker rm 명령어를 사용할 때 컨테이너 이름을 사용할 수 있다.  
-
-### -e : 환경변수 설정
-
--e 옵션으로 컨테이너 환경변수를 설정한다. Docker ENV 설정도 덮어써지게 된다.  
-
-### -p : 호스트와 컨테이너 간의 포트 설정
-
--p 옵션은 호스트에서 컨테이너에서 리스닝하고 있는 포트로 접속할 수 있도록 설정해준다. 포트의 배포, 바인드를 위해서 사용된다.  
-
-### -v : 호스트와 컨테이너 간의 볼륨 설정
-
--v 옵션은 호스트의 파일 시스템의 특정 경로를 컨테이너의 파일 시스템의 특정 경로로 마운트해준다.  
-
-### -w : 컨테이너의 작업 디렉터리 설정
-
--w 옵션은 작업 디렉터리를 설정한다. Dockerfiledml WORKDIR 설정을 덮어쓴다.  
-
-
-
-
-# Dockerfile reference
-
-https://docs.docker.com/engine/reference/builder/  
-
-## FROM
-
-```
-FROM [--platform=<platform>] <image> [AS <name>]
-FROM [--platform=<platform>] <image>[:<tag>] [AS <name>]
-FROM [--platform=<platform>] <image>[@<digest>] [AS <name>]
-```
-
-FROM 명령어는 새 빌드 단계를 초기화하고 후속 명령어에 대한 Base Image를 설정한다. 
-
-## RUN
-
-RUN은 두가지 형식이 있다.  
-
-- `RUN <command>` (shell 형식, 명령은 셸에서 실행되며 기본적으로 Linux에서는 /bin/sh -c, Windows에서는 cmd /S /C 이다.)
-- `RUN ["executable", "param1", "param2"]` (exec 형식)
-
-RUN 명령은 현재 이미지 위에 있는 새 레이어에서 모든 명령을 실행하고 결과를 커밋한다. 커밋된 결과 이미지는 Dockerfile의 다음 단계에 사용된다.  
-
-exec 형식을 사용하면 셸 문자열 변경을 방지하고 지정된 셸 실행 파일이 포함되지 않은 기본 이미지를 사용하여 명령을 실행할 수 있다.  
-
-shell 형식에서는 `\`(백슬래시)를 사용하여 단일 RUN 명령을 다음 줄로 계속 실행할 수 있습니다.  
-
-## ADD
-
-```
-ADD [--chown=<user>:<group>] [--checksum=<checksum>] <src>... <dest>
-ADD [--chown=<user>:<group>] ["<src>",... "<dest>"]
-```
-
-ADD 명령은 <src>에서 새 파일, 디렉터리 또는 원격 파일 URL을 복사하여 <dest> 경로에 있는 이미지의 파일 시스템에 추가한다.  
-
-## VOLUME
-
-```
-VOLUME ["/data"]
-```
-
-VOLUME에 지정된 이름으로 마운트 지점을 생성하고 기본 호스트 또는 다른 컨테이너에서 외부 마운트된 볼륨을 보유하는 것으로 표시한다. docker run 명령은 기본 이미지 내의 지정된 위치에 있는 데이터로 새로 생성된 불륨을 초기화한다.  
-
-[docker volume의 사용 방법](https://darkrasid.github.io/docker/container/volume/2017/05/10/docker-volumes.html)  
-
-container의 데이터 휘발성 때문에 volume을 사용하게 된다. Dockerfile에서 volume을 다음과 같이 선언할 수 있다.  
-
-```
-FROM ubuntu:latest
-
-VOLUME ["/volume/path"]
-```
-
-volume이 선언된 이미지는 container로 올라갈 때 자동으로 해당 경로를 host에 연결한다. 경로는 `/var/lib/docker/volumes/{volume_name}`에 생성된다. volume_name으로는 docker가 생성한 hash 값이 들어가기 때문에 어떤 container의 volume인지 알기 어렵다. 
-
-## EXPOSE
-
-```
-EXPOSE <port> [<port>/<protocol>...]
-```
-
-EXPOSE 명령은 컨테이너가 런타임에 지정된 네트워크 포트에서 수신 대기함을 Docker에 알린다. 포트가 TCP 또는 UDP에서 수신하는지 여부를 지정할 수 있으며 프로토콜이 지정되지 않은 경우 기본값은 TCP이다.  
-
-EXPOSE 명령이 실제로 포트를 게시하지 않지만 이미지를 빌드하는 사람과 컨테이너를 실행하는 사람 사이에서 게시할 포트에 대한 일종의 문서 역할을 한다. 실제로 포트를 게시하려면 docker run 명령어에 -p 플래그를 사용한다.  
-
-## ENTRYPOINT
-
-```
-ENTRYPOINT ["executable", "param1", "param2"]
-ENTRYPOINT command param1 param2
-```
-
-ENTRYPOINT를 사용하면 해당 컨테이너가 수행하게 될 실행 명령을 정의한다. 컨테이너 실행 시 받은 인자와 상관없이 실행 명령을 수행한다.   
-
-[ENTRYPOINT와 CMD의 차이점](https://bluese05.tistory.com/77)  
+기본적으로 다른 리눅스 배포판보다 훨씬 가볍고 깔끔한 것이 장점이기 때문에 Docker 컨테이너에 사용되는 예시가 많고 유명하다. 주로 호스트 환경보다 특정 애플리케이션을 서비스하는 컨테이너 환경에서 사용할 수 있으면 되기 대문에 미러 서버의 규모가 다른 배포판에 비해 크지는 않다. 
 
 
 

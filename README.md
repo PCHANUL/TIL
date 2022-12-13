@@ -9,6 +9,13 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.13](#221213)
+  * [docker network](#docker-network)
+    * [네트워크 조회](#네트워크-조회)
+    * [네트워크 종류](#네트워크-종류)
+    * [네트워크 생성](#네트워크-생성)
+    * [네트워크 상세 정보](#네트워크-상세-정보)
+    * [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
 * [22.12.12](#221212)
   * [docker rmi 사용법](#docker-rmi-사용법)
   * [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
@@ -73,6 +80,149 @@ permalink: /
 
 ---
 
+## 22.12.13
+
+### docker network
+
+컨테이너는 기본적으로 다른 컨테이너와의 통신이 불가능하다. 하지만 여러 컨테이너를 하나의 Docker Network에 연결시키면 통신이 가능해진다.  
+
+#### 네트워크 조회
+
+`docker network ls` 명령어를 사용하면 현재 생성되어 있는 네트워크 목록을 볼 수 있다. bridge, host, none은 Docker 데몬이 실행되며 생성된 네트워크이다.  
+
+```bash
+$ docker network ls
+NETWORK ID     NAME                    DRIVER    SCOPE
+0e5017a27ba9   bridge                  bridge    local
+5e7e20144697   host                    host      local
+07e13e6481ff   none                    null      local
+```  
+
+#### 네트워크 종류
+
+네트워크는 bridge, host, overlay 등 목적에 따라 다양한 종류의 네트워크 드라이버를 지원한다.  
+
+- bridge : 하나의 호스트 내에서 여러 컨테이너들의 네트워크
+- host : 호스트와 동일한 네트워크를 컨테이너가 사용
+- overlay : 여러 호스트의 컨테이너들 간의 네트워크
+
+#### 네트워크 생성
+
+`docker network create` 명령어를 사용하여 새로운 네트워크를 생성할 수 있다. 아래의 예시에는 -d 옵션을 사용하지 않아서 기본값인 bridge 네트워크가 생성된다.   
+
+```
+$ docker network create new-net
+$ docker network ls
+NETWORK ID     NAME                    DRIVER    SCOPE
+0e5017a27ba9   bridge                  bridge    local
+5e7e20144697   host                    host      local
+77461af7ee7e   new-net                 bridge    local
+07e13e6481ff   none                    null      local
+```
+
+#### 네트워크 상세 정보
+
+`docker network inspect` 명령어러 네트워크의 상세 정보를 볼 수 있다. Container 값을 보면 어떠한 컨테이너도 연결되어 있지 않음을 알 수 있다.  
+
+```
+[
+    {
+        "Name": "new-net",
+        "Id": "77461af7ee7e07d3454222a1b53e0148fdae10f88218a2f27b80b2a52f23fd00",
+        "Created": "2022-12-13T14:11:47.193672325Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+```
+
+#### 네트워크에 컨테이너 연결
+
+`docker network connect` 명령어로 컨테이너를 네트워크에 연결할 수 있다. 컨테이너를 실행할 때 --network 옵션을 사용하지 않으면 기본값인 bridge 네트워크에 연결된다.  
+
+```
+$ docker run -itd --name two busybox
+$ docker network inspect bridge
+
+(...)
+"Containers": {
+            "4318dc9251f0f2c4be95056ab1c248491939202850601c569554850b85aae27c": {
+                "Name": "two",
+                "EndpointID": "5c171aa3eabb9f308926fe2f6a3271eaaf7dc0dedd482eb54939e7128f601380",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+(...)
+```
+
+```
+$ docker network connect new-net two
+$ docker network inspect new-net
+
+(...)
+"Containers": {
+            "4318dc9251f0f2c4be95056ab1c248491939202850601c569554850b85aae27c": {
+                "Name": "two",
+                "EndpointID": "4d89fd17ac05f188b73dada5dc96aacd975e6b6a8f2214c4c02cdec1c63d2411",
+                "MacAddress": "02:42:ac:14:00:02",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+(...)
+```
+
+두번째 컨테이너도 연결해본다.  
+
+```
+$ docker run -itd --name four --network new-net busybox
+$ docker network inspect new-net
+
+(...)
+"Containers": {
+            "4318dc9251f0f2c4be95056ab1c248491939202850601c569554850b85aae27c": {
+                "Name": "two",
+                "EndpointID": "4d89fd17ac05f188b73dada5dc96aacd975e6b6a8f2214c4c02cdec1c63d2411",
+                "MacAddress": "02:42:ac:14:00:02",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            },
+            "706849116fb8932986908a9a523315d28fa47c2a820ce50808bac209134c324b": {
+                "Name": "four",
+                "EndpointID": "4c3f080ca1b073ef960f8c3c2797eb524d9d594f4800e583bc46b4544601bd30",
+                "MacAddress": "02:42:ac:14:00:03",
+                "IPv4Address": "172.20.0.3/16",
+                "IPv6Address": ""
+            }
+        },
+(...)
+```
+
+참조 : https://www.daleseo.com/docker-networks/
+
 ## 22.12.12
 
 ### docker rmi 사용법
@@ -84,8 +234,6 @@ https://www.lainyzine.com/ko/article/docker-rmi-removing-docker-images/
 alpinelinux wiki : https://wiki.alpinelinux.org/wiki/Mysql#Installation  
 mysql.sock 에러 해결 : https://velog.io/@tok1324/MySQL-%EC%BD%94%EB%94%A9%EC%9D%91%EC%95%A0%EC%9D%98-mysql.sock-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0  
 mysql 일반적인 오류를 해결하는 유용한 정보들 : https://blog.naver.com/islove8587/221970366883  
-
-
 
 ## 22.12.11
 
@@ -411,8 +559,6 @@ networks:
   front-tier: {}
   back-tier: {}
 ```
-
-
 
 
 ## 22.12.04
