@@ -9,6 +9,15 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.14](#221214)
+  * [Docker Compose network](#docker-compose-network)
+    * [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
+    * [Docker Compose service ports](#docker-compose-service-ports)
+    * [Docker Compose service expose](#docker-compose-service-expose)
+  * [mysql\_install\_db](#mysql_install_db)
+    * [Options](#options)
+  * [mysqld\_safe](#mysqld_safe)
+    * [Options](#options-1)
 * [22.12.13](#221213)
   * [docker network](#docker-network)
     * [네트워크 조회](#네트워크-조회)
@@ -79,6 +88,90 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 22.12.14
+
+### Docker Compose network
+
+Docker Compose는 여러 개의 컨테이너로 구성된 애플리케이션을 관리하기 위한 오케스트레이션 도구이다. 기본적으로 Docker Compose는 하나의 기본 네트워크에 모든 컨테이너를 연결한다. 기본 네트워크 이름은 docker-compose.yml 파일이 위치한 디렉토리 이름 뒤에 _default가 붙는다. `docker network ls` 명령어로 기본 네트워크를 확인할 수 있다.  
+
+#### 사용자 정의 네트워크 지정
+
+docker-compose.yml 파일에 networks 항목에 새로운 네트워크를 명시하여 컨테이너를 연결할 수 있다.  
+
+```
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - new-net
+  db:
+    image: postgres
+    ports:
+      - "8001:5432"
+networks:
+  new-net:
+    driver: bridge
+```
+
+#### Docker Compose service ports
+
+service의 ports에 "host:container" 또는 "container"로 명시하여 호스트 포트와 컨테이너 포트를 구분하는 것이 중요하다. container 포트는 서비스 네트워크를 위해 사용되고, host 포트가 정의되면 외부에서도 서비스에 접근할 수 있다.  
+
+#### Docker Compose service expose
+
+expose는 host OS에 포트를 공개하지 않고, 컨테이너에만 포트를 공개한다. host OS와 직접 연결되지 않고, 링크 등으로 연결된 컨테이너 간의 통신이 필요한 경우에 사용된다.  
+
+참조 : https://www.daleseo.com/docker-compose-networks/, https://docs.docker.com/compose/networking/, https://nirsa.tistory.com/80  
+
+### mysql_install_db
+
+mysql_install_db는 MariaDB 데이터 디렉토리를 초기화하고 시스템 테이블이 존재하지 않는 경우 mysql 데이터베이스에 시스템 테이블을 생성한다. MariaDB는 시스템 테이블을 사용하여 권한, 역할 및 플러그인을 관리한다.  
+
+mysql_install_db는 --bootstrap 모드에서 MariaDB 서버의 mysqld 프로세스를 시작하고 명령을 전송하여 시스템 테이블과 그 내용을 생성하는 방식으로 작동한다.  
+
+MariaDB 서버인 mysqld는 나중에 실행될 때 데이터 디렉터리에 액세스해야 하므로 mysqld를 실행하는 데 사용할 동일한 계정에서 mysql_install_db를 실행하고 --user 옵션을 사용하여 사용자를 지정해야 한다. 또한 --basedir 또는 --datadir과 같은 옵션으로 설치 디렉터리 또는 데이터 디렉터리의 위치를 지정할 수 있다.  
+
+```
+$ scripts/mysql_install_db --user=mysql \
+   --basedir=/opt/mysql/mysql \
+   --datadir=/opt/mysql/mysql/data
+```  
+
+#### Options
+
+- `--auth-root-authentication-method={normal | socket}` : normal로 설정하면 mysql_native_password 인증 플러그인으로 인증하고 초기 비밀번호가 설정되지 않은 root@localhost 계정을 생성하므로 안전하지 않을 수 있다. socket으로 설정하면 unix_socket 인증 플러그인으로 인증하는 root@localhost 계정을 생성한다.  
+- `--basedir=path` : MariaDB 설치 디렉터리의 경로이다.
+- `--builddir=path` : 디렉터리 외부 빌드와 함께 --srcdir을 사용하는 경우 이를 빌드된 파일이 있는 빌드 디렉터리의 위치로 설정해야 한다.
+- `--datadir=path`, `--ldata=path` : MariaDB 데이터 디렉터리의 경로이다.
+
+참조 : https://mariadb.com/kb/en/mysql_install_db/  
+
+### mysqld_safe
+
+mysqld_safe는 몇 가지 추가 안전 기능으로 mysqld를 시작하는 래퍼이다. 예를 들어, mysqld_safe는 mysqld가 충돌했음을 알게 되면 mysqld_safe는 자동으로 mysqld를 다시 시작한다.  
+
+mysqld_safe는 systemd를 지원하지 않는 Linux 및 Unix 배포판에서 mysqld를 시작하는데 권장되는 방법이다.  
+
+mysqld_safe 명령어를 사용하는 구문은 다음과 같다.  
+
+```
+mysqld_safe [ --no-defaults | --defaults-file | --defaults-extra-file | --defaults-group-suffix | --print-defaults ] <options> <mysqld_options>
+```  
+
+#### Options
+
+- `--basedir=path` : 	MariaDB 설치 디렉토리의 경로이다.
+- `--datadir=path` : 데이터 디렉토리의 경로이다.
+- `--user={user_name or user_id}` : 이름이 user_name이거나 숫자 사용자 ID인 user_id가 있는 사용자로 mysqld 서버를 실행한다.
+
+
+참조 : https://runebook.dev/ko/docs/mariadb/mysqld_safe/index  
+
+
+
 
 ## 22.12.13
 

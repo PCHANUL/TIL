@@ -15,6 +15,17 @@ permalink: /docs/projects/Inception/docker_compose
   * [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
 * [The Compose application model](#the-compose-application-model)
   * [example](#example)
+* [Docker Compose 문법](#docker-compose-문법)
+  * [version](#version)
+  * [image](#image)
+  * [build](#build)
+    * [context, dockerfile](#context-dockerfile)
+    * [args](#args)
+  * [environment, env\_file](#environment-env_file)
+  * [networks](#networks)
+    * [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
+  * [ports](#ports)
+  * [expose](#expose)
 
 
 # Docker Compose
@@ -152,3 +163,134 @@ networks:
   front-tier: {}
   back-tier: {}
 ```
+
+# Docker Compose 문법
+
+## version
+
+docker-compose는 버전에 따라 차이가 있기 때문에 버전을 정의하는 것이 좋다.  
+
+```
+version: "3"
+```
+
+## image
+
+서비스의 베이스 이미지를 지정한다. 베이스 이미지가 로컬 환경에 없다면 Docker hub에서 다운로드하여 베이스 이미지로 사용된다.  
+
+```
+services:
+    web:
+        image: centos:7
+```
+
+## build
+
+베이스 이미지를 생성하는 Dockerfile을 지정한다. 자동으로 Dockerfile을 빌드하여 베이스 이미지를 만들고 컨테이너를 실행한다.  
+
+```
+# docker-compose.yaml
+services:
+    web:
+        build: .
+```
+
+```
+# Dockerfile
+FROM centos:7
+```
+
+### context, dockerfile
+
+만약에 Dockerfile의 경로나 이름이 다른 경우에는 지정할 수 있다.  
+- context : Dockerfile의 위치
+- dockerfile : Dockerfile의 이름
+
+```
+services:
+    web:
+        build:
+            context: /src
+            dockerfile: Dockerfile-web
+```
+
+### args
+
+인수를 지정하여 Dockerfile에 값을 넣을 수 있다.  
+
+```
+# docker-compose.yaml
+version: "3"
+services:
+    web:
+        build:
+            context: .
+            args:
+                number: 1
+```
+
+```
+# dockerfile
+FROM centos: 7
+
+ARG number
+RUN echo "$number"
+```
+
+## environment, env_file
+
+파일을 읽어서 컨테이너의 환경 변수를 지정할 수 있다.  
+
+```
+# docker-compose.yaml
+version: "3"
+services:
+    web:
+        build: .
+        environment:
+            NUMBER : 7
+            SHOW : "true"
+```
+
+```
+# docker-compose.yaml
+version: "3"
+services:
+    web:
+        build: .
+        env_file: .env
+```
+
+## networks
+
+Docker Compose는 여러 개의 컨테이너로 구성된 애플리케이션을 관리하기 위한 오케스트레이션 도구이다. 기본적으로 Docker Compose는 하나의 기본 네트워크에 모든 컨테이너를 연결한다. 기본 네트워크 이름은 docker-compose.yml 파일이 위치한 디렉토리 이름 뒤에 _default가 붙는다. `docker network ls` 명령어로 기본 네트워크를 확인할 수 있다.  
+
+### 사용자 정의 네트워크 지정
+
+docker-compose.yml 파일에 networks 항목에 새로운 네트워크를 명시하여 컨테이너를 연결할 수 있다.  
+
+```
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - new-net
+  db:
+    image: postgres
+    ports:
+      - "8001:5432"
+networks:
+  new-net:
+    driver: bridge
+```
+
+## ports
+
+service의 ports에 "host:container" 또는 "container"로 명시하여 호스트 포트와 컨테이너 포트를 구분하는 것이 중요하다. container 포트는 서비스 네트워크를 위해 사용되고, host 포트가 정의되면 외부에서도 서비스에 접근할 수 있다.  
+
+## expose
+
+expose는 host OS에 포트를 공개하지 않고, 컨테이너에만 포트를 공개한다. host OS와 직접 연결되지 않고, 링크 등으로 연결된 컨테이너 간의 통신이 필요한 경우에 사용된다.  
+
