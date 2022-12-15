@@ -9,6 +9,11 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.15](#221215)
+  * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+    * [chown 명령어](#chown-명령어)
+  * [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
+  * [Docker Compose volume](#docker-compose-volume)
 * [22.12.14](#221214)
   * [Docker Compose network](#docker-compose-network)
     * [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
@@ -88,6 +93,45 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 22.12.15
+
+### mysqld_safe 실행 오류
+
+mysqld_safe를 실행하면 로그 파일이 생성된다. 로그 파일에서 발견한 이번에 발생된 에러는 다음과 같다.  
+
+```
+Cannot open datafile for read-only: './mysql/gtid_slave_pos.ibd' OS error: 81  
+```  
+
+이 에러는 폴더 권한 문제로 인해 발생되었다. mysqld_safe를 실행하며 --datadir 옵션으로 지정된 폴더에 권한이 없는 사용자이기 때문에 파일을 읽을 수 없었다. 그래서 지정된 폴더와 모든 하위 폴더의 소유자를 변경하여 문제를 해결할 수 있었다.  
+
+참조 : https://bbs.archlinux.org/viewtopic.php?id=247385, https://hmjkor.tistory.com/325  
+
+#### chown 명령어
+
+하위 폴더 소유자를 모두 변경하려면 -R 옵션을 추가한다.  
+
+```
+$ chown -R user:user folder
+```  
+
+참조 : https://codechacha.com/ko/linux-chown/  
+
+### 데몬 기초 : 개념과 구현 방법
+
+https://reakwon.tistory.com/118  
+
+
+### Docker Compose volume
+
+Docker 컨테이너가 종료되면 안에 저장된 데이터가 사라진다. 컨테이너에서 사용된 데이터를 보존하려면 호스트에 데이터를 저장해야 한다. 호스트에 데이터를 저장한다면 여러 컨테이너가 데이터를 공유할 수 있다. 호스트의 파일 시스템 안에 데이터를 저장하는 방식에 따라서 볼륨과 바인드로 나뉜다.  
+
+1. bind mount : 컨테이너의 데이터를 호스트 경로에 연결
+2. volume : 컨테이너의 데이터를 호스트의 /var/lib/volume 경로에 저장
+
+참조 : https://nerd-mix.tistory.com/47, https://monkeydeveloper.tistory.com/entry/Docker-volume-compose
+
 
 ## 22.12.14
 
