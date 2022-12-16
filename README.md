@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.16](#221216)
+  * [mysql 원격 접속](#mysql-원격-접속)
+    * [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
 * [22.12.15](#221215)
   * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
     * [chown 명령어](#chown-명령어)
@@ -93,6 +96,30 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 22.12.16
+
+### mysql 원격 접속
+
+어떠한 컨테이너에 mysql 서버를 실행시키고, 다른 컨테이너에서 클라이언트로 접속을 시도하면 다음과 같은 문제를 만난다.  
+
+#### 서버에서 로컬 접속만 허용
+
+mysql은 설치시 기본으로 로컬 접근만 허용한다. host 목록을 보면 알 수 있다. 그렇기 때문에 외부에서 접근 가능한 새로운 유저를 생성해야 한다. 다음과 같은 명령어로 모든 IP에서 접속 가능한 유저가 생성된다.   
+
+```
+mysql> CREATE USER '[USER_NAME]'@'%' IDENTIFIED BY '[USER_PWD]';
+mysql> GRANT ALL PRIVILEGES ON *.* TO '[USER_NAME]'@'%' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
+```
+
+다음은 mysql 설정 파일을 수정한다. my.cnf 파일에서 skip-networking이 있는 경우에 주석 처리를 해주어야 한다. skip-networking으로 mysql 서버가 로컬의 유닉스 소켓 접속만 혀용하도록 설정되기 때문이다.  
+
+모든 설정 후에는 mysql 서버를 재시작하여 수정된 설정 사항을 적용시켜주어야 한다.  
+
+
+참조 : https://velog.io/@wpdlzhf159/MySql-%EC%9B%90%EA%B2%A9%EC%A0%91%EC%86%8D-%ED%95%98%EA%B8%B0, https://jordy-torvalds.tistory.com/entry/%ED%8D%BC%EC%98%A8-%EA%B8%80-MySql-%EC%9B%90%EA%B2%A9-%EC%A0%91%EC%86%8D-%EB%B0%A9%EB%B2%95-1  
+
 
 ## 22.12.15
 
