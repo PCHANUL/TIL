@@ -10,7 +10,9 @@ permalink: /docs/projects/Inception
 * [Inception](#inception)
 * [Todos](#todos)
 * [Dockerfile](#dockerfile)
-	* [Base image : alpine Linux](#base-image--alpine-linux)
+  * [Base image : alpine Linux](#base-image--alpine-linux)
+* [MariaDB](#mariadb)
+  * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
 
 # Inception
 
@@ -62,7 +64,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 # Todos
 
 - [ ] [Dockerfile 작성](#dockerfile)
-  - [ ] MariaDB
+  - [ ] [MariaDB](#MariaDB)
   - [ ] WordPress
   - [ ] NGINX
 - [ ] docker.compose.yml 작성
@@ -79,6 +81,22 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 리눅스 커널을 기반으로 한 리눅스 배포판 가운데 하나이다. Musl과 BusyBox를 기반하고 있다. alpine linux는 작고, 보안이 뛰어나고, 간단함을 염두하여 만들어졌다. 이 장점이 두드러져서 배포판의 용량이 커널을 제외하고 8MB 밖에 되지 않으며, 수많은 패키지들을 설치할 수 있다.  
 
 기본적으로 다른 리눅스 배포판보다 훨씬 가볍고 깔끔한 것이 장점이기 때문에 Docker 컨테이너에 사용되는 예시가 많고 유명하다. 주로 호스트 환경보다 특정 애플리케이션을 서비스하는 컨테이너 환경에서 사용할 수 있으면 되기 대문에 미러 서버의 규모가 다른 배포판에 비해 크지는 않다. 
+
+# MariaDB
+
+## mysqld_safe 실행 오류
+
+mysqld_safe를 실행하면 로그 파일이 생성된다. 로그 파일에서 발견한 이번에 발생된 에러는 다음과 같다.  
+
+```
+Cannot open datafile for read-only: './mysql/gtid_slave_pos.ibd' OS error: 81  
+```  
+
+이 에러는 폴더 권한 문제로 인해 발생되었다. mysqld_safe를 실행하며 --datadir 옵션으로 지정된 폴더에 권한이 없는 사용자이기 때문에 파일을 읽을 수 없었다. 그래서 지정된 폴더와 모든 하위 폴더의 소유자를 변경하여 문제를 해결할 수 있었다.  
+
+```
+$ chown -R mysql:mysql /var/lib/mysql
+```  
 
 
 
