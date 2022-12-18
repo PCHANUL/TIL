@@ -13,6 +13,10 @@ permalink: /docs/projects/Inception
   * [Base image : alpine Linux](#base-image--alpine-linux)
 * [MariaDB](#mariadb)
   * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  * [mysql 볼륨](#mysql-볼륨)
+  * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+    * [새로운 유저 생성](#새로운-유저-생성)
+    * [mysql 설정 수정](#mysql-설정-수정)
 
 # Inception
 
@@ -97,6 +101,41 @@ Cannot open datafile for read-only: './mysql/gtid_slave_pos.ibd' OS error: 81
 ```
 $ chown -R mysql:mysql /var/lib/mysql
 ```  
+
+## mysql 볼륨
+
+컨테이너가 종료되면 안에 저장된 데이터가 사라지기 때문에 호스트에 데이터를 저장해야 한다. docker-compose.yaml에서 볼륨을 설정하려면 서비스에 volumes 항목을 추가하면 된다.  
+
+```
+services:
+  mariadb:
+    (...)
+    volumes:
+      - mariadb-data:/var/lib/mysql
+```
+
+## mysql 원격 접속 설정
+
+mysql은 설치시 기본으로 로컬 접근만 허용한다. 다른 컨테이너에서 접근할 수 있도록 설정해야 한다.  
+
+### 새로운 유저 생성
+
+외부에서 접근할 수 있는 새로운 유저를 생성한다. 다음은 모든 IP에서 접속 가능하며, 모든 권한을 가진 유저를 생성한다.  
+
+```
+mysql> CREATE USER '[USER_NAME]'@'%' IDENTIFIED BY '[USER_PWD]';
+mysql> GRANT ALL PRIVILEGES ON *.* TO '[USER_NAME]'@'%' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
+```
+
+### mysql 설정 수정
+
+mysql 서비스를 실행하면 생성되는 설정 파일을 변경한다. 설정 파일에 skip-networking이 있는 경우 주석 처리를 해야 한다. skip-networking은 mysql 서버가 로컬의 유닉스 소켓 접속만 허용하도록 설정한다.  
+
+```
+sed -i 's/^skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
+```
+
 
 
 

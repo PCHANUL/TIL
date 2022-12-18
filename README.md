@@ -9,6 +9,10 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.18](#221218)
+  * [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
+  * [nginx](#nginx)
+    * [nginx 구조](#nginx-구조)
 * [22.12.16](#221216)
   * [mysql 원격 접속](#mysql-원격-접속)
     * [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
@@ -97,6 +101,29 @@ permalink: /
 
 ---
 
+## 22.12.18
+
+### Dockerfile ENTRYPOINT와 CMD의 차이
+
+https://www.bmc.com/blogs/docker-cmd-vs-entrypoint/  
+
+### nginx
+
+nginx는 웹 서버 소프트웨어이다. 비동기 이벤트 기반으로 트래픽이 많은 웹사이트의 서버를 도와준다.  
+
+웹 서버인 아파치 서버는 커넥션을 형성하기 위해 프로세스를 생성한다. 확장성이 좋다는 장점을 활용하여 하나의 서버에서 요청을 받고 응답을 처리할 수 있었다. 하지만 서버 트래픽량이 높아지며 서버에 동시 연결된 커넥션을 감당하지 못하는 문제가 발생된다. 이를 Connection 10000 Problem (C10K problem) 이라고 한다. 수많은 동시 커넥션을 감당할 수 없었던 아파치 서버는 nginx로 문제를 해결할 수 있었다.  
+
+#### nginx 구조
+
+nginx는 Event-Driven Model(이벤트 기반 구조)이다.  
+
+nginx에는 master process가 있다. master process는 설정 파일을 읽고 worker process를 생성한다. worker process는 지정된 소켓을 배정받으며 생성된다. 소켓에 새로운 클라이언트의 요청이 들어오면 worker process는 connection을 형성하고 처리한다. connection은 정해진 시간만큼 유지되며, 형성된 connection에 아무런 요청이 없으면 새로운 connection을 형성하거나 다른 connection에 들어온 요청을 처리한다. connection 형성과 제거, 요청 처리를 event라고 부른다.  
+
+OS 커널이 event를 큐 형식으로 worker process에 전달한다. 큐에 담긴 event는 비동기 방식으로 처리되기 전까지 대기한다. worker process는 하나의 스레드로 event를 꺼내어 처리한다. 만약에 꺼낸 event의 처리가 오래걸린다면 thread pool에 위임하고 다른 event를 처리한다.  
+
+
+참조 : https://ssdragon.tistory.com/60, 
+
 
 ## 22.12.16
 
@@ -158,7 +185,7 @@ Docker 컨테이너가 종료되면 안에 저장된 데이터가 사라진다. 
 1. bind mount : 컨테이너의 데이터를 호스트 경로에 연결
 2. volume : 컨테이너의 데이터를 호스트의 /var/lib/volume 경로에 저장
 
-참조 : https://nerd-mix.tistory.com/47, https://monkeydeveloper.tistory.com/entry/Docker-volume-compose
+참조 : https://nerd-mix.tistory.com/47, https://monkeydeveloper.tistory.com/entry/Docker-volume-compose, https://jjeong.tistory.com/1435
 
 
 ## 22.12.14
