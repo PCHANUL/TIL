@@ -7,16 +7,17 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-* [Inception](#inception)
-* [Todos](#todos)
-* [Dockerfile](#dockerfile)
-  * [Base image : alpine Linux](#base-image--alpine-linux)
-* [MariaDB](#mariadb)
-  * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  * [mysql 볼륨](#mysql-볼륨)
-  * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-    * [새로운 유저 생성](#새로운-유저-생성)
-    * [mysql 설정 수정](#mysql-설정-수정)
+- [Inception](#inception)
+- [Todos](#todos)
+- [Dockerfile](#dockerfile)
+  - [Base image : alpine Linux](#base-image--alpine-linux)
+- [MariaDB](#mariadb)
+  - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  - [mysql 볼륨](#mysql-볼륨)
+  - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+    - [새로운 유저 생성](#새로운-유저-생성)
+    - [mysql 설정 수정](#mysql-설정-수정)
+- [Docker Compose network](#docker-compose-network)
 
 # Inception
 
@@ -72,7 +73,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
   - [ ] WordPress
   - [ ] NGINX
 - [ ] docker.compose.yml 작성
-- [ ] Docker-network 컨테이너 간의 연결 설정
+- [ ] [Docker-network 컨테이너 간의 연결 설정](#docker-compose-network)
 - [ ] WordPress 데이터 베이스 사용자 이름 설정
 - [ ] 호스트 시스템 로그인 설정
 - [ ] NGINX 컨테이너 entrypoint port
@@ -136,6 +137,30 @@ mysql 서비스를 실행하면 생성되는 설정 파일을 변경한다. 설�
 sed -i 's/^skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
 ```
 
+
+# Docker Compose network
+
+docker-compose.yaml 파일에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
+
+```
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - new-net
+  db:
+    image: postgres
+    ports:
+      - "8001:5432"
+networks:
+  new-net:
+    driver: bridge
+```
+
+
+https://www.daleseo.com/docker-compose-networks/  
 
 
 

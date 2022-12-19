@@ -9,97 +9,299 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-* [22.12.18](#221218)
-  * [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
-  * [nginx](#nginx)
-    * [nginx 구조](#nginx-구조)
-* [22.12.16](#221216)
-  * [mysql 원격 접속](#mysql-원격-접속)
-    * [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
-* [22.12.15](#221215)
-  * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-    * [chown 명령어](#chown-명령어)
-  * [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
-  * [Docker Compose volume](#docker-compose-volume)
-* [22.12.14](#221214)
-  * [Docker Compose network](#docker-compose-network)
-    * [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
-    * [Docker Compose service ports](#docker-compose-service-ports)
-    * [Docker Compose service expose](#docker-compose-service-expose)
-  * [mysql\_install\_db](#mysql_install_db)
-    * [Options](#options)
-  * [mysqld\_safe](#mysqld_safe)
-    * [Options](#options-1)
-* [22.12.13](#221213)
-  * [docker network](#docker-network)
-    * [네트워크 조회](#네트워크-조회)
-    * [네트워크 종류](#네트워크-종류)
-    * [네트워크 생성](#네트워크-생성)
-    * [네트워크 상세 정보](#네트워크-상세-정보)
-    * [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
-* [22.12.12](#221212)
-  * [docker rmi 사용법](#docker-rmi-사용법)
-  * [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
-* [22.12.11](#221211)
-  * [daemon](#daemon)
-* [22.12.09](#221209)
-  * [Docker Container PID 1](#docker-container-pid-1)
-    * [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
-    * [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
-    * [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
-  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
-    * [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
-      * [PID 1의 Signal 문제](#pid-1의-signal-문제)
-    * [dumb-init](#dumb-init)
-    * [dumb-init 사용법](#dumb-init-사용법)
-* [22.12.08](#221208)
-  * [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
-  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
-    * [PID 1](#pid-1)
-  * [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
-* [22.12.07](#221207)
-  * [MariaDB Dockerfile](#mariadb-dockerfile)
-* [22.12.06](#221206)
-  * [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
-  * [MariaDB](#mariadb)
-* [22.12.05](#221205)
-  * [The Compose application model](#the-compose-application-model)
-    * [example](#example)
-* [22.12.04](#221204)
-  * [Docker file](#docker-file)
-* [22.12.03](#221203)
-  * [Docker Compose](#docker-compose)
-  * [Key features of Docker Compose](#key-features-of-docker-compose)
-    * [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
-    * [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
-    * [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
-    * [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
-* [22.12.02](#221202)
-  * [Docker](#docker)
-    * [Docker Architecture](#docker-architecture)
-  * [alpine linux](#alpine-linux)
-* [22.12.01](#221201)
-  * [Container](#container)
-    * [Container란](#container란)
-    * [Container Image란](#container-image란)
-    * [Kernel Space](#kernel-space)
-      * [chroot](#chroot)
-      * [Linux namespace](#linux-namespace)
-      * [namespace API](#namespace-api)
-        * [clone](#clone)
-        * [unshare](#unshare)
-        * [setns](#setns)
-        * [proc](#proc)
-      * [namespace](#namespace)
-        * [mnt](#mnt)
-        * [uts](#uts)
-        * [ipc](#ipc)
-        * [pid](#pid)
-        * [net](#net)
-        * [user](#user)
-        * [cgroup](#cgroup)
+- [22.12.19](#221219)
+  - [Install Nginx](#install-nginx)
+  - [nginx.conf](#nginxconf)
+  - [Nginx systemd](#nginx-systemd)
+  - [Nginx SSL](#nginx-ssl)
+    - [openssl 인증서 발급](#openssl-인증서-발급)
+- [22.12.18](#221218)
+  - [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
+  - [nginx](#nginx)
+    - [nginx 구조](#nginx-구조)
+- [22.12.16](#221216)
+  - [mysql 원격 접속](#mysql-원격-접속)
+    - [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
+- [22.12.15](#221215)
+  - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+    - [chown 명령어](#chown-명령어)
+  - [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
+  - [Docker Compose volume](#docker-compose-volume)
+- [22.12.14](#221214)
+  - [Docker Compose network](#docker-compose-network)
+    - [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
+    - [Docker Compose service ports](#docker-compose-service-ports)
+    - [Docker Compose service expose](#docker-compose-service-expose)
+  - [mysql\_install\_db](#mysql_install_db)
+    - [Options](#options)
+  - [mysqld\_safe](#mysqld_safe)
+    - [Options](#options-1)
+- [22.12.13](#221213)
+  - [docker network](#docker-network)
+    - [네트워크 조회](#네트워크-조회)
+    - [네트워크 종류](#네트워크-종류)
+    - [네트워크 생성](#네트워크-생성)
+    - [네트워크 상세 정보](#네트워크-상세-정보)
+    - [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
+- [22.12.12](#221212)
+  - [docker rmi 사용법](#docker-rmi-사용법)
+  - [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
+- [22.12.11](#221211)
+  - [daemon](#daemon)
+- [22.12.09](#221209)
+  - [Docker Container PID 1](#docker-container-pid-1)
+    - [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
+    - [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
+    - [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
+  - [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
+    - [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
+      - [PID 1의 Signal 문제](#pid-1의-signal-문제)
+    - [dumb-init](#dumb-init)
+    - [dumb-init 사용법](#dumb-init-사용법)
+- [22.12.08](#221208)
+  - [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
+  - [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
+    - [PID 1](#pid-1)
+  - [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
+- [22.12.07](#221207)
+  - [MariaDB Dockerfile](#mariadb-dockerfile)
+- [22.12.06](#221206)
+  - [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
+  - [MariaDB](#mariadb)
+- [22.12.05](#221205)
+  - [The Compose application model](#the-compose-application-model)
+    - [example](#example)
+- [22.12.04](#221204)
+  - [Docker file](#docker-file)
+- [22.12.03](#221203)
+  - [Docker Compose](#docker-compose)
+  - [Key features of Docker Compose](#key-features-of-docker-compose)
+    - [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
+    - [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
+    - [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
+    - [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
+- [22.12.02](#221202)
+  - [Docker](#docker)
+    - [Docker Architecture](#docker-architecture)
+  - [alpine linux](#alpine-linux)
+- [22.12.01](#221201)
+  - [Container](#container)
+    - [Container란](#container란)
+    - [Container Image란](#container-image란)
+    - [Kernel Space](#kernel-space)
+      - [chroot](#chroot)
+      - [Linux namespace](#linux-namespace)
+      - [namespace API](#namespace-api)
+        - [clone](#clone)
+        - [unshare](#unshare)
+        - [setns](#setns)
+        - [proc](#proc)
+      - [namespace](#namespace)
+        - [mnt](#mnt)
+        - [uts](#uts)
+        - [ipc](#ipc)
+        - [pid](#pid)
+        - [net](#net)
+        - [user](#user)
+        - [cgroup](#cgroup)
 
 ---
+
+## 22.12.19
+
+### Install Nginx
+
+https://wiki.alpinelinux.org/wiki/Nginx  
+
+### nginx.conf
+
+https://wonit.tistory.com/335, https://prohannah.tistory.com/136  
+
+최소의 nginx 설정 파일은 다음과 같다.  
+
+```
+# /etc/nginx/nginx.conf                                                           
+                                                                                   
+user www;                                                                          
+                                                                                   
+# CPU 코어 수에 따라 자동으로 작업자 프로세스 수를 설정합니다.  
+worker_processes auto;                                                            
+                                                                                  
+# 정규 표현식에 JIT를 사용하여 처리 속도를 높입니다.  
+pcre_jit on;                                                                      
+                                                                                   
+# 기본 오류 로그를 구성합니다.
+error_log /var/log/nginx/error.log warn;
+
+# 동적 모듈을 로드하기 위한 지시문이 있는 파일을 포함합니다.
+include /etc/nginx/modules/*.conf;                                                 
+                                                                                   
+# 구성 스니펫이 있는 파일을 루트 컨텍스트에 포함하려면 주석을 제거하십시오.
+# 참고: 이것은 Alpine 3.15에서 기본적으로 활성화됩니다.                           
+#include /etc/nginx/conf.d/*.conf;                                                
+                                                                                   
+events {                                                                          
+        # 작업자 프로세스에서 열 수 있는 최대 동시 연결 수입니다.
+        worker_connections 1024;                                                   
+}                                                                                  
+                                                                                  
+http {                                                                             
+        # 응답의 MIME 유형에 대한 파일 이름 확장명 매핑을 포함하고 기본 유형을 정의합니다.
+        include /etc/nginx/mime.types;                                             
+        default_type application/octet-stream;                                     
+                                                                                   
+        # 업스트림 서버의 이름을 주소로 확인하는 데 사용되는 이름 서버.
+        # Lua 모듈에서 tcpsocket 및 udpsocket을 사용할 때도 필요합니다.
+        #resolver 1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001;       
+                                                                                   
+        # nginx 버전을 클라이언트에 알리지 않습니다. 기본값은 '켜짐'입니다.
+        server_tokens off;                                                         
+                                                                                   
+        # 요청 헤더 Content-Length에 표시된 대로 클라이언트 요청의 최대 허용 본문 크기를 지정합니다. 명시된 콘텐츠 길이가 이 크기보다 크면 클라이언트는 HTTP 오류 코드 413을 수신합니다. 비활성화하려면 0으로 설정하십시오. 기본값은 '1m'입니다.                    
+        client_max_body_size 1m;                                                   
+                                                                                   
+        # Sendfile은 커널 내에서 하나의 FD와 다른 FD 간에 데이터를 복사하며 이는 read() + write()보다 효율적입니다. 기본값은 꺼져 있습니다.           
+        sendfile on;                                                               
+                                                                                   
+        # nginx가 부분 프레임을 사용하는 대신 하나의 패킷으로 HTTP 응답 헤드를 보내도록 합니다. 기본값은 '꺼짐'입니다.                       
+        tcp_nopush on;                                                             
+                                                                    
+        # 지정된 프로토콜을 활성화합니다. 기본값은 TLSv1 TLSv1.1 TLSv1.2입니다.
+        # 팁: 고대 클라이언트를 지원할 의무가 없다면 TLSv1.1을 제거하십시오.
+        ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;                                     
+                                                                                   
+        # EDH 암호에 대한 Diffie-Hellman 매개변수가 있는 파일의 경로입니다.
+        # 팁: 다음을 사용하여 생성: `openssl dhparam -out /etc/ssl/nginx/dh2048.pem 2048`
+        #ssl_dhparam /etc/ssl/nginx/dh2048.pem;
+        
+        # 우리의 암호 슈트가 클라이언트 암호보다 선호되어야 함을 지정합니다. 기본값은 '꺼짐'입니다.                                                     
+        ssl_prefer_server_ciphers on;                                           
+                                                                                   
+        # 약 8000개의 세션을 저장할 수 있는 크기의 공유 SSL 캐시를 활성화합니다. 기본값은 'none'입니다.
+        ssl_session_cache shared:SSL:2m;                                          
+                                                                                   
+        # 클라이언트가 세션 매개변수를 재사용할 수 있는 시간을 지정합니다. 기본값은 '5m'입니다.
+        ssl_session_timeout 1h;                                                    
+                                                                                  
+        # TLS 세션 티켓을 비활성화합니다(보안되지 않음). 기본값은 '켜짐'입니다.
+        ssl_session_tickets off;                                                   
+                                                                
+        # 응답의 gzipping을 활성화합니다.
+        #gzip on;                                                                  
+                                                                                   
+        # RFC 2616에 정의된 대로 Vary HTTP 헤더를 설정합니다. 기본값은 'off'입니다.
+        gzip_vary on;                                                              
+                                                                                   
+                                                                                   
+        # websocket을 프록싱하기 위한 도우미 변수입니다.
+        map $http_upgrade $connection_upgrade {                                    
+                default upgrade;                                                   
+                '' close;                                                          
+        }                                                                          
+                                                                                   
+                                                                                   
+        # 기본 로그 형식을 지정합니다.
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '    
+                        '$status $body_bytes_sent "$http_referer" '                
+                        '"$http_user_agent" "$http_x_forwarded_for"';              
+                                                                                   
+        # 버퍼링된 로그 쓰기에 대한 경로, 형식 및 구성을 설정합니다.
+        access_log /var/log/nginx/access.log main;                                 
+                                                                                   
+                                                                                   
+        # 가상 호스트 구성을 포함합니다.
+        include /etc/nginx/http.d/*.conf;                                          
+}                                                                                  
+                                                                                   
+# 팁: 스트림 모듈을 사용하는 경우 주석을 제거하십시오.
+#include /etc/nginx/stream.conf;
+```
+
+### Nginx systemd
+
+https://www.nginx.com/resources/wiki/start/topics/examples/systemd/  
+
+```
+[Unit]
+Description=The NGINX HTTP and reverse proxy server
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+ExecStartPre=/usr/sbin/nginx -t
+ExecStart=/usr/sbin/nginx
+ExecReload=/usr/sbin/nginx -s reload
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Nginx SSL 
+
+- certbot : https://geko.cloud/en/nginx-letsencrypt-certbot-docker-alpine/
+- openssl : https://couplewith.tistory.com/entry/SSLTLS%EC%9D%B8%EC%A6%9D%EC%9D%84-%EC%9C%84%ED%95%9C-OpenSSL%EA%B3%BC-CA-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%A7%8C%EB%93%A4%EA%B8%B0  
+
+SSL(Secure Socket Layer) / TLS(Transport Layer Security)는 네트워크 전송 계층의 암호화를 통해 통신하는 규약이다. 통신을 위해서는 상호간의 인증서를 통해서 데이터를 암/복호화 할 수 있다. 웹 서비스와 같이 불특정 다수의 사용자를 위한 서비스는 공인 SSL 인증서를 발급받아 웹서버에 적용하고, 특정 서비스나 지정된 IP간의 통신은 사설 인증서를 만들어서 적용한다.  
+
+#### openssl 인증서 발급
+
+https://setyourmindpark.github.io/2017/05/04/nginx/nginx-1/  
+
+1. 개인 키와 인증 요청서 생성
+
+```
+$ openssl req -new -newkey rsa:2048 -nodes -keyout <개인키이름>.key -out <인증요청서이름>.csr
+```
+
+2. 인증서 생성
+
+```
+$ openssl x509 -req -days 365 -in <인증요청서이름>.csr -signkey <개인키이름>.key -out <생성할인증서이름>.crt
+```
+
+3. 개인 키의 비밀번호 제거
+
+```
+$ cp <생성된개인키이름>.key <생성할개인키복사본이름>.key.secure
+$ openssl rsa -in <생성된개인키복사본이름>.key.secure -out <재생성할개인키이름>.key
+```
+
+4. ssl 적용
+
+```
+$ vi /etc/nginx/conf.d/<서비스명>.conf
+```
+
+```
+# Load Balancing
+upstream target-server {
+  least_conn;
+  server 10.10.200.3:4000 max_fails=3 fail_timeout=10s;
+  server 10.10.200.4:4000 max_fails=3 fail_timeout=10s;
+}
+server {
+        listen 443;
+        server_name 10.10.200.2;
+        charset utf-8;
+        access_log /etc/nginx/log/access.log;
+        error_log /etc/nginx/log/error.log;
+        ssl     on;                                               #ssl사용
+        ssl_certificate /etc/nginx/ssl/jaehunpark-ssl.crt;        #생성된 인증서경로
+        ssl_certificate_key /etc/nginx/ssl/jaehunpark-ssl.key;    #생성된 개인키
+        location / {
+                proxy_redirect  off;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Scheme $scheme;
+                proxy_pass http://target-server;
+        }
+}
+```
+
 
 ## 22.12.18
 
@@ -121,8 +323,9 @@ nginx에는 master process가 있다. master process는 설정 파일을 읽고 
 
 OS 커널이 event를 큐 형식으로 worker process에 전달한다. 큐에 담긴 event는 비동기 방식으로 처리되기 전까지 대기한다. worker process는 하나의 스레드로 event를 꺼내어 처리한다. 만약에 꺼낸 event의 처리가 오래걸린다면 thread pool에 위임하고 다른 event를 처리한다.  
 
+참조 : https://ssdragon.tistory.com/60  
 
-참조 : https://ssdragon.tistory.com/60, 
+
 
 
 ## 22.12.16
