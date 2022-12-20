@@ -17,6 +17,7 @@ permalink: /docs/projects/Inception
   - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
     - [새로운 유저 생성](#새로운-유저-생성)
     - [mysql 설정 수정](#mysql-설정-수정)
+- [Nginx](#nginx)
 - [Docker Compose network](#docker-compose-network)
 
 # Inception
@@ -69,14 +70,14 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 # Todos
 
 - [ ] [Dockerfile 작성](#dockerfile)
-  - [ ] [MariaDB](#MariaDB)
+  - [x] [MariaDB](#MariaDB)
   - [ ] WordPress
-  - [ ] NGINX
+  - [ ] [Nginx](#nginx)
 - [ ] docker.compose.yml 작성
 - [ ] [Docker-network 컨테이너 간의 연결 설정](#docker-compose-network)
 - [ ] WordPress 데이터 베이스 사용자 이름 설정
 - [ ] 호스트 시스템 로그인 설정
-- [ ] NGINX 컨테이너 entrypoint port
+- [ ] Nginx 컨테이너 entrypoint port
 - [ ] Makefile 작성
 
 # Dockerfile
@@ -136,6 +137,10 @@ mysql 서비스를 실행하면 생성되는 설정 파일을 변경한다. 설�
 ```
 sed -i 's/^skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
 ```
+
+# Nginx
+
+
 
 
 # Docker Compose network

@@ -9,9 +9,17 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+- [22.12.20](#221220)
+  - [nginx.conf](#nginxconf)
+    - [event 블록](#event-블록)
+    - [http 블록](#http-블록)
+  - [nginx 사용자별 가상 호스트 도메인 기본 설정 방법](#nginx-사용자별-가상-호스트-도메인-기본-설정-방법)
+    - [가상 호스트 루트 디렉토리 생성과 퍼미션](#가상-호스트-루트-디렉토리-생성과-퍼미션)
+    - [가상 호스트 추가](#가상-호스트-추가)
+    - [IP 및 기타 도메인 접근 불가 설정](#ip-및-기타-도메인-접근-불가-설정)
 - [22.12.19](#221219)
   - [Install Nginx](#install-nginx)
-  - [nginx.conf](#nginxconf)
+  - [nginx.conf](#nginxconf-1)
   - [Nginx systemd](#nginx-systemd)
   - [Nginx SSL](#nginx-ssl)
     - [openssl 인증서 발급](#openssl-인증서-발급)
@@ -106,6 +114,105 @@ permalink: /
         - [cgroup](#cgroup)
 
 ---
+## 22.12.20
+
+### nginx.conf 
+
+#### event 블록
+
+- worker_connections : 하나의 프로세스가 처리할 수 있는 커넥션의 수이다.  
+
+#### http 블록
+
+- default_type : 옥텟 스트림 기반의 http를 사용한다.
+- server_tokens : 헤더에 nginx버전을 숨기는 기능이다.
+- keepalive_timeout : 접속시 커넥션 유지 시간을 지정한다. 값이 높으면 불필요한 커넥션을 유지하기 때문에 낮은 값으로 설정하는 것이 좋다.  
+- access_log : 접속 로그를 저장한다. http 블록에서 로그를 저장하면 관리가 불편하기 때문에 각 가상 호스트마다 로그를 배분하는 것이 좋다.
+- include : 옵션 항목을 설정해둔 파일의 경로를 지정한다. 가상 호스트 설정이나 반복되는 옵션 항목을 불러오는 방식으로 활용한다. 예를 들어서, 리버스 프록시를 각 도메인에 설정할 때 헤더 처리같은 옵션을 include로 깔끔하게 처리할 수 있다. 기본적으로 conf.d 디렉토리에 .conf 파일로 설정을 저장하여 관리한다.
+
+- upstream 블록 : origin 서버를 지정하는데 사용된다. origin 서버는 WAS, 웹 어플리케이션 서버를 의미하며, nginx는 downstream에 해당된다. 
+  - server : 연결할 웹 어플리케이션 서버의 주소와 포트를 지정한다.
+- server 블록 : 하나의 웹 사이트를 선언하는데 사용된다. 만약에 server 블록이 여러 개이면 한 개의 머신에서 여러 웹 사이트를 서빙할 수 있다. 
+  - listen : 웹 사이트가 바라보는 포트이다.
+  - server_name : 클라이언트가 접속하는 서버이다. 실제로 들어온 request의 header에 명시된 값이 일치하는지 확인해서 server를 분기한다.
+- location 블록 : server 블록 안에서 특정 웹 사이트의 url를 처리하는데 사용된다.
+
+
+### nginx 사용자별 가상 호스트 도메인 기본 설정 방법
+
+https://extrememanual.net/10008  
+
+하나의 IP로 웹서버에서 여러 도메인을 연결하여 서비스하기 위해서는 가상 호스트를 설정해야 한다.  
+nginx의 설정 파일인 nginx.conf 파일에 가상 호스트 설정을 추가할 수 있다. 가상 호스트 설정은 가독성을 위해 별도의 파일로 만들어서 include 하는 것이 좋다. 가상화 호스트를 관리하기 쉽게 다음과 같은 구문을 추가해준다.  
+
+```
+http {
+  include /etc/nginx/sites-enabled/*;
+} 
+```
+
+위와 같은 구문을 추가한 후, 가상 호스트 설정 파일이 위치한 /etc/nginx/sites-available 에서 /etc/nginx/sites-enabled/* 로 심볼릭 링크를 걸어주면 사용하는 가상 호스트와 사용하지 않는 가상 호스트를 관리할 수 있다.  
+
+#### 가상 호스트 루트 디렉토리 생성과 퍼미션
+
+```
+# mkdir /home/계정명/www
+# chown -R www-data:www-data /home/계정명/www
+# usermod -G www-data 계정명
+```
+
+웹 문서가 게시되고, 로그 파일이 위치할 디렉토리를 생성한다. 홈페이지를 구성할 때 자동으로 생성되는 설정이나 캐시같은 파일이 www-data 계정 권한으로 동작한다. 디렉토리 권한이 없다면 루트 디렉토리의 권한을 변경하거나 사용자가 FTP, SSH로 파일을 다룰 때에 권한 문제가 발생된다. 그러므로 웹서버에서 사용할 계정을 www-data 그룹에 추가해야 한다.  
+
+#### 가상 호스트 추가
+
+```
+server {
+    listen 80;
+    root /home/계정명/www;
+    server_name domain.com www.domain.com;
+    index index.html index.htm index.php;
+    access_log /var/log/nginx/$host-access.log main;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+```
+
+가상 호스트에 적용될 도메인 주소와 루트 디렉토리, 로그, PHP 구동 설정이 담긴 설정 파일을 만든다. 이 파일은 /etc/nginx/sites-available 디렉토리 안에 위치 시킨다. 그 다음 설정 파일을 /etc/nginx/sites-enabled 디렉토리에 심볼릭 링크를 걸어서 nginx가 설정을 사용할 수 있게 한다.  
+
+```
+ln -s /etc/nginx/sites-available/가상호스트파일명 /etc/nginx/sites-enabled/가상호스트파일명
+```
+
+
+#### IP 및 기타 도메인 접근 불가 설정
+
+```
+server {
+    listen 80 default_server;
+    listen 443 default_server;
+    server_name _;
+    return 403;
+}
+```
+
+위와 같이 기본 가상 호스트 설정 파일을 만든다. 가상 호스트 도메인을 명시하지 않으면 server_name _; 구문으로 인해서 웹서버 IP에 연결되어 있는 모든 도메인 및 IP로 접근하는 메인 페이지가 된다. 가상 호스트로 명시하지 않은 도메인에 접근하지 못하도록 설정하고 싶은 경우에 기본 호스트 설정 파일을 위와 같이 수정한다.  
+
+
+
+
+
+
 
 ## 22.12.19
 
