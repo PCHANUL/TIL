@@ -7,18 +7,22 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-- [Inception](#inception)
-- [Todos](#todos)
-- [Dockerfile](#dockerfile)
-  - [Base image : alpine Linux](#base-image--alpine-linux)
-- [MariaDB](#mariadb)
-  - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  - [mysql 볼륨](#mysql-볼륨)
-  - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-    - [새로운 유저 생성](#새로운-유저-생성)
-    - [mysql 설정 수정](#mysql-설정-수정)
-- [Nginx](#nginx)
-- [Docker Compose network](#docker-compose-network)
+* [Inception](#inception)
+* [Todos](#todos)
+* [Dockerfile](#dockerfile)
+  * [Base image : alpine Linux](#base-image--alpine-linux)
+  * [MariaDB](#mariadb)
+    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      * [새로운 유저 생성](#새로운-유저-생성)
+      * [mysql 설정 수정](#mysql-설정-수정)
+    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  * [Nginx](#nginx)
+    * [.conf 파일](#conf-파일)
+    * [openssl](#openssl)
+* [docker-compose.yaml](#docker-composeyaml)
+  * [volumes](#volumes)
+    * [mysql 볼륨](#mysql-볼륨)
+  * [networks](#networks)
 
 # Inception
 
@@ -71,10 +75,14 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 - [ ] [Dockerfile 작성](#dockerfile)
   - [x] [MariaDB](#MariaDB)
+    - [x] [원격 접속 설정](#mysql-원격-접속-설정)
   - [ ] WordPress
   - [ ] [Nginx](#nginx)
-- [ ] docker.compose.yml 작성
-- [ ] [Docker-network 컨테이너 간의 연결 설정](#docker-compose-network)
+    - [ ] conf 파일
+    - [ ] open ssl 인증서
+- [ ] [docker-compose.yml 작성](#docker-composeyaml)
+  - [ ] [volumes](#volumes)
+  - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
 - [ ] WordPress 데이터 베이스 사용자 이름 설정
 - [ ] 호스트 시스템 로그인 설정
 - [ ] Nginx 컨테이너 entrypoint port
@@ -88,9 +96,31 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 기본적으로 다른 리눅스 배포판보다 훨씬 가볍고 깔끔한 것이 장점이기 때문에 Docker 컨테이너에 사용되는 예시가 많고 유명하다. 주로 호스트 환경보다 특정 애플리케이션을 서비스하는 컨테이너 환경에서 사용할 수 있으면 되기 대문에 미러 서버의 규모가 다른 배포판에 비해 크지는 않다. 
 
-# MariaDB
+## MariaDB
 
-## mysqld_safe 실행 오류
+### mysql 원격 접속 설정
+
+mysql은 설치시 기본으로 로컬 접근만 허용한다. 다른 컨테이너에서 접근할 수 있도록 설정해야 한다.  
+
+#### 새로운 유저 생성
+
+외부에서 접근할 수 있는 새로운 유저를 생성한다. 다음은 모든 IP에서 접속 가능하며, 모든 권한을 가진 유저를 생성한다.  
+
+```
+mysql> CREATE USER '[USER_NAME]'@'%' IDENTIFIED BY '[USER_PWD]';
+mysql> GRANT ALL PRIVILEGES ON *.* TO '[USER_NAME]'@'%' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
+```
+
+#### mysql 설정 수정
+
+mysql 서비스를 실행하면 생성되는 설정 파일을 변경한다. 설정 파일에 skip-networking이 있는 경우 주석 처리를 해야 한다. skip-networking은 mysql 서버가 로컬의 유닉스 소켓 접속만 허용하도록 설정한다.  
+
+```
+sed -i 's/^skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
+```
+
+### mysqld_safe 실행 오류
 
 mysqld_safe를 실행하면 로그 파일이 생성된다. 로그 파일에서 발견한 이번에 발생된 에러는 다음과 같다.  
 
@@ -104,7 +134,25 @@ Cannot open datafile for read-only: './mysql/gtid_slave_pos.ibd' OS error: 81
 $ chown -R mysql:mysql /var/lib/mysql
 ```  
 
-## mysql 볼륨
+
+## Nginx
+
+### .conf 파일
+
+nginx를 설정하는 .conf 파일을 수정한다. 
+
+
+### openssl
+
+
+
+
+
+# docker-compose.yaml
+
+## volumes
+
+### mysql 볼륨
 
 컨테이너가 종료되면 안에 저장된 데이터가 사라지기 때문에 호스트에 데이터를 저장해야 한다. docker-compose.yaml에서 볼륨을 설정하려면 서비스에 volumes 항목을 추가하면 된다.  
 
@@ -116,34 +164,7 @@ services:
       - mariadb-data:/var/lib/mysql
 ```
 
-## mysql 원격 접속 설정
-
-mysql은 설치시 기본으로 로컬 접근만 허용한다. 다른 컨테이너에서 접근할 수 있도록 설정해야 한다.  
-
-### 새로운 유저 생성
-
-외부에서 접근할 수 있는 새로운 유저를 생성한다. 다음은 모든 IP에서 접속 가능하며, 모든 권한을 가진 유저를 생성한다.  
-
-```
-mysql> CREATE USER '[USER_NAME]'@'%' IDENTIFIED BY '[USER_PWD]';
-mysql> GRANT ALL PRIVILEGES ON *.* TO '[USER_NAME]'@'%' WITH GRANT OPTION;
-mysql> FLUSH PRIVILEGES;
-```
-
-### mysql 설정 수정
-
-mysql 서비스를 실행하면 생성되는 설정 파일을 변경한다. 설정 파일에 skip-networking이 있는 경우 주석 처리를 해야 한다. skip-networking은 mysql 서버가 로컬의 유닉스 소켓 접속만 허용하도록 설정한다.  
-
-```
-sed -i 's/^skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
-```
-
-# Nginx
-
-
-
-
-# Docker Compose network
+## networks
 
 docker-compose.yaml 파일에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
 

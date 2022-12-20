@@ -9,109 +9,110 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-- [22.12.20](#221220)
-  - [nginx.conf](#nginxconf)
-    - [event 블록](#event-블록)
-    - [http 블록](#http-블록)
-  - [nginx 사용자별 가상 호스트 도메인 기본 설정 방법](#nginx-사용자별-가상-호스트-도메인-기본-설정-방법)
-    - [가상 호스트 루트 디렉토리 생성과 퍼미션](#가상-호스트-루트-디렉토리-생성과-퍼미션)
-    - [가상 호스트 추가](#가상-호스트-추가)
-    - [IP 및 기타 도메인 접근 불가 설정](#ip-및-기타-도메인-접근-불가-설정)
-- [22.12.19](#221219)
-  - [Install Nginx](#install-nginx)
-  - [nginx.conf](#nginxconf-1)
-  - [Nginx systemd](#nginx-systemd)
-  - [Nginx SSL](#nginx-ssl)
-    - [openssl 인증서 발급](#openssl-인증서-발급)
-- [22.12.18](#221218)
-  - [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
-  - [nginx](#nginx)
-    - [nginx 구조](#nginx-구조)
-- [22.12.16](#221216)
-  - [mysql 원격 접속](#mysql-원격-접속)
-    - [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
-- [22.12.15](#221215)
-  - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-    - [chown 명령어](#chown-명령어)
-  - [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
-  - [Docker Compose volume](#docker-compose-volume)
-- [22.12.14](#221214)
-  - [Docker Compose network](#docker-compose-network)
-    - [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
-    - [Docker Compose service ports](#docker-compose-service-ports)
-    - [Docker Compose service expose](#docker-compose-service-expose)
-  - [mysql\_install\_db](#mysql_install_db)
-    - [Options](#options)
-  - [mysqld\_safe](#mysqld_safe)
-    - [Options](#options-1)
-- [22.12.13](#221213)
-  - [docker network](#docker-network)
-    - [네트워크 조회](#네트워크-조회)
-    - [네트워크 종류](#네트워크-종류)
-    - [네트워크 생성](#네트워크-생성)
-    - [네트워크 상세 정보](#네트워크-상세-정보)
-    - [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
-- [22.12.12](#221212)
-  - [docker rmi 사용법](#docker-rmi-사용법)
-  - [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
-- [22.12.11](#221211)
-  - [daemon](#daemon)
-- [22.12.09](#221209)
-  - [Docker Container PID 1](#docker-container-pid-1)
-    - [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
-    - [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
-    - [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
-  - [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
-    - [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
-      - [PID 1의 Signal 문제](#pid-1의-signal-문제)
-    - [dumb-init](#dumb-init)
-    - [dumb-init 사용법](#dumb-init-사용법)
-- [22.12.08](#221208)
-  - [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
-  - [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
-    - [PID 1](#pid-1)
-  - [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
-- [22.12.07](#221207)
-  - [MariaDB Dockerfile](#mariadb-dockerfile)
-- [22.12.06](#221206)
-  - [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
-  - [MariaDB](#mariadb)
-- [22.12.05](#221205)
-  - [The Compose application model](#the-compose-application-model)
-    - [example](#example)
-- [22.12.04](#221204)
-  - [Docker file](#docker-file)
-- [22.12.03](#221203)
-  - [Docker Compose](#docker-compose)
-  - [Key features of Docker Compose](#key-features-of-docker-compose)
-    - [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
-    - [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
-    - [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
-    - [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
-- [22.12.02](#221202)
-  - [Docker](#docker)
-    - [Docker Architecture](#docker-architecture)
-  - [alpine linux](#alpine-linux)
-- [22.12.01](#221201)
-  - [Container](#container)
-    - [Container란](#container란)
-    - [Container Image란](#container-image란)
-    - [Kernel Space](#kernel-space)
-      - [chroot](#chroot)
-      - [Linux namespace](#linux-namespace)
-      - [namespace API](#namespace-api)
-        - [clone](#clone)
-        - [unshare](#unshare)
-        - [setns](#setns)
-        - [proc](#proc)
-      - [namespace](#namespace)
-        - [mnt](#mnt)
-        - [uts](#uts)
-        - [ipc](#ipc)
-        - [pid](#pid)
-        - [net](#net)
-        - [user](#user)
-        - [cgroup](#cgroup)
+* [22.12.20](#221220)
+  * [nginx.conf](#nginxconf)
+    * [event 블록](#event-블록)
+    * [http 블록](#http-블록)
+  * [nginx 사용자별 가상 호스트 도메인 기본 설정 방법](#nginx-사용자별-가상-호스트-도메인-기본-설정-방법)
+    * [가상 호스트 루트 디렉토리 생성과 퍼미션](#가상-호스트-루트-디렉토리-생성과-퍼미션)
+    * [가상 호스트 추가](#가상-호스트-추가)
+    * [IP 및 기타 도메인 접근 불가 설정](#ip-및-기타-도메인-접근-불가-설정)
+  * [nginx.conf References](#nginxconf-references)
+* [22.12.19](#221219)
+  * [Install Nginx](#install-nginx)
+  * [nginx.conf](#nginxconf-1)
+  * [Nginx systemd](#nginx-systemd)
+  * [Nginx SSL](#nginx-ssl)
+    * [openssl 인증서 발급](#openssl-인증서-발급)
+* [22.12.18](#221218)
+  * [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
+  * [nginx](#nginx)
+    * [nginx 구조](#nginx-구조)
+* [22.12.16](#221216)
+  * [mysql 원격 접속](#mysql-원격-접속)
+    * [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
+* [22.12.15](#221215)
+  * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+    * [chown 명령어](#chown-명령어)
+  * [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
+  * [Docker Compose volume](#docker-compose-volume)
+* [22.12.14](#221214)
+  * [Docker Compose network](#docker-compose-network)
+    * [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
+    * [Docker Compose service ports](#docker-compose-service-ports)
+    * [Docker Compose service expose](#docker-compose-service-expose)
+  * [mysql\_install\_db](#mysql_install_db)
+    * [Options](#options)
+  * [mysqld\_safe](#mysqld_safe)
+    * [Options](#options-1)
+* [22.12.13](#221213)
+  * [docker network](#docker-network)
+    * [네트워크 조회](#네트워크-조회)
+    * [네트워크 종류](#네트워크-종류)
+    * [네트워크 생성](#네트워크-생성)
+    * [네트워크 상세 정보](#네트워크-상세-정보)
+    * [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
+* [22.12.12](#221212)
+  * [docker rmi 사용법](#docker-rmi-사용법)
+  * [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
+* [22.12.11](#221211)
+  * [daemon](#daemon)
+* [22.12.09](#221209)
+  * [Docker Container PID 1](#docker-container-pid-1)
+    * [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
+    * [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
+    * [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
+  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
+    * [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
+      * [PID 1의 Signal 문제](#pid-1의-signal-문제)
+    * [dumb-init](#dumb-init)
+    * [dumb-init 사용법](#dumb-init-사용법)
+* [22.12.08](#221208)
+  * [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
+  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
+    * [PID 1](#pid-1)
+  * [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
+* [22.12.07](#221207)
+  * [MariaDB Dockerfile](#mariadb-dockerfile)
+* [22.12.06](#221206)
+  * [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
+  * [MariaDB](#mariadb)
+* [22.12.05](#221205)
+  * [The Compose application model](#the-compose-application-model)
+    * [example](#example)
+* [22.12.04](#221204)
+  * [Docker file](#docker-file)
+* [22.12.03](#221203)
+  * [Docker Compose](#docker-compose)
+  * [Key features of Docker Compose](#key-features-of-docker-compose)
+    * [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
+    * [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
+    * [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
+    * [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
+* [22.12.02](#221202)
+  * [Docker](#docker)
+    * [Docker Architecture](#docker-architecture)
+  * [alpine linux](#alpine-linux)
+* [22.12.01](#221201)
+  * [Container](#container)
+    * [Container란](#container란)
+    * [Container Image란](#container-image란)
+    * [Kernel Space](#kernel-space)
+      * [chroot](#chroot)
+      * [Linux namespace](#linux-namespace)
+      * [namespace API](#namespace-api)
+        * [clone](#clone)
+        * [unshare](#unshare)
+        * [setns](#setns)
+        * [proc](#proc)
+      * [namespace](#namespace)
+        * [mnt](#mnt)
+        * [uts](#uts)
+        * [ipc](#ipc)
+        * [pid](#pid)
+        * [net](#net)
+        * [user](#user)
+        * [cgroup](#cgroup)
 
 ---
 ## 22.12.20
@@ -209,8 +210,10 @@ server {
 위와 같이 기본 가상 호스트 설정 파일을 만든다. 가상 호스트 도메인을 명시하지 않으면 server_name _; 구문으로 인해서 웹서버 IP에 연결되어 있는 모든 도메인 및 IP로 접근하는 메인 페이지가 된다. 가상 호스트로 명시하지 않은 도메인에 접근하지 못하도록 설정하고 싶은 경우에 기본 호스트 설정 파일을 위와 같이 수정한다.  
 
 
+### nginx.conf References
 
-
+[/etc/nginx/nginx.conf 톺아보기](https://darrengwon.tistory.com/542)  
+[가상 호스트 Virtual Host 생성하기](https://darrengwon.tistory.com/543)  
 
 
 
@@ -390,22 +393,25 @@ upstream target-server {
   server 10.10.200.3:4000 max_fails=3 fail_timeout=10s;
   server 10.10.200.4:4000 max_fails=3 fail_timeout=10s;
 }
+
 server {
-        listen 443;
-        server_name 10.10.200.2;
-        charset utf-8;
-        access_log /etc/nginx/log/access.log;
-        error_log /etc/nginx/log/error.log;
-        ssl     on;                                               #ssl사용
-        ssl_certificate /etc/nginx/ssl/jaehunpark-ssl.crt;        #생성된 인증서경로
-        ssl_certificate_key /etc/nginx/ssl/jaehunpark-ssl.key;    #생성된 개인키
-        location / {
-                proxy_redirect  off;
-                proxy_set_header Host $http_host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Scheme $scheme;
-                proxy_pass http://target-server;
-        }
+    listen                443;
+    server_name           10.10.200.2;
+    charset               utf-8;
+    access_log            /etc/nginx/log/access.log;
+    error_log             /etc/nginx/log/error.log;
+    
+    ssl                   on;                                   # ssl사용
+    ssl_certificate       /etc/nginx/ssl/jaehunpark-ssl.crt;    # 생성된 인증서경로
+    ssl_certificate_key   /etc/nginx/ssl/jaehunpark-ssl.key;    # 생성된 개인키
+    
+    location / {
+        proxy_redirect    off;
+        proxy_set_header  Host $http_host;
+        proxy_set_header  X-Real-IP $remote_addr;
+        proxy_set_header  X-Scheme $scheme;
+        proxy_pass        http://target-server;
+    }
 }
 ```
 
