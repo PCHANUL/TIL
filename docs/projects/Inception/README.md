@@ -7,22 +7,23 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-* [Inception](#inception)
-* [Todos](#todos)
-* [Dockerfile](#dockerfile)
-  * [Base image : alpine Linux](#base-image--alpine-linux)
-  * [MariaDB](#mariadb)
-    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      * [새로운 유저 생성](#새로운-유저-생성)
-      * [mysql 설정 수정](#mysql-설정-수정)
-    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  * [Nginx](#nginx)
-    * [.conf 파일](#conf-파일)
-    * [openssl](#openssl)
-* [docker-compose.yaml](#docker-composeyaml)
-  * [volumes](#volumes)
-    * [mysql 볼륨](#mysql-볼륨)
-  * [networks](#networks)
+- [Inception](#inception)
+- [Todos](#todos)
+- [Dockerfile](#dockerfile)
+  - [Base image : alpine Linux](#base-image--alpine-linux)
+  - [MariaDB](#mariadb)
+    - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      - [새로운 유저 생성](#새로운-유저-생성)
+      - [mysql 설정 수정](#mysql-설정-수정)
+    - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  - [Nginx](#nginx)
+    - [nginx.conf](#nginxconf)
+    - [openssl](#openssl)
+- [docker-compose.yaml](#docker-composeyaml)
+  - [volumes](#volumes)
+    - [mysql 볼륨](#mysql-볼륨)
+    - [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
+  - [networks](#networks)
 
 # Inception
 
@@ -78,7 +79,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
     - [x] [원격 접속 설정](#mysql-원격-접속-설정)
   - [ ] WordPress
   - [ ] [Nginx](#nginx)
-    - [ ] conf 파일
+    - [ ] nginx.conf 파일
     - [ ] open ssl 인증서
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [ ] [volumes](#volumes)
@@ -137,9 +138,11 @@ $ chown -R mysql:mysql /var/lib/mysql
 
 ## Nginx
 
-### .conf 파일
+### nginx.conf
 
-nginx를 설정하는 .conf 파일을 수정한다. 
+wordpress를 프록시 서버로
+
+nginx.conf 파일로 nginx를 설정한다.
 
 
 ### openssl
@@ -163,6 +166,14 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
 ```
+
+### wordpress, nginx 볼륨
+
+wordpress와 nginx는 같은 볼륨을 공유한다.  
+
+
+
+
 
 ## networks
 

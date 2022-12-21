@@ -16,6 +16,7 @@ permalink: /docs/projects/Inception/nginx_conf
   - [Location Block](#location-block)
 - [Example : 정적 컨텐츠 제공](#example--정적-컨텐츠-제공)
 - [Example : 프록시 서버 설정](#example--프록시-서버-설정)
+  - [FastCGI 프록싱 설정](#fastcgi-프록싱-설정)
 
 # nginx 구성 파일
 
@@ -246,6 +247,28 @@ server {
 ```
 
 이 서버는 gif, jpg, png 확장자로 끝나는 요청을 먼저 필터링한다. 그리고 /data/images 디렉터리에 매핑하고 위에 구성된 프록시 서버에 다른 모든 요청을 전달한다.  
+
+## FastCGI 프록싱 설정
+
+nginx는 PHP와 같은 다양한 프레임 워크 및 프로그래밍 언어로 구축된 애플리케이션을 실행하는 FastCGI 서버로 요청을 라우팅하는데 사용할 수 있다.  
+
+FastCGI 서버와 함께 작동할때에는 proxy_pass 지시어 대신 fastcgi_pass 지시문을 사용하고, fastcgi_param 지시문으로 매개변수를 설정한다. 만약에 FastCGI 서버가 localhost:9000에 액세스할 수 있다고 가정하고, 이전에 구성한 프록시 서버 구성을 변경해본다. 먼저 proxy_pass를 fastcgi_pass로 바꾸고, 매개변수를 localhost:9000으로 변경한다. 그리고 fastcgi_param으로 SCRIPT_FILENAME과 QUERY_STRING을 설정한다. PHP에서 SCRIPT_FILENAME은 스크립트 이름을 결정하고, QUERY_STRING은 요청 매개변수를 전달한다.  
+
+```
+server {
+    location / {
+        fastcgi_pass  localhost:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param QUERY_STRING    $query_string;
+    }
+
+    location ~ \.(gif|jpg|png)$ {
+        root /data/images;
+    }
+}
+```
+
+정적 이미지 요청을 제외한 나머지 모든 요청을 FastCGI 프로토콜을 통해 localhost:9000에서 작동하는 프록시 서버로 설정되었다.  
 
 
 참조 : https://nginx.org/en/docs/beginners_guide.html, https://prohannah.tistory.com/136, 

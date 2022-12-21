@@ -9,112 +9,182 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-* [22.12.20](#221220)
-  * [nginx.conf](#nginxconf)
-    * [event 블록](#event-블록)
-    * [http 블록](#http-블록)
-  * [nginx 사용자별 가상 호스트 도메인 기본 설정 방법](#nginx-사용자별-가상-호스트-도메인-기본-설정-방법)
-    * [가상 호스트 루트 디렉토리 생성과 퍼미션](#가상-호스트-루트-디렉토리-생성과-퍼미션)
-    * [가상 호스트 추가](#가상-호스트-추가)
-    * [IP 및 기타 도메인 접근 불가 설정](#ip-및-기타-도메인-접근-불가-설정)
-  * [nginx.conf References](#nginxconf-references)
-* [22.12.19](#221219)
-  * [Install Nginx](#install-nginx)
-  * [nginx.conf](#nginxconf-1)
-  * [Nginx systemd](#nginx-systemd)
-  * [Nginx SSL](#nginx-ssl)
-    * [openssl 인증서 발급](#openssl-인증서-발급)
-* [22.12.18](#221218)
-  * [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
-  * [nginx](#nginx)
-    * [nginx 구조](#nginx-구조)
-* [22.12.16](#221216)
-  * [mysql 원격 접속](#mysql-원격-접속)
-    * [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
-* [22.12.15](#221215)
-  * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-    * [chown 명령어](#chown-명령어)
-  * [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
-  * [Docker Compose volume](#docker-compose-volume)
-* [22.12.14](#221214)
-  * [Docker Compose network](#docker-compose-network)
-    * [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
-    * [Docker Compose service ports](#docker-compose-service-ports)
-    * [Docker Compose service expose](#docker-compose-service-expose)
-  * [mysql\_install\_db](#mysql_install_db)
-    * [Options](#options)
-  * [mysqld\_safe](#mysqld_safe)
-    * [Options](#options-1)
-* [22.12.13](#221213)
-  * [docker network](#docker-network)
-    * [네트워크 조회](#네트워크-조회)
-    * [네트워크 종류](#네트워크-종류)
-    * [네트워크 생성](#네트워크-생성)
-    * [네트워크 상세 정보](#네트워크-상세-정보)
-    * [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
-* [22.12.12](#221212)
-  * [docker rmi 사용법](#docker-rmi-사용법)
-  * [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
-* [22.12.11](#221211)
-  * [daemon](#daemon)
-* [22.12.09](#221209)
-  * [Docker Container PID 1](#docker-container-pid-1)
-    * [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
-    * [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
-    * [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
-  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
-    * [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
-      * [PID 1의 Signal 문제](#pid-1의-signal-문제)
-    * [dumb-init](#dumb-init)
-    * [dumb-init 사용법](#dumb-init-사용법)
-* [22.12.08](#221208)
-  * [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
-  * [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
-    * [PID 1](#pid-1)
-  * [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
-* [22.12.07](#221207)
-  * [MariaDB Dockerfile](#mariadb-dockerfile)
-* [22.12.06](#221206)
-  * [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
-  * [MariaDB](#mariadb)
-* [22.12.05](#221205)
-  * [The Compose application model](#the-compose-application-model)
-    * [example](#example)
-* [22.12.04](#221204)
-  * [Docker file](#docker-file)
-* [22.12.03](#221203)
-  * [Docker Compose](#docker-compose)
-  * [Key features of Docker Compose](#key-features-of-docker-compose)
-    * [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
-    * [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
-    * [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
-    * [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
-* [22.12.02](#221202)
-  * [Docker](#docker)
-    * [Docker Architecture](#docker-architecture)
-  * [alpine linux](#alpine-linux)
-* [22.12.01](#221201)
-  * [Container](#container)
-    * [Container란](#container란)
-    * [Container Image란](#container-image란)
-    * [Kernel Space](#kernel-space)
-      * [chroot](#chroot)
-      * [Linux namespace](#linux-namespace)
-      * [namespace API](#namespace-api)
-        * [clone](#clone)
-        * [unshare](#unshare)
-        * [setns](#setns)
-        * [proc](#proc)
-      * [namespace](#namespace)
-        * [mnt](#mnt)
-        * [uts](#uts)
-        * [ipc](#ipc)
-        * [pid](#pid)
-        * [net](#net)
-        * [user](#user)
-        * [cgroup](#cgroup)
+- [22.12.21](#221221)
+  - [nginx wordpress basic setup](#nginx-wordpress-basic-setup)
+  - [FastCGI cache](#fastcgi-cache)
+- [22.12.20](#221220)
+  - [nginx.conf](#nginxconf)
+    - [event 블록](#event-블록)
+    - [http 블록](#http-블록)
+  - [nginx 사용자별 가상 호스트 도메인 기본 설정 방법](#nginx-사용자별-가상-호스트-도메인-기본-설정-방법)
+    - [가상 호스트 루트 디렉토리 생성과 퍼미션](#가상-호스트-루트-디렉토리-생성과-퍼미션)
+    - [가상 호스트 추가](#가상-호스트-추가)
+    - [IP 및 기타 도메인 접근 불가 설정](#ip-및-기타-도메인-접근-불가-설정)
+  - [nginx.conf References](#nginxconf-references)
+- [22.12.19](#221219)
+  - [Install Nginx](#install-nginx)
+  - [nginx.conf](#nginxconf-1)
+  - [Nginx systemd](#nginx-systemd)
+  - [Nginx SSL](#nginx-ssl)
+    - [openssl 인증서 발급](#openssl-인증서-발급)
+- [22.12.18](#221218)
+  - [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
+  - [nginx](#nginx)
+    - [nginx 구조](#nginx-구조)
+- [22.12.16](#221216)
+  - [mysql 원격 접속](#mysql-원격-접속)
+    - [서버에서 로컬 접속만 허용](#서버에서-로컬-접속만-허용)
+- [22.12.15](#221215)
+  - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+    - [chown 명령어](#chown-명령어)
+  - [데몬 기초 : 개념과 구현 방법](#데몬-기초--개념과-구현-방법)
+  - [Docker Compose volume](#docker-compose-volume)
+- [22.12.14](#221214)
+  - [Docker Compose network](#docker-compose-network)
+    - [사용자 정의 네트워크 지정](#사용자-정의-네트워크-지정)
+    - [Docker Compose service ports](#docker-compose-service-ports)
+    - [Docker Compose service expose](#docker-compose-service-expose)
+  - [mysql\_install\_db](#mysql_install_db)
+    - [Options](#options)
+  - [mysqld\_safe](#mysqld_safe)
+    - [Options](#options-1)
+- [22.12.13](#221213)
+  - [docker network](#docker-network)
+    - [네트워크 조회](#네트워크-조회)
+    - [네트워크 종류](#네트워크-종류)
+    - [네트워크 생성](#네트워크-생성)
+    - [네트워크 상세 정보](#네트워크-상세-정보)
+    - [네트워크에 컨테이너 연결](#네트워크에-컨테이너-연결)
+- [22.12.12](#221212)
+  - [docker rmi 사용법](#docker-rmi-사용법)
+  - [Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' 에러](#cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-에러)
+- [22.12.11](#221211)
+  - [daemon](#daemon)
+- [22.12.09](#221209)
+  - [Docker Container PID 1](#docker-container-pid-1)
+    - [Solution 1 : PID 1으로 실행하고 신호 핸들러로 등록](#solution-1--pid-1으로-실행하고-신호-핸들러로-등록)
+    - [Solution 2 : Kubernetes에서 프로세스 네임 스페이스 공유 사용 설정](#solution-2--kubernetes에서-프로세스-네임-스페이스-공유-사용-설정)
+    - [Solution 3 : 특수한 init 시스템 사용](#solution-3--특수한-init-시스템-사용)
+  - [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템)
+    - [컨테이너 내부에서의 프로세스 동작](#컨테이너-내부에서의-프로세스-동작)
+      - [PID 1의 Signal 문제](#pid-1의-signal-문제)
+    - [dumb-init](#dumb-init)
+    - [dumb-init 사용법](#dumb-init-사용법)
+- [22.12.08](#221208)
+  - [Docker Container 백그라운드 실행](#docker-container-백그라운드-실행)
+  - [컨테이너 환경을 위한 초기화 시스템](#컨테이너-환경을-위한-초기화-시스템-1)
+    - [PID 1](#pid-1)
+  - [PID 1, 신호 처리, 좀비 프로세스 올바르게 처리하기](#pid-1-신호-처리-좀비-프로세스-올바르게-처리하기)
+- [22.12.07](#221207)
+  - [MariaDB Dockerfile](#mariadb-dockerfile)
+- [22.12.06](#221206)
+  - [container의 OS, Virtual Machine의 OS](#container의-os-virtual-machine의-os)
+  - [MariaDB](#mariadb)
+- [22.12.05](#221205)
+  - [The Compose application model](#the-compose-application-model)
+    - [example](#example)
+- [22.12.04](#221204)
+  - [Docker file](#docker-file)
+- [22.12.03](#221203)
+  - [Docker Compose](#docker-compose)
+  - [Key features of Docker Compose](#key-features-of-docker-compose)
+    - [단일 호스트에 여러 개의 격리된 환경](#단일-호스트에-여러-개의-격리된-환경)
+    - [컨테이너 생성 시 볼륨 데이터 보존](#컨테이너-생성-시-볼륨-데이터-보존)
+    - [변경된 컨테이너만 재생성](#변경된-컨테이너만-재생성)
+    - [변수 지원 및 환경 간 컴포지션 이동](#변수-지원-및-환경-간-컴포지션-이동)
+- [22.12.02](#221202)
+  - [Docker](#docker)
+    - [Docker Architecture](#docker-architecture)
+  - [alpine linux](#alpine-linux)
+- [22.12.01](#221201)
+  - [Container](#container)
+    - [Container란](#container란)
+    - [Container Image란](#container-image란)
+    - [Kernel Space](#kernel-space)
+      - [chroot](#chroot)
+      - [Linux namespace](#linux-namespace)
+      - [namespace API](#namespace-api)
+        - [clone](#clone)
+        - [unshare](#unshare)
+        - [setns](#setns)
+        - [proc](#proc)
+      - [namespace](#namespace)
+        - [mnt](#mnt)
+        - [uts](#uts)
+        - [ipc](#ipc)
+        - [pid](#pid)
+        - [net](#net)
+        - [user](#user)
+        - [cgroup](#cgroup)
 
 ---
+
+## 22.12.21
+
+### nginx wordpress basic setup
+
+https://www.nginx.com/resources/wiki/start/topics/recipes/wordpress/  
+
+먼저, php에 대해 명명된 업스트림을 설정한다. 이는 백엔드를 추상화하고 쉽게 포트를 변경하거나 더 많은 백엔드를 추가할 수 있게 한다. 그 다음에 domain.tld 가상 호스트 구성을 설정한다.  
+
+```
+# Upstream to abstract backend connection(s) for php
+upstream php {
+        server unix:/tmp/php-cgi.socket;
+        server 127.0.0.1:9000;
+}
+
+server {
+        ## 웹사이트 이름
+        server_name domain.tld;
+        ## 유일한 경로 참조
+        root /var/www/wordpress;
+        ## http 블록에 있어야 하며, 만약에 있다면 여기에서 제거
+        index index.php;
+
+        location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+
+        location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
+
+        location / {
+                # "?args" 부분을 포함하여 non-default permalinks가 중단되지 않도록 한다.
+                try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
+                #NOTE: php.ini에 "cgi.fix_pathinfo = 0;"가 있어야 한다.
+                include fastcgi_params;
+                fastcgi_intercept_errors on;
+                fastcgi_pass php;
+                
+                #다음 매개변수도 fastcgi_params 파일에 포함될 수 있다. 
+                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                expires max;
+                log_not_found off;
+        }
+}
+```
+
+### FastCGI cache
+
+FastCGI는 이전에 불러온 페이지를 저장하고 있다가 사용자가 요청하면 보내준다. 저장된 페이지를 보내는 일은 PHP나 MySQL의 도움없이 빠르게 처리할 수 있기 때문에 속도를 높이고 시스템의 부하를 줄인다. 아래의 다이어그램은 Nginx, PHP-FPM, MySQL의 관계를 보여준다.   
+
+![](/docs/src/projects/inception/fastcgi.png)  
+
+
+참조 : https://happist.com/557860/%EC%9B%8C%EB%93%9C%ED%94%84%EB%A0%88%EC%8A%A4-%EC%B5%9C%EC%A0%81%ED%99%94-fastcgi-cache-%EC%A0%81%EC%9A%A9-%EC%9B%8C%EB%93%9C%ED%94%84%EB%A0%88%EC%8A%A4-%EB%B0%98%EC%9D%91-%EC%86%8D%EB%8F%84#:~:text=FastCGI%EB%8A%94%20NGINX%EC%99%80%20PHP,%EB%A5%BC%20%EC%A4%84%EC%9D%B4%EB%8A%94%20%EC%97%AD%ED%99%9C%20%EC%9D%84%20%ED%95%A9%EB%8B%88%EB%8B%A4.
+
+
 ## 22.12.20
 
 ### nginx.conf 
