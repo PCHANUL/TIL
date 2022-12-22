@@ -13,7 +13,7 @@ permalink: /docs/projects/Inception
   - [Base image : alpine Linux](#base-image--alpine-linux)
   - [MariaDB](#mariadb)
     - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      - [새로운 유저 생성](#새로운-유저-생성)
+      - [외부 유저 생성](#외부-유저-생성)
       - [mysql 설정 수정](#mysql-설정-수정)
     - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
   - [Nginx](#nginx)
@@ -77,10 +77,12 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 - [ ] [Dockerfile 작성](#dockerfile)
   - [x] [MariaDB](#MariaDB)
     - [x] [원격 접속 설정](#mysql-원격-접속-설정)
-  - [ ] WordPress
+      - [x] [외부 유저 생성](#외부-유저-생성)
+      - [x] [mysql 설정 수정](#mysql-설정-수정)
   - [ ] [Nginx](#nginx)
     - [ ] nginx.conf 파일
     - [ ] open ssl 인증서
+  - [ ] WordPress
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [ ] [volumes](#volumes)
   - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
@@ -103,7 +105,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 mysql은 설치시 기본으로 로컬 접근만 허용한다. 다른 컨테이너에서 접근할 수 있도록 설정해야 한다.  
 
-#### 새로운 유저 생성
+#### 외부 유저 생성
 
 외부에서 접근할 수 있는 새로운 유저를 생성한다. 다음은 모든 IP에서 접속 가능하며, 모든 권한을 가진 유저를 생성한다.  
 
@@ -123,13 +125,17 @@ sed -i 's/^skip-networking/#skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
 
 ### mysqld_safe 실행 오류
 
-mysqld_safe를 실행하면 로그 파일이 생성된다. 로그 파일에서 발견한 이번에 발생된 에러는 다음과 같다.  
+일반적으로 daemon 프로세스는 파일을 생성하여 로그를 기록한다. mysqld는 --datadir로 설정된 디렉토리에 .err 확장자 파일을 생성한다.  
+
+mysqld_safe가 실행되지 않아서 로그 파일을 확인해보았다. 로그 파일에는 다음과 같은 에러 메시지가 있었다.  
 
 ```
 Cannot open datafile for read-only: './mysql/gtid_slave_pos.ibd' OS error: 81  
 ```  
 
-이 에러는 폴더 권한 문제로 인해 발생되었다. mysqld_safe를 실행하며 --datadir 옵션으로 지정된 폴더에 권한이 없는 사용자이기 때문에 파일을 읽을 수 없었다. 그래서 지정된 폴더와 모든 하위 폴더의 소유자를 변경하여 문제를 해결할 수 있었다.  
+이는 폴더 권한 문제가 발생되었다는 에러 메시지이다. mysqld_safe를 실행하며 --datadir 옵션으로 지정된 폴더에 권한이 없는 사용자이기 때문에 파일을 읽을 수 없었다.  
+
+지정된 폴더와 모든 하위 폴더의 소유자를 변경하면 문제가 해결된다.
 
 ```
 $ chown -R mysql:mysql /var/lib/mysql
@@ -139,6 +145,8 @@ $ chown -R mysql:mysql /var/lib/mysql
 ## Nginx
 
 ### nginx.conf
+
+[nginx 설정 문서](/docs/projects/Inception/nginx_conf.md)  
 
 wordpress를 프록시 서버로
 
