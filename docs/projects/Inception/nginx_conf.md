@@ -17,6 +17,8 @@ permalink: /docs/projects/Inception/nginx_conf
 - [Example : 정적 컨텐츠 제공](#example--정적-컨텐츠-제공)
 - [Example : 프록시 서버 설정](#example--프록시-서버-설정)
   - [FastCGI 프록싱 설정](#fastcgi-프록싱-설정)
+- [Nginx Wordpress basic setup](#nginx-wordpress-basic-setup)
+- [References](#references)
 
 # nginx 구성 파일
 
@@ -270,5 +272,61 @@ server {
 
 정적 이미지 요청을 제외한 나머지 모든 요청을 FastCGI 프로토콜을 통해 localhost:9000에서 작동하는 프록시 서버로 설정되었다.  
 
+# Nginx Wordpress basic setup  
 
-참조 : https://nginx.org/en/docs/beginners_guide.html, https://prohannah.tistory.com/136, 
+먼저, php에 대해 명명된 업스트림을 설정한다. 이는 백엔드를 추상화하고 쉽게 포트를 변경하거나 더 많은 백엔드를 추가할 수 있게 한다. 그 다음에 domain.tld 가상 호스트 구성을 설정한다.  
+
+```
+# Upstream to abstract backend connection(s) for php
+upstream php {
+        server unix:/tmp/php-cgi.socket;
+        server 127.0.0.1:9000;
+}
+
+server {
+    ## 웹사이트 이름
+    server_name domain.tld;
+    ## 유일한 경로 참조
+    root /var/www/wordpress;
+    ## http 블록에 있어야 하며, 만약에 있다면 여기에서 제거
+    index index.php;
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    location / {
+        # "?args" 부분을 포함하여 non-default permalinks가 중단되지 않도록 한다.
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        #NOTE: php.ini에 "cgi.fix_pathinfo = 0;"가 있어야 한다.
+        include fastcgi_params;
+        fastcgi_intercept_errors on;
+        fastcgi_pass php;
+        
+        #다음 매개변수도 fastcgi_params 파일에 포함될 수 있다. 
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        expires max;
+        log_not_found off;
+    }
+}
+```
+
+
+# References
+
+- [nginx beginners guide](https://nginx.org/en/docs/beginners_guide.html)
+- [nginx wordpress basic setup](https://www.nginx.com/resources/wiki/start/topics/recipes/wordpress/)
+- [nginx 기본 환경 설정](https://prohannah.tistory.com/136)

@@ -148,15 +148,61 @@ $ chown -R mysql:mysql /var/lib/mysql
 
 [nginx 설정 문서](/docs/projects/Inception/nginx_conf.md)  
 
-wordpress를 프록시 서버로
+wordpress를 프록시 서버로 하는 nginx를 설정한다.  
 
-nginx.conf 파일로 nginx를 설정한다.
 
 
 ### openssl
 
+SSL(Secure Socket Layer)은 네트워크 전송 계층의 암호화를 통해 통신하는 프로토콜이다. HTTPS를 사용하기 위해서는 SSL가 적용되어 있어야 한다. 다음은 OpenSSL로 개인 인증서를 생성하여 적용하는 과정이다.   
 
+```
+# 개인 키와 인증 요청서 생성
+$ openssl req -new -newkey rsa:2048 -nodes -keyout <개인키 이름>.key -out <인증요청서 이름>.csr -subj "/C=KR/ST=Seoul/L=GangNam/O=42Seoul/CN=example.com"
 
+# 인증서 생성
+$ openssl x509 -req -days 365 -in <인증요청서 이름>.csr -signkey <개인키 이름>.key -out <생성할 인증서 이름>.crt
+
+# 개인 키의 비밀번호 제거
+$ cp <생성된 개인키 이름>.key <생성할 개인키 복사본 이름>.key.secure
+$ openssl rsa -in <생성된 개인키 복사본 이름>.key.secure -out <재생성할 개인키 이름>.key
+```
+
+다음과 같이 nginx 설정 파일을 수정하여 생성된 인증서와 개인키를 적용한다.
+
+```
+# Load Balancing
+upstream target-server {
+  least_conn;
+  server 10.10.200.3:4000 max_fails=3 fail_timeout=10s;
+  server 10.10.200.4:4000 max_fails=3 fail_timeout=10s;
+}
+
+server {
+    listen                443;
+    server_name           10.10.200.2;
+    charset               utf-8;
+    access_log            /etc/nginx/log/access.log;
+    error_log             /etc/nginx/log/error.log;
+    
+    # ssl사용
+    ssl                   on;            
+    
+    # 생성된 인증서경로                       
+    ssl_certificate       /etc/nginx/ssl/jaehunpark-ssl.crt;    
+    
+    # 생성된 개인키
+    ssl_certificate_key   /etc/nginx/ssl/jaehunpark-ssl.key;    
+    
+    location / {
+        proxy_redirect    off;
+        proxy_set_header  Host $http_host;
+        proxy_set_header  X-Real-IP $remote_addr;
+        proxy_set_header  X-Scheme $scheme;
+        proxy_pass        http://target-server;
+    }
+}
+```
 
 
 # docker-compose.yaml

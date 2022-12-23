@@ -9,6 +9,12 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+- [22.12.23](#221223)
+  - [curl error](#curl-error)
+  - [nginx](#nginx)
+    - [Proxy](#proxy)
+    - [Upstream, Downstream](#upstream-downstream)
+    - [Reverse Proxy nginx](#reverse-proxy-nginx)
 - [22.12.21](#221221)
   - [nginx wordpress basic setup](#nginx-wordpress-basic-setup)
   - [FastCGI cache](#fastcgi-cache)
@@ -29,7 +35,7 @@ permalink: /
     - [openssl 인증서 발급](#openssl-인증서-발급)
 - [22.12.18](#221218)
   - [Dockerfile ENTRYPOINT와 CMD의 차이](#dockerfile-entrypoint와-cmd의-차이)
-  - [nginx](#nginx)
+  - [nginx](#nginx-1)
     - [nginx 구조](#nginx-구조)
 - [22.12.16](#221216)
   - [mysql 원격 접속](#mysql-원격-접속)
@@ -119,6 +125,120 @@ permalink: /
 
 ---
 
+## 22.12.23
+
+### curl error 
+
+```
+curl: (60) SSL certificate problem: self signed certificate
+More details here: https://curl.haxx.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+```
+
+### nginx
+
+웹 서버 소프트웨어인 nginx는 주로 다음과 같은 용도로 사용된다.  
+
+- Serve static content : 이미지나 CSS와 같은 정적인 리소스 요청을 서버를 대신하여 처리한다.
+- Reverse Proxy Server : 요청와 응답을 중개하는 프록시 서버로 동작할 수 있다.
+
+#### Proxy
+
+서버와 클라이언트 사이에서 Request와 Response를 중계하는 Proxy는 Forward와 Reverse로 나뉜다.  
+
+- Forward Proxy : 유저가 Request를 보내면 Forward Proxy 서버가 받고, 다시 원래 서버에 전달한다. 
+  - 일반적으로 회사나 특정 기관에서 보안을 위해 firewall을 세워서 접속에 제한을 두는 목적으로 사용한다. 
+- Reverse Proxy : Request를 받은 Reverse Proxy 서버는 어느 서버에 요청을 보낼지 관리한다.
+  - 중요한 서버에 접근하기 전에 하나의 레이어가 생겨서 효율적이며 안전하게 Request와 Response를 관리할 수 있다. 
+
+#### Upstream, Downstream
+
+네트워크에서 주고 받는 Request와 Response 데이터를 흐르는 강물로 표현할 수 있다. 물을 흘려 내보내듯이 데이터를 보내는 Upstream, 흘러온 물을 받듯이 데이터를 받는 Downstream이 있다. 예를 들어, 어떠한 파일을 다운로드하는 경우에 유저 입장에서 서버는 Upstream이고, 데이터를 받는 곳은 Downstream이다.  
+
+#### Reverse Proxy nginx
+
+nginx를 Reverse Proxy로 설정하기 위해 다음과 같이 설정 파일을 작성할 수 있다.  
+
+```
+http {
+  upstream myproject {
+    server 127.0.0.1:8000 weight=3;
+    server 127.0.0.1:8001;
+    server 127.0.0.1:8002;
+    server 127.0.0.1:8003;
+  }
+  
+  server {
+    listen 80;
+    server_name www.domain.com;
+    location / {
+      proxy_pass http://myproject;
+    }
+  }
+}
+```  
+
+upstream 지시문 뒤에는 서버 집합의 그룹명이 들어간다. 이 그룹명은 location 블록 안에 있는 proxy_pass에 들어가서 참조한다. upstream 블록 안에는 동작 중인 서버 목록이 들어간다. 형식은 `server (IP:Port 또는 domain)`이다. 알고리즘을 정하지 않으면 Round-Robin 방식으로 서버 목록에 따라 돌아가며 Request를 보낸다. Round-Robin 스케줄링은 목록 안에서 우선 순위없이 시간 단위로 하나씩 처리하는 방식이다.  
+
+nginx가 지원하는 Load balancing 알고리즘은 다음과 같다.
+
+- hash <key> : 매개변수 값에 따라 해싱하여 분배한다.
+- ip_hash : IP 해시 값에 따라 분배한다.
+- random : 랜덤으로 분배한다.
+- least_conns : 가장 활성 연결 수가 적은 곳을 선택한다.
+- least_time : 평균 연결시간이 가장 짧으며 활성 연결 수가 적은 곳을 선택한다.
+
+hash <key> 알고리즘을 제외한 모든 알고리즘에서는 server 지시문의 weight 값을 고려한다.  
+
+```
+upstream myproject {
+  ip_hash; # <hash | random | least_conn | least_time>
+  server 127.0.0.1:8000 weight=3;
+  server 127.0.0.1:8001;
+  server 127.0.0.1:8002;
+  server 127.0.0.1:8003;
+}
+```
+
+다음은 server 지시문의 매개변수들이다.  
+
+- backup : 해당 서버를 백업 서버로 지정한다. 주요 서버에 장애가 발생하면 여기로 요청이 전달된다.
+
+```
+server 127.0.0.1:8000 backup;
+```
+
+- weight=<number> : 서버의 가중치를 설정한다.
+
+```
+server 127.0.0.1:8000 weight=3;
+```
+
+- max_conns=<number> : 워커 프로세스의 동시 연결 수를 설정한다. 기본값은 0으로 제한이 없다.
+
+```
+server 127.0.0.1:8000 max_conns=256;
+```
+
+- max_fails=<number> : 설정한 수 만큼 요청이 실패한 경우 다른 서버에게 요청이 넘어간다.
+
+```
+server 127.0.0.1:8000 max_fails=3;
+```
+
+- fail_timeout=<time(sec)> : 설정한 시간동안 서버가 응답하지 못하면 실패로 간주한다.
+
+```
+server 127.0.0.1:8000 fail_timeout=30;
+```
+
+
+참조 : [nginx에 대한 정리](https://developer88.tistory.com/299), [리버스 프록시](https://jizard.tistory.com/308), [Round-Robin이란](https://jwprogramming.tistory.com/17)  
+
+
 ## 22.12.21
 
 ### nginx wordpress basic setup
@@ -182,7 +302,7 @@ FastCGI는 이전에 불러온 페이지를 저장하고 있다가 사용자가 
 ![](/docs/src/projects/inception/fastcgi.png)  
 
 
-참조 : https://happist.com/557860/%EC%9B%8C%EB%93%9C%ED%94%84%EB%A0%88%EC%8A%A4-%EC%B5%9C%EC%A0%81%ED%99%94-fastcgi-cache-%EC%A0%81%EC%9A%A9-%EC%9B%8C%EB%93%9C%ED%94%84%EB%A0%88%EC%8A%A4-%EB%B0%98%EC%9D%91-%EC%86%8D%EB%8F%84#:~:text=FastCGI%EB%8A%94%20NGINX%EC%99%80%20PHP,%EB%A5%BC%20%EC%A4%84%EC%9D%B4%EB%8A%94%20%EC%97%AD%ED%99%9C%20%EC%9D%84%20%ED%95%A9%EB%8B%88%EB%8B%A4.
+참조 : https://happist.com/557860/
 
 
 ## 22.12.20
