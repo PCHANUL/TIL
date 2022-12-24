@@ -7,23 +7,24 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-- [Inception](#inception)
-- [Todos](#todos)
-- [Dockerfile](#dockerfile)
-  - [Base image : alpine Linux](#base-image--alpine-linux)
-  - [MariaDB](#mariadb)
-    - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      - [외부 유저 생성](#외부-유저-생성)
-      - [mysql 설정 수정](#mysql-설정-수정)
-    - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  - [Nginx](#nginx)
-    - [nginx.conf](#nginxconf)
-    - [openssl](#openssl)
-- [docker-compose.yaml](#docker-composeyaml)
-  - [volumes](#volumes)
-    - [mysql 볼륨](#mysql-볼륨)
-    - [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
-  - [networks](#networks)
+* [Inception](#inception)
+* [Todos](#todos)
+* [Dockerfile](#dockerfile)
+  * [Base image : alpine Linux](#base-image--alpine-linux)
+  * [MariaDB](#mariadb)
+    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      * [외부 유저 생성](#외부-유저-생성)
+      * [mysql 설정 수정](#mysql-설정-수정)
+    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  * [Nginx](#nginx)
+    * [nginx.conf](#nginxconf)
+    * [openssl](#openssl)
+    * [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
+* [docker-compose.yaml](#docker-composeyaml)
+  * [volumes](#volumes)
+    * [mysql 볼륨](#mysql-볼륨)
+    * [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
+  * [networks](#networks)
 
 # Inception
 
@@ -202,7 +203,17 @@ server {
         proxy_pass        http://target-server;
     }
 }
+```  
+
+### nginx 컨테이너 실행 오류
+
+Dockerfile CMD로 nginx를 background로 실행시켰다. 하지만 컨테이너가 실행된 상태로 유지되지 못하고 종료된다. nginx 서버를 foreground로 실행시키지 않으면 컨테이너 안의 서버가 실행이 되지 않은 상태이기 때문이다. 그래서 공식 nginx docker image의 Dockerfile을 보면 다음과 같이 nginx를 실행시킨다.  
+
 ```
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+[nginx docker image](https://github.com/nginxinc/docker-nginx/blob/23a990403d6dbe102bf2c72ab2f6a239e940e3c3/mainline/alpine/Dockerfile#L117)  
 
 
 # docker-compose.yaml
