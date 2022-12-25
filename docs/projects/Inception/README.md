@@ -20,6 +20,7 @@ permalink: /docs/projects/Inception
     * [nginx.conf](#nginxconf)
     * [openssl](#openssl)
     * [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
+  * [wordpress](#wordpress)
 * [docker-compose.yaml](#docker-composeyaml)
   * [volumes](#volumes)
     * [mysql 볼륨](#mysql-볼륨)
@@ -80,10 +81,11 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
     - [x] [원격 접속 설정](#mysql-원격-접속-설정)
       - [x] [외부 유저 생성](#외부-유저-생성)
       - [x] [mysql 설정 수정](#mysql-설정-수정)
-  - [ ] [Nginx](#nginx)
-    - [ ] nginx.conf 파일
-    - [ ] open ssl 인증서
+  - [x] [Nginx](#nginx)
+    - [x] nginx.conf 파일
+    - [x] open ssl 인증서
   - [ ] WordPress
+    - [ ] Mariadb 연결
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [ ] [volumes](#volumes)
   - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
@@ -149,8 +151,7 @@ $ chown -R mysql:mysql /var/lib/mysql
 
 [nginx 설정 문서](/docs/projects/Inception/nginx_conf.md)  
 
-wordpress를 프록시 서버로 하는 nginx를 설정한다.  
-
+wordpress를 프록시 서버로 하는 nginx를 설정한다. nginx에 wordpress 설정 예시가 있으므로 이를 활용한다.   
 
 
 ### openssl
@@ -214,6 +215,18 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 
 [nginx docker image](https://github.com/nginxinc/docker-nginx/blob/23a990403d6dbe102bf2c72ab2f6a239e940e3c3/mainline/alpine/Dockerfile#L117)  
+
+
+## wordpress
+
+
+
+
+
+
+
+
+
 
 
 # docker-compose.yaml

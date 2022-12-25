@@ -9,6 +9,10 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [22.12.25](#221225)
+  * [wordpress](#wordpress)
+  * [Docker Alpine Linux에 WordPress 설치하기](#docker-alpine-linux에-wordpress-설치하기)
+  * [PHP-fpm](#php-fpm)
 * [22.12.23](#221223)
   * [nginx 컨테이너 중지 오류](#nginx-컨테이너-중지-오류)
   * [curl error](#curl-error)
@@ -125,6 +129,24 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 22.12.25
+
+### wordpress
+
+wordpress는 오픈소스를 기반으로 한 CMS(Contents Management System)이다. CMS은 웹사이트에 컨텐츠를 게시하는 소프트웨어이다. 게시판과 이미지, 텍스트, 댓글을 자동으로 배치하기 때문에 웹 사이트 제작에 드는 시간과 비용이 감소한다. 
+
+### Docker Alpine Linux에 WordPress 설치하기
+
+https://infraadmin.tech/blog/docker-alpine-linux%EC%97%90-wordpress-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0/  
+
+### PHP-fpm  
+
+https://phsun102.tistory.com/46  
+
+PHP-fpm은 PHP를 FastCGI 방식으로 동작시킨다.  
+CGI(Common Gateway Interface)는 웹서버와 외부 프로토콜을 연결시켜주는 표준 프로토콜이다. 프로세스의 생성과 삭제를 통해 발생하는 부하를 줄이기 위한 FastCGI를 활용하기 위해 PHP-fpm이 사용된다. 
+
 
 ## 22.12.23
 
