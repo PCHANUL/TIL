@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+- [22.12.27](#221227)
+  - [wordpress docker setup](#wordpress-docker-setup)
+  - [php-fpm 설정 하기](#php-fpm-설정-하기)
 - [22.12.26](#221226)
   - [php-fpm Dockerfile](#php-fpm-dockerfile)
     - [Configuration](#configuration)
@@ -133,6 +136,79 @@ permalink: /
         - [cgroup](#cgroup)
 
 ---
+
+## 22.12.27
+
+### wordpress docker setup
+
+[custom wordpress docker setup](https://codingwithmanny.medium.com/custom-wordpress-docker-setup-8851e98e6b8), [docker hub - wordpress](https://github.com/docker-library/wordpress/blob/97f75b51f909fbd9894d128ea6893120cfd23979/latest/php8.0/fpm-alpine/Dockerfile)  
+
+nginx와 wordpress를 하나의 컨테이너에서 동작시킨다면 다음과 같이 Dockerfile을 작성하면 된다.  
+
+```
+# Dockerfile
+FROM alpine:3.16
+
+RUN apk update
+RUN apk add dumb-init
+RUN apk add php-fpm php-mysqli curl tar
+
+RUN apk add nginx
+
+RUN curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-6.1.1.tar.gz" 
+RUN tar -xzf wordpress.tar.gz -C /var/www/localhost
+RUN rm wordpress.tar.gz
+
+COPY conf/default.conf /etc/nginx/http.d/default.conf
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["/bin/sh", "-c", "/usr/sbin/php-fpm8; exec nginx -g 'daemon off;';"]
+
+WORKDIR /var/www/localhost/htdocs
+```
+
+```
+# default.conf
+
+# This is a default site configuration which will simply return 404, preventing
+# chance access to any other virtualhost.
+server {
+ listen 80 default_server;
+ listen [::]:80 default_server;
+ 
+ root   /var/www/localhost/wordpress;
+ index  index.php index.html index.htm;
+location / {
+  try_files $uri $uri/ /index.php?$query_string;
+ }
+# You may need this to prevent return 404 recursion.
+ location = /404.html {
+  internal;
+ }
+# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+location ~ \.php$ {
+  try_files $uri /index.php =404;
+  fastcgi_split_path_info ^(.+\.php)(/.+)$;
+  fastcgi_pass   0.0.0.0:9000;
+  fastcgi_index  index.php;
+  fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  include fastcgi_params;
+ }
+}
+```
+
+"http://localhost"로 접속하면 wordpress setup 페이지를 볼 수 있다.  
+
+위의 예시는 nginx와 wordpress가 동일한 컨테이너에 있다. 이 둘을 분리하여 각각의 컨테이너에서 동작하게 만들 수 있다. 동일한 볼륨 파일을 두개의 컨테이너가 공유한다면 이전과 같이 동작할 수 있다.  
+
+Dockerfile을 보면, wordpress.tar.gz 압축 파일을 /var/www/localhost에 풀어 놓았다. 그리고 default.conf를 보면, /var/www/localhost/wordpress 폴더를 root 디렉터리로 설정하였다. 그러므로 /var/www/localhost 파일을 nginx 컨테이너와 wordpress 컨테이너에 공유시키면 된다.  
+
+
+### php-fpm 설정 하기
+
+https://server-talk.tistory.com/329  
+
+
 
 ## 22.12.26
 
