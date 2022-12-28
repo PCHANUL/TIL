@@ -7,25 +7,26 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-- [Inception](#inception)
-- [Todos](#todos)
-- [Dockerfile](#dockerfile)
-  - [Base image : alpine Linux](#base-image--alpine-linux)
-  - [MariaDB](#mariadb)
-    - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      - [외부 유저 생성](#외부-유저-생성)
-      - [mysql 설정 수정](#mysql-설정-수정)
-    - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  - [Nginx](#nginx)
-    - [nginx.conf](#nginxconf)
-    - [openssl](#openssl)
-    - [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
-  - [wordpress](#wordpress)
-- [docker-compose.yaml](#docker-composeyaml)
-  - [volumes](#volumes)
-    - [mysql 볼륨](#mysql-볼륨)
-    - [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
-  - [networks](#networks)
+* [Inception](#inception)
+* [Todos](#todos)
+* [Dockerfile](#dockerfile)
+  * [Base image : alpine Linux](#base-image--alpine-linux)
+  * [MariaDB](#mariadb)
+    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      * [외부 유저 생성](#외부-유저-생성)
+      * [mysql 설정 수정](#mysql-설정-수정)
+    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  * [Nginx](#nginx)
+    * [nginx.conf](#nginxconf)
+    * [openssl](#openssl)
+    * [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
+  * [wordpress](#wordpress)
+    * [php-fpm](#php-fpm)
+* [docker-compose.yaml](#docker-composeyaml)
+  * [volumes](#volumes)
+    * [mysql 볼륨](#mysql-볼륨)
+    * [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
+  * [networks](#networks)
 
 # Inception
 
@@ -86,6 +87,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
     - [x] open ssl 인증서
   - [ ] WordPress
     - [ ] php-fpm
+    - [ ] nginx volumes
     - [ ] Mariadb 연결
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [ ] [volumes](#volumes)
@@ -220,10 +222,22 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ## wordpress
 
+### php-fpm
+
+php-fpm은 php를 FastCGI 방식으로 동작시킨다. CGI는 웹서버와 외부 프로토콜을 연결시켜주는 표준 프로토콜이다. 각각의 요청별로 프로세스를 생성하기 때문에 속도가 느리다. 그래서 이를 개선한 FastCGI를 사용한다. FastCGI는 각각의 요청이 들어올때마다 프로세스를 생성하지 않고, 기존에 만들어진 프로세스로 새로운 요청을 처리한다.  
+
+nginx가 FastCGI 서버와 함께 동작하려면 nginx 설정 파일을 변경해야 한다. 원래는 location 블록에 proxy 지시문으로 프록시된 서버의 정보를 명시한다. FastCGI 서버로 라우트하기 위해서는 proxy 대신에 fastcgi 지시문을 사용한다. fastcgi 지시문을 작성하면 모든 요청들을 프록시된 서버에게 FastCGI 프로토콜을 사용하여 라우트한다. location 블록은 다음과 같이 작성될 수 있다.
+
+```
+location / {
+  fastcgi_pass  localhost:9000;
+  fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  fastcgi_param QUERY_STRING    $query_string;
+}
+```
 
 
-
-
+참조 : https://architectophile.tistory.com/11
 
 
 
