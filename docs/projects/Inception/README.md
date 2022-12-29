@@ -7,26 +7,27 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-* [Inception](#inception)
-* [Todos](#todos)
-* [Dockerfile](#dockerfile)
-  * [Base image : alpine Linux](#base-image--alpine-linux)
-  * [MariaDB](#mariadb)
-    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      * [외부 유저 생성](#외부-유저-생성)
-      * [mysql 설정 수정](#mysql-설정-수정)
-    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  * [Nginx](#nginx)
-    * [nginx.conf](#nginxconf)
-    * [openssl](#openssl)
-    * [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
-  * [wordpress](#wordpress)
-    * [php-fpm](#php-fpm)
-* [docker-compose.yaml](#docker-composeyaml)
-  * [volumes](#volumes)
-    * [mysql 볼륨](#mysql-볼륨)
-    * [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
-  * [networks](#networks)
+- [Inception](#inception)
+- [Todos](#todos)
+- [Dockerfile](#dockerfile)
+  - [Base image : alpine Linux](#base-image--alpine-linux)
+  - [MariaDB](#mariadb)
+    - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      - [외부 유저 생성](#외부-유저-생성)
+      - [mysql 설정 수정](#mysql-설정-수정)
+    - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  - [Nginx](#nginx)
+    - [nginx.conf](#nginxconf)
+    - [openssl](#openssl)
+    - [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
+  - [wordpress](#wordpress)
+    - [php-fpm](#php-fpm)
+    - [php-fpm.conf](#php-fpmconf)
+- [docker-compose.yaml](#docker-composeyaml)
+  - [volumes](#volumes)
+    - [mysql 볼륨](#mysql-볼륨)
+    - [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
+  - [networks](#networks)
 
 # Inception
 
@@ -86,7 +87,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
     - [x] nginx.conf 파일
     - [x] open ssl 인증서
   - [ ] WordPress
-    - [ ] php-fpm
+    - [ ] php-fpm.conf 파일
     - [ ] nginx volumes
     - [ ] Mariadb 연결
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
@@ -236,11 +237,19 @@ location / {
 }
 ```
 
-
 참조 : https://architectophile.tistory.com/11
 
 
+### php-fpm.conf
 
+프로세스로 동작하는 php-fpm의 설정 파일은 php-fpm.conf이다. php-fpm.conf 설정에 따라서 자원 관리를 효율적으로 할 수 있으므로 중요하다.  
+
+
+
+
+
+
+참조 : https://server-talk.tistory.com/329
 
 
 
