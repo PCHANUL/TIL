@@ -28,6 +28,7 @@ permalink: /docs/projects/Inception
     - [mysql 볼륨](#mysql-볼륨)
     - [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
   - [networks](#networks)
+    - [nginx - wordpress](#nginx---wordpress)
 
 # Inception
 
@@ -87,12 +88,13 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
     - [x] nginx.conf 파일
     - [x] open ssl 인증서
   - [ ] WordPress
-    - [ ] php-fpm.conf 파일
-    - [ ] nginx volumes
+    - [x] php-fpm.conf 파일
+    - [x] nginx volumes
     - [ ] Mariadb 연결
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [ ] [volumes](#volumes)
   - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
+    - [ ] nginx - wordpress
 - [ ] WordPress 데이터 베이스 사용자 이름 설정
 - [ ] 호스트 시스템 로그인 설정
 - [ ] Nginx 컨테이너 entrypoint port
@@ -244,11 +246,6 @@ location / {
 
 프로세스로 동작하는 php-fpm의 설정 파일은 php-fpm.conf이다. php-fpm.conf 설정에 따라서 자원 관리를 효율적으로 할 수 있으므로 중요하다.  
 
-
-
-
-
-
 참조 : https://server-talk.tistory.com/329
 
 
@@ -297,6 +294,17 @@ networks:
   new-net:
     driver: bridge
 ```
+
+### nginx - wordpress
+
+nginx 컨테이너는 누군가 요청을 보내면 wordpress 컨테이너의 php-fpm 서버로 요청을 보낸다. wordpress 컨테이너는 9000 포트를 열어두고 있으며, nginx는 그곳으로 요청을 보내야 하는 것이다. 
+
+nginx와 wordpress 컨테이너가 서로 통신할 수 있도록 하나의 네트워크에 포함시켰다. 
+
+
+
+
+
 
 
 https://www.daleseo.com/docker-compose-networks/  

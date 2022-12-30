@@ -9,6 +9,7 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+- [22.12.30](#221230)
 - [22.12.27](#221227)
   - [wordpress docker setup](#wordpress-docker-setup)
   - [php-fpm 설정 하기](#php-fpm-설정-하기)
@@ -136,6 +137,13 @@ permalink: /
         - [cgroup](#cgroup)
 
 ---
+
+## 22.12.30
+
+[도커에서 컨테이너 포트와 호스트 포트의 개념](https://blog.naver.com/alice_k106/220278762795)  
+
+
+
 
 ## 22.12.27
 
