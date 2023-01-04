@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.4](#2314)
+  * [php extentions](#php-extentions)
+  * [wordpress cli](#wordpress-cli)
 * [23.1.3](#2313)
   * [wordpress 설정파일](#wordpress-설정파일)
 * [22.12.30](#221230)
@@ -140,6 +143,30 @@ permalink: /
 
 ---
 
+## 23.1.4
+
+### php extentions
+
+https://make.wordpress.org/hosting/handbook/server-environment/#php-extensions  
+
+### wordpress cli
+
+[wp-cli 공식 페이지](https://wp-cli.org/)  
+[wp-cli wordpress 페이지](https://make.wordpress.org/cli/handbook/guides/installing)
+
+https://www.lesstif.com/system-admin/wp-cli-22643947.html  
+
+```
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+
+cd /var/www/html
+wp core download --locale=ko_KR
+wp core install --url=$WP_URL  --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL
+```
+
+
 ## 23.1.3
 
 ### wordpress 설정파일
@@ -156,10 +183,10 @@ cp -p /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-co
 
 ```
 # Database 정보 값 수정
-sed -i "s|define( 'DB_NAME', 'database_name_here' );|define( 'DB_NAME', '$DB_NAME' );|g" /var/www/html/wordpress/wp-config.php
-sed -i "s|define( 'DB_USER', 'username_here' );|define( 'DB_USER', '$DB_USER' );|g" /var/www/html/wordpress/wp-config.php
-sed -i "s|define( 'DB_PASSWORD', 'password_here' );|define( 'DB_PASSWORD', '$DB_PWD' );|g" /var/www/html/wordpress/wp-config.php
-sed -i "s|define( 'DB_HOST', 'localhost' );|define( 'DB_HOST', '$DB_HOST' );|g" /var/www/html/wordpress/wp-config.php
+sed -i "s|define( 'DB_NAME', 'database_name_here' );|define( 'DB_NAME', '$DB_NAME' );|g" /var/www/html/wp-config.php
+sed -i "s|define( 'DB_USER', 'username_here' );|define( 'DB_USER', '$DB_USER' );|g" /var/www/html/wp-config.php
+sed -i "s|define( 'DB_PASSWORD', 'password_here' );|define( 'DB_PASSWORD', '$DB_PWD' );|g" /var/www/html/wp-config.php
+sed -i "s|define( 'DB_HOST', 'localhost' );|define( 'DB_HOST', '$DB_HOST' );|g" /var/www/html/wp-config.php
 ```
 
 ```

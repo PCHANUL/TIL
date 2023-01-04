@@ -7,28 +7,29 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-- [Inception](#inception)
-- [Todos](#todos)
-- [Dockerfile](#dockerfile)
-  - [Base image : alpine Linux](#base-image--alpine-linux)
-  - [MariaDB](#mariadb)
-    - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      - [외부 유저 생성](#외부-유저-생성)
-      - [mysql 설정 수정](#mysql-설정-수정)
-    - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  - [Nginx](#nginx)
-    - [nginx.conf](#nginxconf)
-    - [openssl](#openssl)
-    - [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
-  - [wordpress](#wordpress)
-    - [php-fpm](#php-fpm)
-    - [php-fpm.conf](#php-fpmconf)
-- [docker-compose.yaml](#docker-composeyaml)
-  - [volumes](#volumes)
-    - [mysql 볼륨](#mysql-볼륨)
-    - [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
-  - [networks](#networks)
-    - [nginx - wordpress](#nginx---wordpress)
+* [Inception](#inception)
+* [Todos](#todos)
+* [Dockerfile](#dockerfile)
+  * [Base image : alpine Linux](#base-image--alpine-linux)
+  * [MariaDB](#mariadb)
+    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      * [외부 유저 생성](#외부-유저-생성)
+      * [mysql 설정 수정](#mysql-설정-수정)
+    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  * [Nginx](#nginx)
+    * [nginx.conf](#nginxconf)
+    * [openssl](#openssl)
+    * [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
+  * [wordpress](#wordpress)
+    * [php-fpm](#php-fpm)
+    * [php-fpm.conf](#php-fpmconf)
+    * [wp-cli](#wp-cli)
+* [docker-compose.yaml](#docker-composeyaml)
+  * [volumes](#volumes)
+    * [mysql 볼륨](#mysql-볼륨)
+    * [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
+  * [networks](#networks)
+    * [nginx - wordpress](#nginx---wordpress)
 
 # Inception
 
@@ -247,6 +248,26 @@ location / {
 프로세스로 동작하는 php-fpm의 설정 파일은 php-fpm.conf이다. php-fpm.conf 설정에 따라서 자원 관리를 효율적으로 할 수 있으므로 중요하다.  
 
 참조 : https://server-talk.tistory.com/329
+
+### wp-cli
+
+[wp-cli 공식 페이지](https://wp-cli.org/), [wp-cli wordpress 페이지](https://make.wordpress.org/cli/handbook/guides/installing)  
+
+wp-cli는 wordpress용 명령줄 인터페이스이다. 웹 브라우저를 사용하지 않고도 플러그인을 업데이트하거나 다중 사이트 설치를 구성하는 등의 작업을 수행할 수 있다.  
+
+```
+# Install wp-cli
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+
+# Download wordpress
+cd /var/www/html
+wp core download --locale=ko_KR
+wp core install --url=$WP_URL  --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL
+```
+
+
 
 
 
