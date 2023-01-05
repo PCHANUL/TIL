@@ -9,6 +9,8 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.5](#2315)
+  * [docker-compose depends\_on](#docker-compose-depends_on)
 * [23.1.4](#2314)
   * [php extentions](#php-extentions)
   * [wordpress cli](#wordpress-cli)
@@ -142,6 +144,15 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 23.1.5
+
+### docker-compose depends_on
+
+[Docker Compose를 사용한 여러 컨테이너의 구성 관리](https://nomad-programmer.tistory.com/317), [Docker Compose에서 컨테이너 startup 순서 컨트롤하기](https://jupiny.com/2016/11/13/conrtrol-container-startup-order-in-compose/)  
+
+depends_on은 서비스간의 의존관계를 지정하여 순서대로 서비스를 시작하기 위해 사용된다. 하지만 depends_on은 순서만 제어할 뿐, 컨테이너의 어플리케이션이 이용 가능할 때까지 기다리지 않는다. 그렇기 때문에 이에 대한 조치가 필요하다면 대책이 필요하다. 만약에 다른 서비스가 실행 가능한 상태가 될 때까지 기다리길 원한하면 dockerize라는 툴을 사용하면 된다.  
+
 
 ## 23.1.4
 

@@ -268,9 +268,6 @@ wp core install --url=$WP_URL  --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --a
 ```
 
 
-
-
-
 # docker-compose.yaml
 
 ## volumes
