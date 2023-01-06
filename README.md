@@ -1035,6 +1035,8 @@ mysqld_safe 명령어를 사용하는 구문은 다음과 같다.
 mysqld_safe [ --no-defaults | --defaults-file | --defaults-extra-file | --defaults-group-suffix | --print-defaults ] <options> <mysqld_options>
 ```  
 
+/var/lib/mysql/
+
 #### Options
 
 - `--basedir=path` : 	MariaDB 설치 디렉토리의 경로이다.

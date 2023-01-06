@@ -8,7 +8,13 @@ permalink: /docs/projects/Inception
 ---
 
 * [Inception](#inception)
+* [Summary](#summary)
 * [Todos](#todos)
+* [docker-compose.yaml](#docker-composeyaml)
+  * [volumes](#volumes)
+    * [volume 구성](#volume-구성)
+  * [networks](#networks)
+    * [nginx - wordpress](#nginx---wordpress)
 * [Dockerfile](#dockerfile)
   * [Base image : alpine Linux](#base-image--alpine-linux)
   * [MariaDB](#mariadb)
@@ -24,12 +30,6 @@ permalink: /docs/projects/Inception
     * [php-fpm](#php-fpm)
     * [php-fpm.conf](#php-fpmconf)
     * [wp-cli](#wp-cli)
-* [docker-compose.yaml](#docker-composeyaml)
-  * [volumes](#volumes)
-    * [mysql 볼륨](#mysql-볼륨)
-    * [wordpress, nginx 볼륨](#wordpress-nginx-볼륨)
-  * [networks](#networks)
-    * [nginx - wordpress](#nginx---wordpress)
 
 # Inception
 
@@ -65,9 +65,9 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 > Docker를 사용하는 호스트 시스템의 /home/login/data 폴더에서 볼륨을 사용할 수 있다. 물론 로그인을 본인의 것으로 교체해야 한다.
 
 작업을 더 간단하게 하려면 로컬 IP 주소를 가리키도록 도메인 이름을 구성해야 한다.  
-이 도메인 이름은 login.42.ft이어야 한다. 반드시 자신의 로그인을 사용해야 한다. 예를 들어, 로그인인 wil인 경우에 wil.42.fr은 wil의 웹사이트를 가리키는 IP 주소로 리디렉션된다.  
+이 도메인 이름은 login.42.fr이어야 한다. 반드시 자신의 로그인을 사용해야 한다. 예를 들어, 로그인인 wil인 경우에 wil.42.fr은 wil의 웹사이트를 가리키는 IP 주소로 리디렉션된다.  
 
-> 최신 태그는 금지되어 있다. Dockerfile에 암호가 없어야 한다. 환경 변수를 사용하는 것은 필수이다. 또한, .env 파일을 사용하여 환경 변수를 저장하는 것이 좋다. .env 파일을 srcs 디렉토리의 루트에 있어야 한다. NGINX 컨테이너는 TLSv1.2 또는 TLSv1.3 프로토콜을 사용하여 포트 443가 인프라에 대한 유일한 진입점이어야 한다.
+> 최신 태그는 금지되어 있다. Dockerfile에 암호가 없어야 한다. 환경 변수를 사용하는 것은 필수이다. 또한, .env 파일을 사용하여 환경 변수를 저장하는 것이 좋다. .env 파일은 srcs 디렉토리의 루트에 있어야 한다. NGINX 컨테이너는 TLSv1.2 또는 TLSv1.3 프로토콜을 사용하여 포트 443가 인프라에 대한 유일한 진입점이어야 한다.
 
 다음은 예상되는 결과의 다이어그램이다.  
 
@@ -77,29 +77,136 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 ![](../../src/projects/inception/inception02.png)  
 
+# Summary
+
+- 각 Docker 이미지는 Alpine Linux의 두번째 안정 버전을 사용한다.
+- Makefile은 Docker-compose.yml을 사용하고, Docker-compose.yml은 각 서비스의 Dockerfile을 호출한다. Dockerfile은 서비스의 이미지를 빌드한다. (Makefile -> Docker-compose.yml -> Dockerfile)  
+- 소규모 인프라가 다음과 같이 구성되어야 한다.
+  - 3가지 서비스가 동작한다.
+    1. NGINX - TLSv1.2 또는 TLSv1.3 사용
+    2. WordPress - php-fpm로 동작
+    3. MariaDB
+  - 2개의 볼륨에 다음이 포함된다.
+    1. WordPress database
+    2. WordPress website files
+  - 1개의 Docker-network안에 연결된다.
+- 데몬이 동작하여 컨테이너가 유지된다.
+- 네트워크 라인은 docker-compose.yml 파일에 있어야 한다.
+- WordPress database에는 2명의 사용자가 있어야 한다.
+  - 1명은 관리자이다. 이름에 admin이 들어갈 수 없다.
+- 볼륨은 호스트 시스템의 /home/login/data 폴더를 사용한다. 
+- 도메인 이름은 login.42.fr이어야 한다. 
+- .env 파일을 사용하여 환경 변수를 저장한다. 파일의 위치는 srcs 디렉토리 루트이다.
+- NGINX 컨테이너는 TLSv1.2 또는 TLSv1.3를 사용하며, 포트 443가 인프라에 대한 유일한 진입점이다.
+
 
 # Todos
 
-- [ ] [Dockerfile 작성](#dockerfile)
-  - [x] [MariaDB](#MariaDB)
-    - [x] [원격 접속 설정](#mysql-원격-접속-설정)
-      - [x] [외부 유저 생성](#외부-유저-생성)
-      - [x] [mysql 설정 수정](#mysql-설정-수정)
-  - [x] [Nginx](#nginx)
-    - [x] nginx.conf 파일
-    - [x] open ssl 인증서
-  - [ ] WordPress
-    - [x] php-fpm.conf 파일
-    - [x] nginx volumes
-    - [ ] Mariadb 연결
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [ ] [volumes](#volumes)
   - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
     - [ ] nginx - wordpress
+- [ ] [서비스 Dockerfile 작성](#dockerfile)
+  - [x] [MariaDB](#MariaDB)
+    - [x] [원격 접속 설정](#mysql-원격-접속-설정)
+      - [x] [외부 유저 생성](#외부-유저-생성)
+      - [x] [mysql 설정 수정](#mysql-설정-수정)
+  - [x] WordPress
+    - [x] php-fpm.conf 파일
+    - [x] nginx volumes
+    - [x] Mariadb 연결
+  - [x] [Nginx](#nginx)
+    - [x] nginx.conf 파일
+    - [x] open ssl 인증서
 - [ ] WordPress 데이터 베이스 사용자 이름 설정
 - [ ] 호스트 시스템 로그인 설정
 - [ ] Nginx 컨테이너 entrypoint port
 - [ ] Makefile 작성
+
+
+# docker-compose.yaml
+
+## volumes
+
+컨테이너가 종료되면 안에 저장된 데이터가 사라지기 때문에 호스트에 데이터를 저장한다. 호스트 파일 시스템 안에 데이터를 저장하는 방식은 크게 volume과 bind로 나뉜다. 나뉘는 기준은 호스트 파일 시스템 상에 저장되는 폴더의 위치이다. volume은 docker 폴더 내에 위치하고, bind는 호스트 시스템 내에서 지정할 수 있다.  
+
+```
+valumes:
+  - ${SOURCE-PATH}:${DESTINATION-PATH}:${MODE}
+```
+
+### volume 구성
+
+구현하는 인프라에 필요한 volume은 2개이고, 이들은 호스트의 /home/login/data에 위치해야 한다. 그러므로 먼저 /home/login/data를 만들고 각 서비스의 디렉터리를 생성한다.  
+
+```
+mkdir -p /home/cpak/data/mariadb
+mkdir -p /home/cpak/data/wordpress
+```
+
+docker-compose.yml에서 services 항목에 volumes를 다음과 같이 추가한다. 짧은 구문으로 bind를 설정하였다.  
+
+```
+services:
+  mariadb:
+    (...)
+    volumes:
+      - /home/cpak/data/mariadb:/var/lib/mysql
+  
+  wordpress:
+    (...)
+    volumes:
+      - /home/cpak/data/wordpress:/var/www/wordpress
+  
+  nginx:
+    (...)
+    volumes:
+      - /home/cpak/data/wordpress:/var/www/wordpress
+```
+
+wordpress와 nginx는 같은 볼륨을 공유한다.  
+
+
+
+
+
+## networks
+
+docker-compose.yaml 파일에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
+
+```
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - new-net
+  db:
+    image: postgres
+    ports:
+      - "8001:5432"
+networks:
+  new-net:
+    driver: bridge
+```
+
+### nginx - wordpress
+
+nginx 컨테이너는 누군가 요청을 보내면 wordpress 컨테이너의 php-fpm 서버로 요청을 보낸다. wordpress 컨테이너는 9000 포트를 열어두고 있으며, nginx는 그곳으로 요청을 보내야 하는 것이다. 
+
+nginx와 wordpress 컨테이너가 서로 통신할 수 있도록 하나의 네트워크에 포함시켰다. 
+
+
+
+
+
+
+
+https://www.daleseo.com/docker-compose-networks/  
+
+
+
 
 # Dockerfile
 
@@ -266,66 +373,4 @@ cd /var/www/html
 wp core download --locale=ko_KR
 wp core install --url=$WP_URL  --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL
 ```
-
-
-# docker-compose.yaml
-
-## volumes
-
-### mysql 볼륨
-
-컨테이너가 종료되면 안에 저장된 데이터가 사라지기 때문에 호스트에 데이터를 저장해야 한다. docker-compose.yaml에서 볼륨을 설정하려면 서비스에 volumes 항목을 추가하면 된다.  
-
-```
-services:
-  mariadb:
-    (...)
-    volumes:
-      - mariadb-data:/var/lib/mysql
-```
-
-### wordpress, nginx 볼륨
-
-wordpress와 nginx는 같은 볼륨을 공유한다.  
-
-
-
-
-
-## networks
-
-docker-compose.yaml 파일에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
-
-```
-services:
-  web:
-    build: .
-    ports:
-      - "8000:8000"
-    networks:
-      - new-net
-  db:
-    image: postgres
-    ports:
-      - "8001:5432"
-networks:
-  new-net:
-    driver: bridge
-```
-
-### nginx - wordpress
-
-nginx 컨테이너는 누군가 요청을 보내면 wordpress 컨테이너의 php-fpm 서버로 요청을 보낸다. wordpress 컨테이너는 9000 포트를 열어두고 있으며, nginx는 그곳으로 요청을 보내야 하는 것이다. 
-
-nginx와 wordpress 컨테이너가 서로 통신할 수 있도록 하나의 네트워크에 포함시켰다. 
-
-
-
-
-
-
-
-https://www.daleseo.com/docker-compose-networks/  
-
-
 
