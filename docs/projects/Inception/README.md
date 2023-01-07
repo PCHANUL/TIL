@@ -56,7 +56,7 @@ permalink: /docs/projects/Inception
   
 > Docker 컨테이너는 가상 머신이 아니다. 따라서 실행하려고 할 때 'tail -f' 등을 기반으로 하는 해키 패치를 사용하지 않는 것이 좋다. 데몬이 어떻게 동작하는지 읽어보고, 데몬을 사용하는 것이 좋은지 생각해보아야 한다.  
 
-> 네트워크 라인은 docker-compose.yml 파일에 있어야 합니다. host 또는 -link, links를 사용하는 것은 금지되어 있다. 무한 루프를 실행하는 명령으로 컨테이너를 시작하면 안된다. 따라서 이는 entrypoint로 사용되거나 entrypoint script에서 사용되는 모든 명령에도 적용된다. 다음은 금지된 해키 패치이다. tail -f, bash, sleep infinity, while true.
+> 네트워크 라인은 docker-compose.yml 파일에 있어야 합니다. host 또는 -link, links를 사용하는 것은 금지되어 있다. 무한 루프를 실행하는 명령으로 컨테이너를 시작하면 안된다. 따라서 이는 entrypoint로 사용되거나 entrypoint script에서 사용되는 모든 명령에도 적용된다. 다음은 금지된 해키 패치이다. tail -f, bash, sleep infinity, while true.  
 
 > PID 1 및 Dockerfile 작성 모범 사례에 대해 읽어보자.
 
@@ -128,7 +128,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 
 ## volumes
 
-컨테이너가 종료되면 안에 저장된 데이터가 사라지기 때문에 호스트에 데이터를 저장한다. 호스트 파일 시스템 안에 데이터를 저장하는 방식은 크게 volume과 bind로 나뉜다. 나뉘는 기준은 호스트 파일 시스템 상에 저장되는 폴더의 위치이다. volume은 docker 폴더 내에 위치하고, bind는 호스트 시스템 내에서 지정할 수 있다.  
+컨테이너가 종료되면 안에 저장된 데이터가 사라지기 때문에 호스트에 데이터를 저장한다. 호스트 파일 시스템 안에 데이터를 저장하는 방식은 크게 volume과 bind로 나뉜다. 나뉘는 기준은 호스트 파일 시스템 상에 저장되는 폴더의 위치이다. volume은 docker 폴더 내에 위치하고, bind는 호스트 시스템 내에서 지정할 수 있다. volume의 위치는 /var/lib/docker/volumes 이다.  
 
 ```
 valumes:
@@ -165,6 +165,30 @@ services:
 ```
 
 wordpress와 nginx는 같은 볼륨을 공유한다.  
+
+
+
+```
+
+FROM alpine:3.16
+
+# install MariaDB
+RUN apk update
+RUN apk add mariadb mariadb-client
+RUN apk add dumb-init
+
+# Mariadb 초기화
+RUN mariadb-install-db --datadir=/var/lib/mysql --auth-root-authentication-method=normal
+#RUN chown -R mysql:mysql /var/lib/mysql
+
+# run.sh 파일 복사
+COPY run.sh /scripts/run.sh
+RUN chmod +x /scripts/run.sh
+
+#ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+#CMD ["sh", "-c", "/scripts/run.sh"]
+
+```
 
 
 

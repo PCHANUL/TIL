@@ -9,6 +9,10 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.7](#2317)
+  * [docker-compose volume configuration reference](#docker-compose-volume-configuration-reference)
+    * [driver](#driver)
+    * [driver\_opts](#driver_opts)
 * [23.1.5](#2315)
   * [docker-compose depends\_on](#docker-compose-depends_on)
 * [23.1.4](#2314)
@@ -144,6 +148,55 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 23.1.7
+
+### docker-compose volume configuration reference
+
+https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference  
+
+서비스 선언의 일부로 볼륨을 선언할 수 있지만, 여러 서비스에서 재사용할 수 있고, docker 명령을 사용하여 쉽게 검색할 수 있는 named 볼륨을 생성할 수 있다. 다음은 데이터 디렉터리를 볼륨으로 두개의 서비스가 공유하는 설정의 예이다.  
+
+```
+version: "3.9"
+
+services:
+  db:
+    image: db
+    volumes:
+      - data-volume:/var/lib/db
+  backup:
+    image: backup-service
+    volumes:
+      - data-volume:/var/lib/backup/data
+
+volumes:
+  data-volume:
+```
+
+볼륨 키 아래의 항목은 비어있을 수 있으며, 이 경우 기본 드라이버를 사용한다. 선택적으로 다음 키를 사용하여 볼륨을 구성할 수 있다.  
+
+#### driver
+
+볼륨에 사용할 볼륨 드라이버를 지정한다. 기본적으로 Docker 엔진이 사용하도록 구성된 모든 드라이버가 사용되며 대부분의 경우 로컬이다. 드라이버를 사용할 수 없는 경우 엔진이 오류를 반환한다.
+
+```
+driver: foobar
+```
+
+#### driver_opts
+
+볼륨의 드라이버에 전달할 키-값 쌍으로 옵션 목록을 지정한다. 옵션은 드라이버에 따라 다르다. 자세한 내용은 드라이버 설명서를 참조하면 된다.  
+
+```
+volumes:
+  example:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.40.0.199,nolock,soft,rw"
+      device: ":/docker/example"
+```
+
 
 ## 23.1.5
 
@@ -958,7 +1011,7 @@ https://reakwon.tistory.com/118
 Docker 컨테이너가 종료되면 안에 저장된 데이터가 사라진다. 컨테이너에서 사용된 데이터를 보존하려면 호스트에 데이터를 저장해야 한다. 호스트에 데이터를 저장한다면 여러 컨테이너가 데이터를 공유할 수 있다. 호스트의 파일 시스템 안에 데이터를 저장하는 방식에 따라서 볼륨과 바인드로 나뉜다.  
 
 1. bind mount : 컨테이너의 데이터를 호스트 경로에 연결
-2. volume : 컨테이너의 데이터를 호스트의 /var/lib/volume 경로에 저장
+2. volume : 컨테이너의 데이터를 호스트의 /var/lib/docker/volume 경로에 저장
 
 참조 : https://nerd-mix.tistory.com/47, https://monkeydeveloper.tistory.com/entry/Docker-volume-compose, https://jjeong.tistory.com/1435
 
