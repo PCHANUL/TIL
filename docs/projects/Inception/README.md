@@ -168,32 +168,6 @@ wordpress와 nginx는 같은 볼륨을 공유한다.
 
 
 
-```
-
-FROM alpine:3.16
-
-# install MariaDB
-RUN apk update
-RUN apk add mariadb mariadb-client
-RUN apk add dumb-init
-
-# Mariadb 초기화
-RUN mariadb-install-db --datadir=/var/lib/mysql --auth-root-authentication-method=normal
-#RUN chown -R mysql:mysql /var/lib/mysql
-
-# run.sh 파일 복사
-COPY run.sh /scripts/run.sh
-RUN chmod +x /scripts/run.sh
-
-#ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-#CMD ["sh", "-c", "/scripts/run.sh"]
-
-```
-
-
-
-
-
 ## networks
 
 docker-compose.yaml 파일에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
@@ -210,6 +184,7 @@ services:
     image: postgres
     ports:
       - "8001:5432"
+
 networks:
   new-net:
     driver: bridge
