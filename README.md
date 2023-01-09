@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.9](#2319)
+  * [volume](#volume)
+  * [bind mount](#bind-mount)
 * [23.1.7](#2317)
   * [docker-compose volume configuration reference](#docker-compose-volume-configuration-reference)
     * [driver](#driver)
@@ -148,6 +151,33 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 23.1.9
+
+https://medium.com/dtevangelist/docker-%EA%B8%B0%EB%B3%B8-5-8-volume%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-data-%EA%B4%80%EB%A6%AC-9a9ac1db978c  
+
+### volume
+
+Docker가 volume을 생성하고 관리하는 방식이다. docker volume create 명령으로 volume을 생성하거나, container 생성 중에 volume을 생성할 수 있다.  
+
+- volume이 생성되면 host의 디렉토리에 저장된다. 
+- 생성된 volume을 container에 mount하면, host의 디렉토리가 mount된다.
+- volume은 Docker에 의해 관리되며, host 시스템과 분리된다.
+- docker volume 명령어로 볼륨을 생성하거나 제거할 수 있다. 
+
+### bind mount
+
+host 시스템의 파일 또는 디렉토리가 container에 mount된다. 
+
+- 파일 또는 디렉토리가 host 시스템의 전체 경로로 참조된다.
+- 만약에 파일 또는 디렉토리가 존재하지 않는 경우에는 참조된 경로로 생성된다. 
+- bind mount는 host의 파일 시스템 디렉토리 구조에 의존적이다.
+- Docker CLI 명령어로 관리할 수 없다.
+
+> bind mount는 container에서 실행 중인 프로세스가 host 파일 시스템의 중요한 시스템 파일이나 디렉토리를 생성, 수정, 삭제 명령을 통해 변경할 수 있다. 이는 host 시스템에서 Non-Docker 프로세스와 충돌을 일으키거나, 보안에 큰 영향을 줄 수 있다. 그러므로 bind mount보다 volume을 사용해야 한다.  
+
+
+
 
 ## 23.1.7
 
