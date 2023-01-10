@@ -9,6 +9,8 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.10](#23110)
+  * [env file](#env-file)
 * [23.1.9](#2319)
   * [volume](#volume)
   * [bind mount](#bind-mount)
@@ -151,6 +153,40 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 23.1.10
+
+### env file
+
+https://seongjin.me/environment-variables-in-docker-compose/  
+
+환경변수를 별도의 파일로 구성할 수 있다. 이는 간단하게 docker-compose.yaml 파일이 위치한 경로에 `.env` 파일을 추가하면 된다. `.env`는 다음과 같은 문법을 따라서 작성해야 한다.  
+
+- `변수명=값` 형태로 한 줄씩 작성
+- `#` 문자는 주석 
+- 빈 줄은 무시된다.
+- 따옴표 처리는 불필요
+
+`.env` 파일은 다른 설정없이 자동으로 docker-compose 파일에 반영된다.  
+
+```
+# .env
+MYSQL_PASSWORD=1234
+```
+
+```
+# docker-compose.yaml
+version: '3'
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+```
+
+`.env` 파일을 이용하는 방식은 간편하지만 `docker-compose up` 명령어를 수행하는 경우에만 적용된다.  
+
+
 
 ## 23.1.9
 

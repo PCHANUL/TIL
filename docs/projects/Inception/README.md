@@ -13,6 +13,7 @@ permalink: /docs/projects/Inception
 * [docker-compose.yaml](#docker-composeyaml)
   * [volumes](#volumes)
     * [volume 구성](#volume-구성)
+    * [volume 사용](#volume-사용)
   * [networks](#networks)
     * [nginx - wordpress](#nginx---wordpress)
 * [Dockerfile](#dockerfile)
@@ -103,7 +104,7 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 # Todos
 
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
-  - [ ] [volumes](#volumes)
+  - [x] [volumes](#volumes)
   - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
     - [ ] nginx - wordpress
 - [ ] [서비스 Dockerfile 작성](#dockerfile)
@@ -144,7 +145,7 @@ mkdir -p /home/cpak/data/mariadb
 mkdir -p /home/cpak/data/wordpress
 ```
 
-docker-compose.yml에서 services 항목에 volumes를 다음과 같이 추가한다. 짧은 구문으로 bind를 설정하였다.  
+docker-compose.yml에서 services에 volumes를 추가하여 컨테이너에 볼륨을 마운트한다. 아래의 예제는 wordpress와 nginx가 하나의 볼륨을 공유하도록 구성되어 있다. 
 
 ```
 services:
@@ -164,8 +165,9 @@ services:
       - /home/cpak/data/wordpress:/var/www/wordpress
 ```
 
-wordpress와 nginx는 같은 볼륨을 공유한다.  
+### volume 사용
 
+docker-compose에서 구성한 볼륨을 컨테이너에서 이용하게 된다. 이 볼륨은 이미지를 생성하는 도중에는 사용할 수 없다. 즉, Dockerfile에서는 볼륨을 사용할 수 없다.  
 
 
 ## networks
