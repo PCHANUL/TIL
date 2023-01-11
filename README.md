@@ -9,6 +9,10 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.11](#23111)
+  * [VirtualBox 설정](#virtualbox-설정)
+    * [복사, 붙여넣기 설정](#복사-붙여넣기-설정)
+    * [docker, docker-compose](#docker-docker-compose)
 * [23.1.10](#23110)
   * [env file](#env-file)
 * [23.1.9](#2319)
@@ -153,6 +157,23 @@ permalink: /
         * [cgroup](#cgroup)
 
 ---
+
+## 23.1.11
+
+### VirtualBox 설정
+
+#### 복사, 붙여넣기 설정
+
+[Install the VirtualBox Guest Additions in Debian 11 bullseye](https://www.pragmaticlinux.com/2021/09/install-the-virtualbox-guest-additions-in-debian-11-bullseye/)  
+[Unable to insert the virtual optical disk 해결 방법](https://kldp.org/node/156897)  
+
+shared folder를 설정하는 도중에 `usermod: command not found`가 발생되면 `/usr/sbin/usermod`를 사용하면 된다.  
+
+#### docker, docker-compose 
+
+[Install docker-compose](https://developer-eun-diary.tistory.com/138)  
+
+
 
 ## 23.1.10
 
