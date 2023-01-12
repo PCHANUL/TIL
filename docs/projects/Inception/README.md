@@ -7,30 +7,31 @@ has_children: true
 permalink: /docs/projects/Inception
 ---
 
-* [Inception](#inception)
-* [Summary](#summary)
-* [Todos](#todos)
-* [docker-compose.yaml](#docker-composeyaml)
-  * [volumes](#volumes)
-    * [volume 구성](#volume-구성)
-    * [volume 사용](#volume-사용)
-  * [networks](#networks)
-    * [nginx - wordpress](#nginx---wordpress)
-* [Dockerfile](#dockerfile)
-  * [Base image : alpine Linux](#base-image--alpine-linux)
-  * [MariaDB](#mariadb)
-    * [mysql 원격 접속 설정](#mysql-원격-접속-설정)
-      * [외부 유저 생성](#외부-유저-생성)
-      * [mysql 설정 수정](#mysql-설정-수정)
-    * [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
-  * [Nginx](#nginx)
-    * [nginx.conf](#nginxconf)
-    * [openssl](#openssl)
-    * [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
-  * [wordpress](#wordpress)
-    * [php-fpm](#php-fpm)
-    * [php-fpm.conf](#php-fpmconf)
-    * [wp-cli](#wp-cli)
+- [Inception](#inception)
+- [Summary](#summary)
+- [Todos](#todos)
+- [docker-compose.yaml](#docker-composeyaml)
+  - [volumes](#volumes)
+    - [volume 구성](#volume-구성)
+    - [volume 마운트 시점](#volume-마운트-시점)
+  - [networks](#networks)
+    - [nginx - wordpress](#nginx---wordpress)
+- [Dockerfile](#dockerfile)
+  - [Base image : alpine Linux](#base-image--alpine-linux)
+  - [MariaDB](#mariadb)
+    - [mysql 원격 접속 설정](#mysql-원격-접속-설정)
+      - [외부 유저 생성](#외부-유저-생성)
+      - [mysql 설정 수정](#mysql-설정-수정)
+    - [mysqld\_safe 실행 오류](#mysqld_safe-실행-오류)
+  - [Nginx](#nginx)
+    - [nginx.conf](#nginxconf)
+    - [openssl](#openssl)
+    - [nginx 컨테이너 실행 오류](#nginx-컨테이너-실행-오류)
+  - [wordpress](#wordpress)
+    - [php-fpm](#php-fpm)
+    - [php-fpm.conf](#php-fpmconf)
+    - [wp-cli](#wp-cli)
+  - [docker-compose와 docker compose의 차이](#docker-compose와-docker-compose의-차이)
 
 # Inception
 
@@ -106,22 +107,25 @@ WordPress 데이터베이스에는 두 명의 사용자가 있어야 하며, 그
 - [ ] [docker-compose.yml 작성](#docker-composeyaml)
   - [x] [volumes](#volumes)
   - [ ] [Docker-network 컨테이너 간의 연결 설정](#networks)
-    - [ ] nginx - wordpress
+    - [x] 네트워크를 선언하고 네트워크 드라이버로 컨테이너를 연결
+    - [x] nginx - wordpress
 - [ ] [서비스 Dockerfile 작성](#dockerfile)
   - [x] [MariaDB](#MariaDB)
     - [x] [원격 접속 설정](#mysql-원격-접속-설정)
       - [x] [외부 유저 생성](#외부-유저-생성)
       - [x] [mysql 설정 수정](#mysql-설정-수정)
+  - [x] [Nginx](#nginx)
+    - [x] nginx.conf 파일
+    - [x] open ssl 인증서
   - [x] WordPress
     - [x] php-fpm.conf 파일
     - [x] nginx volumes
     - [x] Mariadb 연결
-  - [x] [Nginx](#nginx)
-    - [x] nginx.conf 파일
-    - [x] open ssl 인증서
-- [ ] WordPress 데이터 베이스 사용자 이름 설정
-- [ ] 호스트 시스템 로그인 설정
-- [ ] Nginx 컨테이너 entrypoint port
+- [x] docker-compose와 docker compose의 차이
+- [ ] docker compose restart
+- [x] WordPress 데이터 베이스 사용자 이름 설정
+- [x] 호스트 시스템 볼륨 설정
+- [x] Nginx 컨테이너 entrypoint port
 - [ ] Makefile 작성
 
 
@@ -165,14 +169,14 @@ services:
       - /home/cpak/data/wordpress:/var/www/wordpress
 ```
 
-### volume 사용
+### volume 마운트 시점
 
-docker-compose에서 구성한 볼륨을 컨테이너에서 이용하게 된다. 이 볼륨은 이미지를 생성하는 도중에는 사용할 수 없다. 즉, Dockerfile에서는 볼륨을 사용할 수 없다.  
+컨테이너가 생성되며 볼륨이 마운트된다. 그러므로 이미지를 빌드하는 과정에서 볼륨을 이용할 수 없다. 만약에 볼륨을 이용해야 한다면 ENTRYPOINT나 CMD를 사용하여 컨테이너의 볼륨에 접근하도록 해야한다.  
 
 
 ## networks
 
-docker-compose.yaml 파일에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
+서비스에 networks 항목을 추가하여 사용자 지정 네트워크를 추가할 수 있다. docker-compose up 명령어를 실행하면 기본 네트워크와 함께 사용자 지정 네트워크가 생성된다. 
 
 ```
 services:
@@ -192,20 +196,22 @@ networks:
     driver: bridge
 ```
 
+참조 : [Docker bridge network의 함정](https://velog.io/@hschoi1104/Docker-Bridge-Network-%EC%9D%98-%ED%95%A8%EC%A0%95)
+
+
+
 ### nginx - wordpress
 
 nginx 컨테이너는 누군가 요청을 보내면 wordpress 컨테이너의 php-fpm 서버로 요청을 보낸다. wordpress 컨테이너는 9000 포트를 열어두고 있으며, nginx는 그곳으로 요청을 보내야 하는 것이다. 
 
 nginx와 wordpress 컨테이너가 서로 통신할 수 있도록 하나의 네트워크에 포함시켰다. 
 
-
-
-
-
-
-
 https://www.daleseo.com/docker-compose-networks/  
 
+
+```
+tail -f /var/log/nginx/error.log
+```
 
 
 
@@ -359,7 +365,7 @@ location / {
 
 ### wp-cli
 
-[wp-cli 공식 페이지](https://wp-cli.org/), [wp-cli wordpress 페이지](https://make.wordpress.org/cli/handbook/guides/installing)  
+[wp-cli 공식 페이지](https://wp-cli.org/), [wp-cli wordpress 페이지](https://make.wordpress.org/cli/handbook/guides/installing), [wp-cli 사용법](https://www.lesstif.com/system-admin/wp-cli-22643947.html)  
 
 wp-cli는 wordpress용 명령줄 인터페이스이다. 웹 브라우저를 사용하지 않고도 플러그인을 업데이트하거나 다중 사이트 설치를 구성하는 등의 작업을 수행할 수 있다.  
 
@@ -375,3 +381,9 @@ wp core download --locale=ko_KR
 wp core install --url=$WP_URL  --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL
 ```
 
+
+## docker-compose와 docker compose의 차이
+
+docker compose가 docker cli에 통합되었다. 그래서 docker-compose에서 하이픈을 빼고 docker compose로 명령어를 사용할 수 있다. docker-compose는 python으로 작성되었지만 docker compose는 go언어로 다시 작성되었다.  
+
+참조 : https://shinjam.tistory.com/entry/docker-compose-VS-docker-compose?category=891607
