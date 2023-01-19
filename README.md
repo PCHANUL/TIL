@@ -9,6 +9,15 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.19](#23119)
+  * [socket](#socket)
+  * [socket programming](#socket-programming)
+    * [socket](#socket-1)
+    * [setsockopt](#setsockopt)
+    * [bind](#bind)
+    * [listen](#listen)
+    * [accept](#accept)
+    * [Client](#client)
 * [23.1.12](#23112)
   * [bash 쉘의 환경 변수](#bash-쉘의-환경-변수)
 * [23.1.11](#23111)
@@ -33,6 +42,93 @@ permalink: /
   * [wordpress 설정파일](#wordpress-설정파일)
 
 ---
+
+## 23.1.19
+
+### socket
+
+서버와 클라이언트가 통신을 하기 위해서 소켓 라이브러리를 사용한다. socket 함수는 소켓을 생성하여 반환한다.  
+
+socket 함수는 통신을 위한 endpoint를 만들고 endpoint를 참조하는 file descriptor를 반환한다.  
+
+```c
+#include <sys/socket.h>
+
+int socket(int domain, int type, int protocol);
+```
+
+성공적이라면 현재 열리지 않은 fd의 가장 낮은 번호를 반환한다. 이 fd는 생성된 소켓을 가리키는 소켓 디스크립터이다. 만약에 생성에 실패했다면 -1을 반환한다. 
+
+- domain : 통신 도메인을 지정한다. 이는 통신에 사용될 프로토콜 제품군을 선택한다. 제품군은 <sys/socket.h>에 정의되어 있다. (AF_UNIX(프로토콜 내부에서), AF_INET(IPv4), AF_INET6(IPv6))  
+- type : 사용할 프로토콜을 지정한다. (SOCK_STREAM(TCP), SOCK_DGRAM(UDP), SOCK_RAW(사용자 정의))
+- protocol : 프로토콜의 값을 결정한다. (IPPROTO_TCP(TCP 일때), IPPROTO_UDP(UDP 일때))
+
+
+참조 : [socket man page](https://man7.org/linux/man-pages/man2/socket.2.html), [c언어 소켓 생성 함수 socket()](https://badayak.com/entry/C%EC%96%B8%EC%96%B4-%EC%86%8C%EC%BC%93-%EC%83%9D%EC%84%B1-%ED%95%A8%EC%88%98-socket)
+
+### socket programming
+
+https://www.geeksforgeeks.org/socket-programming-cc/  
+
+소켓 프로그래밍은 네트워크의 두 노드를 연결하여 서로 통신하는 방법입니다. 하나의 소켓(노드)은 IP의 특정 포트에서 수신 대기하고 다른 소켓은 연결을 형성하기 위해 다른 소켓에 도달합니다. 클라이언트가 서버에 도달하는 동안 서버는 리스너 소켓을 형성합니다.  
+
+#### socket
+
+```c
+int sockfd = socket(domain, type, protocol)
+```
+
+- sockfd : socket descriptor, 정수이다. 
+- domain : integer, 통신 도메인을 지정한다. 동일한 호스트의 프로세스 간 통신을 위해 POSIX 표준에 정의된 대로 AF_LOCAL을 사용한다.  
+- type : 통신 방식
+  - SOCK_STREAM: TCP(reliable, connection oriented)
+  - SOCK_DGRAM: UDP(unreliable, connectionless)
+- protocol : 인터넷 프로토콜(IP)에 대한 프로토콜 값으로 0이다. 패킷의 IP 헤더에 있는 protocol 필드에 나타나는 것과 동일한 숫자이다.(자세한 내용은 man protocols 참조)
+
+#### setsockopt
+
+fd인 sockfd가 참조하는 소켓에 대한 옵션을 조작한다. 주소와 포트를 재사용하는데 도움이 된다. "이미 사용 중인 주소"와 같은 오류를 방지한다.  
+
+```c
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+```
+
+#### bind
+
+소켓 생성 후 bind 함수는 소켓을 addr(사용자 지정 데이터 구조)에 지정된 주소 및 포트 번호에 바인딩한다.  
+
+```c
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+```  
+
+#### listen
+
+서버 소켓을 수동 모드로 전환하여 클라이언트가 연결을 위해 서버에 접근할 때까지 기다린다. backlog는 sockfd에 대한 대기 중인 연결 대기열이 커질 수 있는 최대 길이를 정의한다. 대기열이 가득 찼을 때 연결 요청이 도착하면 클라이언트는 ECONNREFUSED 표시와 함께 오류를 수신할 수 있다.  
+
+```c
+int listen(int sockfd, int backlog);
+```
+
+#### accept
+
+listen 소켓인 sockfd에 대하여 대기 중인 연결 큐에서 첫 번째 연결 요청을 추출하고 연결된 새 소켓을 만들고 해당 소켓을 참조하는 새 fd를 반환한다. 이 시점에서 클라이언트와 서버 간에 연결이 설정되고 데이터를 전송할 준비가 된다. 
+
+```c
+int new_socket = accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+```
+
+#### Client
+
+- Socket connection : 서버의 소켓 생성과 같다.
+- Connect : connect 시스템 호출은 sockfd가 참조하는 소켓을 addr가 지정한 주소에 연결한다. 서버의 주소와 포트는 addr에 지정된다.  
+
+```c
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+```
+
+
+
+
 
 ## 23.1.12
 

@@ -14,6 +14,9 @@ permalink: /docs/projects/irc
 * [Summary](#summary)
 * [Functions](#functions)
   * [socket](#socket)
+  * [setsockopt](#setsockopt)
+    * [SO\_REUSEADDR](#so_reuseaddr)
+  * [getsockname](#getsockname)
   * [poll](#poll)
     * [입출력 다중화 모델](#입출력-다중화-모델)
     * [Definition](#definition)
@@ -110,10 +113,75 @@ ctrl+D를 사용하여 'com', 'man', 'd\n'의 여러 부분으로 명령을 보�
 
 ## socket
 
+socket 함수는 통신을 위한 endpoint를 만들고 endpoint를 참조하는 file descriptor를 반환한다.  
+
+```c
+#include <sys/socket.h>
+
+int socket(int domain, int type, int protocol);
+```
+
+- domain : 통신 도메인을 지정 (AF_UNIX(프로토콜 내부), AF_INET(IPv4), AF_INET6(IPv6))
+- type : 사용할 프로토콜 지정 (SOCK_STREAM(TCP), SOCK_DGRAM(UDP), SOCK_RAW(사용자 정의))
+- protocol : 프로토콜 값 지정 (IPPROTO_TCP(TCP), IPPROTO_UDP(UDP))
 
 
+## setsockopt
+
+fd인 sockfd가 참조하는 소켓에 대한 옵션을 조작하여 세부사항을 조절한다. 주소와 포트를 재사용하는데 도움이 된다. "이미 사용 중인 주소"와 같은 오류를 방지한다.  
+
+```c
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+```
+
+- sockfd : 소켓지정번호
+- level : 소켓의 레벨로 어떤 레벨의 소켓정보를 가져오거나 변경할 것인지 명시한다. 보통 SOL_SOCKET과 IPPROTO_TCP 중 하나를 사용한다.
+- optname : 설정을 위한 소켓옵션의 번호
+- optval : 설정값을 저장하기 위한 버퍼의 포인터
+- optlen : optval 버퍼의 크기
+
+optval이 `void *`인 이유는 설정하려는 옵션에 따라서 다양한 크기를 가지는 데이터형이 사용되기 때문이다. SOL_SOCKET 레벨에서 사용할 수 있는 옵션과 데이터형은 다음과 같다.  
+
+- SO_BROADCAST : (BOOL) 브로드캐스트 메시지 전달이 가능하도록 한다.
+- SO_DEBUG : (BOOL) 디버깅 정보를 레코딩 한다.
+- SO_DONTLINGER : (BOOL) 소켓을 닫을때 보내지 않은 데이터를 보내기 위해서 블럭되지 않도록 한다.
+- SO_DONTROUTE : (BOOL) 라우팅 하지 않고 직접 인터페이스로 보낸다.
+- SO_OOBINLINE : (BOOL) OOB 데이터 전송을 설정할때, 일반 입력 큐에서 데이터를 읽을 수 있게 한다. 이 플래그를 켜면 recv(:12)나 send(:12)에서 MSG_OOB 플래그를 사용할 필요 없이 OOB 데이터를 읽을 수 있다.
+- SO_GROUP_PRIORITY : (int) 사용하지 않음
+- SO_KEEPALIVE : (BOOL) Keepalives를 전달한다.
+- SO_LINGER : (struct) LINGER	소켓을 닫을 때 전송되지 않은 데이터의 처리 규칙
+- SO_RCVBUF : (int) 데이터를 수신하기 위한 버퍼공간의 명시
+- SO_REUSEADDR : (BOOL) 이미 사용된 주소를 재사용 (bind) 하도록 한다.
+- SO_SNDBUF : (int) 데이터 전송을 위한 버퍼공간 명시
+
+### SO_REUSEADDR
+
+소켓을 이용한 서버 프로그램을 운용하면 프로그램을 다시 실행시켜야하는 경우가 생긴다. 이 경우에 커널이 bind 정보를 유지하고 있다면 다음과 같은 에러가 발생된다.  
+
+```
+bind error : Address already in use
+```
+
+이러한 문제를 해결하기 위해서 SO_REUSEADDR로 소켓을 설정할 수 있다. 설정하면 기존에 bind로 할당된 소켓자원을 프로세스가 재사용할 수 있다.   
+
+```c
+int sock = socket(...);
+setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *)&bf, (int)sizeof(bf));
+```
 
 
+참조 : [setsockopt - 소켓옵션](https://www.joinc.co.kr/w/Site/Network_Programing/AdvancedComm/SocketOption)  
+
+
+## getsockname
+
+getsockname은 지정한 소켓 지정자에 대한 정보를 가져온다.  
+
+```c
+#include <sys/socket.h>
+
+int getsockname(int sockfd, struct sockaddr *name, socklen_t *namelen);
+```
 
 
 
@@ -210,6 +278,8 @@ poll의 마지막 인자인 timeout은 대기 시간이다.
 ![](/TIL/docs/src/projects/irc/tcpip1.png)  
 
 ![](/TIL/docs/src/projects/irc/tcpip2.png)  
+
+출처 : [c언어 소켓 생성 함수 socket()](https://badayak.com/entry/C%EC%96%B8%EC%96%B4-%EC%86%8C%EC%BC%93-%EC%83%9D%EC%84%B1-%ED%95%A8%EC%88%98-socket)  
 
 
 
