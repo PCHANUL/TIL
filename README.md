@@ -9,6 +9,10 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.23](#23123)
+  * [htons](#htons)
+  * [inet\_addr](#inet_addr)
+  * [inet\_ntoa](#inet_ntoa)
 * [23.1.19](#23119)
   * [socket](#socket)
   * [socket programming](#socket-programming)
@@ -42,6 +46,39 @@ permalink: /
   * [wordpress 설정파일](#wordpress-설정파일)
 
 ---
+
+## 23.1.23
+
+### htons
+
+htons 함수는 데이터를 네트워크 바이트 순서로 변환한다.  
+데이터는 바이트 단위로 저장되지만 저장되는 방식에 따라서 cpu마다 차이가 발생된다.  
+데이터를 저장할 때, 가장 낮은 바이트부터 저장을 하면 Little Endian 방식이고, 높은 바이트부터 저장을 하면 Big Endian 방식이라고 한다.  
+
+서로 다른 데이터 저장 방식을 사용하는 시스템끼리 통신하면 문제가 발생된다. 전혀 다른 값을 주고 받을 수 있으므로 네트워크 byte order를 따르도록 데이터의 byte order를 변경한다. 데이터의 byte order는 Big Endian을 따른다.  
+
+### inet_addr
+
+Dotte-Decimal Notation 형식을 Big Endian 32비트 값으로 변환  
+
+```c
+unsigned long inet_addr(const char *string);
+
+// 성공시 32비트 값 반환
+// 실패시 INADDR_NONE 반환(-1)
+```
+
+### inet_ntoa
+
+네트워크 바이트 순서의 32비트 값을 Dotte-Decimal Notation으로 변환
+
+```c
+char * inet_ntoa(struct in_addr addr);
+
+// 성공시 문자열의 포인터 반환
+// 실패시 -1 반환
+```
+
 
 ## 23.1.19
 
