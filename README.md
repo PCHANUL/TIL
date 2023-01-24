@@ -9,6 +9,9 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
+* [23.1.24](#23124)
+  * [State diagram for server and client model](#state-diagram-for-server-and-client-model)
+  * [Server](#server)
 * [23.1.23](#23123)
   * [htons](#htons)
   * [inet\_addr](#inet_addr)
@@ -46,6 +49,113 @@ permalink: /
   * [wordpress 설정파일](#wordpress-설정파일)
 
 ---
+
+## 23.1.24
+
+### State diagram for server and client model
+
+![](/TIL/docs/src/socketProgramming.png)  
+
+### Server
+
+- Creating socket file descriptor
+
+```c
+if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  perror("socket failed");
+  exit(EXIT_FAILURE);
+}
+
+// - int socket(int domain, int type, int protocol);
+// - AF_INET은 해당 소켓을 IP version 4로 사용
+// - SOCK_STREAM은 해당 소켓에 TCP 패킷을 받음
+```
+
+- Forcefully attaching socket to the port 8080
+
+```c
+if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt))) {
+  perror("setsockopt");
+  exit(EXIT_FAILURE);
+}
+
+// - int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+// - SOL_SOCKET : 일반적인 설정에 관련된 레벨
+// - SO_REUSEPORT : 동일한 포트에 여러 리스너를 바인드 할 수 있도록 설정
+```
+
+[소켓 옵션 변경](https://velog.io/@minji/%EC%86%8C%EC%BC%93%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EC%86%8C%EC%BC%93%EC%9D%98-%EC%98%B5%EC%85%98sockopt), [소켓 옵션](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kbm0996&logNo=221041496905), [SO_REUSEPORT](https://jacking75.github.io/network_linux_reuseport/)  
+
+```c
+struct sockaddr_in address;
+address.sin_family = AF_INET;
+address.sin_addr.s_addr = INADDR_ANY;
+address.sin_port = htons(PORT);
+
+// - sockaddr_in : sa_family가 AF_INET인 경우에 사용하는 소켓 주소 저장 구조체  
+// - sin_addr : 호스트 IP 주소 (inet_aton() 혹은 inet_addr() 값)
+// - sin_port : 포트 번호 (network byte order)
+```
+
+[소켓 주소 정보 구조체](https://techlog.gurucat.net/292)  
+
+```c
+if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+  perror("bind failed");
+  exit(EXIT_FAILURE);
+}
+
+// - int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+// - bind : 소켓을 addr(사용자 지정 데이터 구조)에 지정된 주소 및 포트 번호에 바인딩
+```
+
+```c
+if (listen(server_fd, 3) < 0) {
+  perror("listen");
+  exit(EXIT_FAILURE);
+}
+
+// - int listen(int sockfd, int backlog);
+// - listen : 서버 소켓을 수동 모드로 전환하여 클라이언트가 서버에 접근할 때까지 기다림
+```
+
+```c
+if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
+  perror("accept");
+  exit(EXIT_FAILURE);
+}
+
+// - int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+// - accept : listen 소켓에 대하여 대기 중인 연결 큐에서 첫 번째 연결을 추출하고 연결된 새 소켓을 만들어 해당 소켓을 참조하는 새 file descriptor를 반환
+```
+
+- Connected
+
+```c
+valread = read(new_socket, buffer, 1024);
+printf("%s\n", buffer);
+send(new_socket, hello, strlen(hello), 0);
+printf("Hello message sent\n");
+
+// - ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+// - 연결된 socket으로 상대 시스템에 데이터를 전송
+```
+
+- Closing the socket
+
+```c
+// closing the connected socket
+close(new_socket);
+
+// closing the listening socket
+shutdown(server_fd, SHUT_RDWR);
+```
+
+
+
+
+
+
 
 ## 23.1.23
 
