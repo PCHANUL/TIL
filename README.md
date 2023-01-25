@@ -9,46 +9,354 @@ permalink: /
 
 # Today I Learned <!-- omit in toc -->
 
-* [23.1.24](#23124)
-  * [State diagram for server and client model](#state-diagram-for-server-and-client-model)
-  * [Server](#server)
-* [23.1.23](#23123)
-  * [htons](#htons)
-  * [inet\_addr](#inet_addr)
-  * [inet\_ntoa](#inet_ntoa)
-* [23.1.19](#23119)
-  * [socket](#socket)
-  * [socket programming](#socket-programming)
-    * [socket](#socket-1)
-    * [setsockopt](#setsockopt)
-    * [bind](#bind)
-    * [listen](#listen)
-    * [accept](#accept)
-    * [Client](#client)
-* [23.1.12](#23112)
-  * [bash 쉘의 환경 변수](#bash-쉘의-환경-변수)
-* [23.1.11](#23111)
-  * [VirtualBox 설정](#virtualbox-설정)
-    * [복사, 붙여넣기 설정](#복사-붙여넣기-설정)
-    * [docker, docker-compose](#docker-docker-compose)
-* [23.1.10](#23110)
-  * [env file](#env-file)
-* [23.1.9](#2319)
-  * [volume](#volume)
-  * [bind mount](#bind-mount)
-* [23.1.7](#2317)
-  * [docker-compose volume configuration reference](#docker-compose-volume-configuration-reference)
-    * [driver](#driver)
-    * [driver\_opts](#driver_opts)
-* [23.1.5](#2315)
-  * [docker-compose depends\_on](#docker-compose-depends_on)
-* [23.1.4](#2314)
-  * [php extentions](#php-extentions)
-  * [wordpress cli](#wordpress-cli)
-* [23.1.3](#2313)
-  * [wordpress 설정파일](#wordpress-설정파일)
+- [23.1.25](#23125)
+  - [멀티 스레딩 없이 서버에서 여러 클라이언트 처리](#멀티-스레딩-없이-서버에서-여러-클라이언트-처리)
+  - [Example code](#example-code)
+    - [Set of socket descriptors](#set-of-socket-descriptors)
+    - [Initialise all client\_socket\[\] to 0 so not checked](#initialise-all-client_socket-to-0-so-not-checked)
+    - [Set master socket to allow multiple connections](#set-master-socket-to-allow-multiple-connections)
+    - [Bind the socket to localhost port 8888](#bind-the-socket-to-localhost-port-8888)
+    - [Try to specify maximum of 3 pending connections for the master socket](#try-to-specify-maximum-of-3-pending-connections-for-the-master-socket)
+    - [Accept the incoming connection](#accept-the-incoming-connection)
+      - [Clear the socket set](#clear-the-socket-set)
+      - [Add master socket to set](#add-master-socket-to-set)
+      - [Add child socket to set](#add-child-socket-to-set)
+      - [Wait for an activity on one of the sockets](#wait-for-an-activity-on-one-of-the-sockets)
+      - [If something happened on the master socket](#if-something-happened-on-the-master-socket)
+      - [Else its some IO operation on some other socket](#else-its-some-io-operation-on-some-other-socket)
+  - [RFC message](#rfc-message)
+- [23.1.24](#23124)
+  - [State diagram for server and client model](#state-diagram-for-server-and-client-model)
+  - [Server](#server)
+- [23.1.23](#23123)
+  - [htons](#htons)
+  - [inet\_addr](#inet_addr)
+  - [inet\_ntoa](#inet_ntoa)
+- [23.1.19](#23119)
+  - [socket](#socket)
+  - [socket programming](#socket-programming)
+    - [socket](#socket-1)
+    - [setsockopt](#setsockopt)
+    - [bind](#bind)
+    - [listen](#listen)
+    - [accept](#accept)
+    - [Client](#client)
+- [23.1.12](#23112)
+  - [bash 쉘의 환경 변수](#bash-쉘의-환경-변수)
+- [23.1.11](#23111)
+  - [VirtualBox 설정](#virtualbox-설정)
+    - [복사, 붙여넣기 설정](#복사-붙여넣기-설정)
+    - [docker, docker-compose](#docker-docker-compose)
+- [23.1.10](#23110)
+  - [env file](#env-file)
+- [23.1.9](#2319)
+  - [volume](#volume)
+  - [bind mount](#bind-mount)
+- [23.1.7](#2317)
+  - [docker-compose volume configuration reference](#docker-compose-volume-configuration-reference)
+    - [driver](#driver)
+    - [driver\_opts](#driver_opts)
+- [23.1.5](#2315)
+  - [docker-compose depends\_on](#docker-compose-depends_on)
+- [23.1.4](#2314)
+  - [php extentions](#php-extentions)
+  - [wordpress cli](#wordpress-cli)
+- [23.1.3](#2313)
+  - [wordpress 설정파일](#wordpress-설정파일)
 
 ---
+
+## 23.1.25
+
+### 멀티 스레딩 없이 서버에서 여러 클라이언트 처리
+
+새로운 클라이언트를 처리하는 경우에 새로운 스레드를 생성할 수 있다. 그러나 다음과 같은 단점 때문에 권장되지 않는다.  
+
+- 스레드는 코딩, 디버그하기 어렵고 때로는 예측할 수 없는 결과가 발생하기도 한다.
+- 컨텍스트의 오버헤드 전환
+- 많은 수의 클라이언트에 대해 확장할 수 없음
+- 교착 상태가 발생할 수 있다.
+
+여러 클라이언트를 처리하기 위해 select() 함수를 사용할 수 있다.  
+
+- Select 명령을 사용하면 파일 설명자 중 하나가 활성화될 때까지 기다리면서 여러 파일 설명자를 모니터링할 수 있다.
+- 예를 들어 소켓 중 하나에서 읽을 데이터가 있는 경우 select는 해당 정보를 제공한다.
+- Select 는 파일 디스크립터가 데이터를 보내자마자 활성화되는 인터럽트 핸들러처럼 작동한다.
+
+select 함수에는 fd_set 데이터 구조체가 사용된다. 이 구조체에는 일부 활동을 모니터링할 파일 설명자 목록이 포함된다.  
+
+```c
+fd_set readfds; 
+
+// fd_set을 초기화
+FD_ZERO(&readfds);  
+
+// fd_set에 디스크립터 추가 
+FD_SET(master_sock, &readfds);   
+
+// fd_set에서 디스크립터 제거 
+FD_CLR(master_sock, &readfds); 
+
+// 마스터 소켓에서 문제가 발생한 경우 들어오는 연결   
+FD_ISSET(master_sock, &readfds);
+```
+
+### Example code
+
+예제 코드는 받은 메시지를 되돌려주는 간단한 에코 서버 코드이다. 예제 코드는 다음과 같이 동작된다.  
+
+- readfds 변수는 클라이언트의 모든 활성 파일 디스크립터와 주 서버 listen 소켓의 디스크립터를 모니터링한다.
+- 새 클라이언트가 연결될 때마다 master_socket이 활성화되고 해당 클라이언트에 대하여 새 fd가 열린다. 
+- 새 fd를 client_list에 저장하고 클라이언트의 활동을 모니터링하기 위해 readfds에 추가한다.
+- 이전 클라이언트가 데이터를 보내면 readfds가 활성화되고 기존 클라이언트 목록에서 어떤 클라이언트가 데이터를 보냈는지 확인한다.
+
+
+#### Set of socket descriptors
+
+```c
+fd_set readfds;
+
+// typedef struct fd_set {
+//     __int32_t       fds_bits[ ... ];
+// } fd_set;
+```
+
+- select 함수는 여러 소켓의 상태를 체크해야 한다. 그러므로 fd_set이라는 구조체를 사용하여 소켓의 그룹을 구성한다.
+- 소켓 그룹을 구성하기 위해 FD_ZERO, FD_SET과 같은 매크로 함수를 사용한다.
+
+[fd_set, FD_SET, FD_ZERO에 대하여](https://blog.naver.com/tipsware/220810795410)  
+
+
+#### Initialise all client_socket[] to 0 so not checked
+
+```c
+int client_socket[30];
+int max_clients = 30;
+
+for (i = 0; i < max_clients; i++)
+{
+  client_socket[i] = 0;
+}
+```
+
+#### Set master socket to allow multiple connections
+
+```c
+#define PORT 8888
+
+int opt = TRUE;
+int master_socket;
+struct sockaddr_in address;
+
+if( setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )
+{
+  perror("setsockopt");
+  exit(EXIT_FAILURE);
+}
+
+address.sin_family = AF_INET;
+address.sin_addr.s_addr = INADDR_ANY;
+address.sin_port = htons( PORT );
+```
+
+
+#### Bind the socket to localhost port 8888
+
+```c
+int addrlen;
+
+if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0)
+{
+  perror("bind failed");
+  exit(EXIT_FAILURE);
+}
+addrlen = sizeof(address);
+```
+
+#### Try to specify maximum of 3 pending connections for the master socket
+
+```c
+if (listen(master_socket, 3) < 0)
+{
+  perror("listen");
+  exit(EXIT_FAILURE);
+}
+```
+
+#### Accept the incoming connection
+
+```c
+puts("Waiting for connections ...");
+
+while (TRUE)
+{
+  
+  // - Clear the socket set
+  // - Add master socket to set
+  // - Add child socket to set
+  // - Wait for an activity on one of the sockets
+  // - If something happened on the master socket
+  // - Else its some IO operation on some other socket
+  
+}
+```
+
+![](/TIL/docs/src/fd_set.png)
+
+
+##### Clear the socket set
+
+```c
+FD_ZERO(&readfds);
+```
+
+##### Add master socket to set
+
+```c
+FD_SET(master_socket, &readfds);
+max_sd = master_socket;
+```
+
+##### Add child socket to set
+
+```c
+for ( i = 0 ; i < max_clients ; i++)
+{
+	//socket descriptor
+	sd = client_socket[i];
+		
+	//if valid socket descriptor then add to read list
+	if(sd > 0)
+		FD_SET( sd , &readfds);
+		
+	//highest file descriptor number, need it for the select function
+	if(sd > max_sd)
+		max_sd = sd;
+}
+```
+
+##### Wait for an activity on one of the sockets
+
+```c
+activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
+	
+if ((activity < 0) && (errno!=EINTR))
+{
+	printf("select error");
+}
+```
+
+- int select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+- readfds : 읽을 데이터가 있는지 검사하기 위한 파일 목록
+- writefds : 쓰여진 데이터가 있는지 검사하기 위한 파일 목록
+- exceptfds : 파일에 예외 사항들이 있는지 검사하기 위한 파일 목록
+- timeout : 데이터 변경이 있는지 기다리는 시간. 인자가 NULL이므로 무한정 대기
+- 반환값 : 데이터가 변경된 파일의 개수 즉 fd_set에서 비트 값이 1인 필드의 개수를 반환
+
+[select를 이용한 입출력 다중화](https://www.joinc.co.kr/w/Site/system_programing/File/select)  
+
+##### If something happened on the master socket
+
+```c
+if (FD_ISSET(master_socket, &readfds))
+{
+	if ((new_socket = accept(master_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
+	{
+		perror("accept");
+		exit(EXIT_FAILURE);
+	}
+	
+	//inform user of socket number - used in send and receive commands
+	printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
+
+	//send new connection greeting message
+	if( send(new_socket, message, strlen(message), 0) != strlen(message) )
+	{
+		perror("send");
+	}
+		
+	puts("Welcome message sent successfully");
+		
+	//add new socket to array of sockets
+	for (i = 0; i < max_clients; i++)
+	{
+		//if position is empty
+		if( client_socket[i] == 0 )
+		{
+			client_socket[i] = new_socket;
+			printf("Adding to list of sockets as %d\n" , i);
+				
+			break;
+		}
+	}
+}
+```
+
+- int accept(int s, struct sockaddr *addr, socklen_t *addrlen);
+- 아직 처리되지 않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 연결을 가져와서 새로운 연결된 소켓을 만들고, 파일 지정자를 반환한다.
+- s : socket 함수로 만들어진 파일 지정자
+- addr : 성공적으로 연결되었다면 이 구조체를 통해서 클라이언트의 정보를 알 수 있다. 
+- addrlen : addr의 크기
+- inet_ntoa(address.sin_addr) : 클라이언트 ip
+- ntohs(address.sin_port) : 클라이언트 port
+
+[accept](https://www.joinc.co.kr/w/man/2/accept)  
+
+##### Else its some IO operation on some other socket
+
+```c
+for (i = 0; i < max_clients; i++)
+{
+	sd = client_socket[i];
+		
+	if (FD_ISSET( sd , &readfds))
+	{
+		//Check if it was for closing , and also read the
+		//incoming message
+		if ((valread = read( sd , buffer, 1024)) == 0)
+		{
+			//Somebody disconnected , get his details and print
+			getpeername(sd , (struct sockaddr*)&address , (socklen_t*)&addrlen);
+			printf("Host disconnected , ip %s , port %d \n" , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
+				
+			//Close the socket and mark as 0 in list for reuse
+			close( sd );
+			client_socket[i] = 0;
+		}
+			
+		//Echo back the message that came in
+		else
+		{
+			//set the string terminating NULL byte on the end
+			//of the data read
+			buffer[valread] = '\0';
+			send(sd , buffer , strlen(buffer) , 0 );
+		}
+	}
+}
+```
+
+### RFC message
+
+- 서버와 클라이언트는 응답을 생성하거나 생성하지 않을 수 있는 메시지를 서로 보낸다.
+- 클라이언트와 서버의 통신은 본질적으로 비동기이다.
+- 각 IRC 메시지의 형식은 다음과 같고, 각각 0x20으로 나뉜다.
+  - [prefix] [command] [params] 
+  - prefix
+    - `':', 0x3b`로 시작된다. 콜론 사이에 간격이 없어야 한다. 
+    - 서버에서 메시지의 실제 출처를 나타내는데 사용된다. 
+    - 접두사가 메시지에서 누락 된 경우 해당 접두사가 수신 된 연결에서 시작된 것으로 간주한다.
+    - 서버의 내부 데이터베이스에서 접두어를 찾을 수 없는 경우 반드시 버려야 하며 접두사가 서버에서 온 것으로 표시되면 메시지를 수신 한 링크를 삭제해야 함
+  - command
+    - 유효한 IRC 명령이거나 ASCII 텍스트로 표시되는 3자리 숫자여야 한다.
+    - IRC 메시지는 항상 CR_LF 쌍으로 끝나는 문자 줄이다.
+    - 메시지는 CR-LF를 포함한 모든 문자를 계산하여 길이가 512자를 초과하지 않는다.
+    - 명령 및 해당 매개 변수에 허용되는 최대 문자 수는 510자
+
+
+
+
+
 
 ## 23.1.24
 
