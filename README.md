@@ -12,6 +12,35 @@ permalink: /
 
 ---
 
+## 23.03.01
+
+### Signalling Server
+
+피어를 다음과 같은 순서로 연결할 수 있다.
+
+1. 브라우저에서 미디어 스트림을 받는다.
+2. 스트림을 넣어준다.
+3. local sdp를 설정한다.
+4. 연결할 Peer에 Offer을 제안한다.
+
+연결할 Peer에서는 offer을 받으면
+
+1. remote sdp를 설정한다
+2. 브라우저 미디어 스트림을 받는다.
+3.  스트림을 넣어준다.
+4. local sdp 설정
+5. create answer 후 answer을 보낸다.
+6. 받는 Peer에서는 remote sdp를 설정한다.
+
+create-answer 과정이 끝나면 icecandidate로 네트워크 정보를 교환한다.
+
+1. 요청자에서 candidate를 보낸다.
+2. 연결할 peer에서 받은 정보를 저장하고 자신의 candidate를 보내고
+3. 받는 쪽에서 해당 candidate를 저장한다.
+
+
+
+
 ## 23.02.28
 
 ### WebRTC 동작 원리
