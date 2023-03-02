@@ -12,6 +12,49 @@ permalink: /
 
 ---
 
+## 23.03.02
+
+### OAuth
+
+OAuth는 인터넷 사용자들이 비밀번호를 제공하지 않고 다른 웹사이트 상의 자신들의 정보에 대해 웹사이트나 애플리케이션의 접근 권한을 부여할 수 있는 공통적인 수단으로서 사용되는 개방형 표준이다. 예를 들어, 앱에서 사용자 인증을 위해 Google이나 Facebook에서 제공하는 사용자 인증 방식을 사용할 수 있다. 그리고 OAuth를 바탕으로 앱은 외부 서비스(Google, Facebook 등)의 특정 자원에 접근하고 사용할 수 있는 권한을 인가받는다.  
+
+### OAuth 참여자
+
+- Resource Server : Client가 제어하고자 하는 자원을 보유하고 있는 서버
+- Resource Owner : 자원의 소유자
+- Client : Resource Server에 접속해서 정보를 가져오고자 하는 클라이언트
+
+### OAuth Flow
+
+1. Client 등록
+
+Client가 Resource Server를 이용하기 위해서는 자신의 서비스를 등록하여 승인을 받아야 한다. 등록 절차를 통해 세가지 정보를 부여받는다.  
+
+- Client ID : 클라이언트 웹 앱을 구별할 수 있는 식별자
+- Client Secret : ClientID에 대한 비밀키
+- Authorized redirect URL : Authorization Code를 전달받을 리다이렉트 주소
+
+Client가 인증을 마치면 명시된 url로 리다이렉트시킨다. 이때 Query String으로 Code가 함께 전달된다. Client는 이 Code와 Client ID, Client Secret을 Resource Server에 보내서 자원을 사용할 수 있는 Access Token을 발급받는다.  
+
+2. Resource Owner의 승인
+
+Resource Owner는 로그인을 위해 특정 주소로 연결되는 소셜 로그인 버튼을 클릭한다. Resource Owner는 Resource Server에 접속하여 로그인을 수행한다. 로그인이 완료되면 Resource Server는 Query String으로 넘어온 파라미터들을 통해 Client를 검사한다. 검증이 마무리되면 권한 부여를 승인받은 후에 Resource Server는 Resource Owner에게 Client의 접근을 승인하게 된다.  
+
+3. Resource Server의 승인
+
+Resource Owner의 승인이 마무리 되면 명시된 Redirect URL로 클라이언트를 리다이렉트 시킨다. 이 때 Resource Server는 Client가 자신의 자원을 사용할 수 있는 Access Token을 발급하기 전에, 임시 암호인 Authorization Code를 함께 발급한다.  
+
+Query String으로 들어온 code가 바로 Authorization Code이다.  
+
+Client는 ID와 비밀키 및 code를 Resource Owner를 거치지 않고 Resource Server에 직접 전달한다. Resource Server는 정보를 검사한 다음, 유효한 요청이라면 Access Token을 발급하게 된다.  
+
+Client는 해당 토큰을 서버에 저장해두고, Resource Server의 자원을 사용하기 위한 API 호출시 해당 토큰을 헤더에 담아 보낸다.  
+
+4. API 호출
+
+
+
+
 ## 23.03.01
 
 ### Signalling Server
