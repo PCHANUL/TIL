@@ -12,6 +12,28 @@ permalink: /
 
 ---
 
+## 23.03.03
+
+### Refreshing Access Tokens
+
+https://www.oauth.com/oauth2-servers/access-tokens/refreshing-access-tokens/  
+
+- Request Parameters
+  - grant_type(required) : "refresh_token"
+  - refresh_token(required) : 이전에 받은 refresh token
+  - scope (optional) : 원래 액세스 토큰에서 발급되지 않은 추가 범위를 추가하지 말아야 한다. 생략된 경우에는 이전에 발급된 것과 동일한 범위의 액세스 토큰이 발급된다.  
+  - Client Authenticaiton (만약에 secret을 발급했다면 required이다)
+
+### OAuth와 JWT
+
+OAuth와 JWT는 둘 다 인증 및 권한 부여를 위한 프로토콜 및 토큰이지만 목적과 동작 방식에 차이가 있다.  
+
+- OAuth : 사용자가 서드파티 애플리케이션에 대한 접근 권한을 제어하는 프로토콜
+- JWT : JSON Web Token의 약자로, 서비스 간에 정보를 안전하게 전송하기 위한 토큰
+
+따라서, OAuth는 사용자가 서드파티 애플리케이션에 대한 접근 권한을 관리하는 반면에, JWT는 서비스 간에 정보를 안전하게 전송하고 인증 및 권한 부여를 처리한다.
+
+
 ## 23.03.02
 
 ### OAuth
