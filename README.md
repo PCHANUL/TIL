@@ -12,11 +12,246 @@ permalink: /
 
 ---
 
+## 23.03.05
+
+### NestJS 데코레이터
+
+데코레이터를 사용하면 횡단 관심사를 분리하여 관점 지향 프로그래밍을 적용한 코드를 작성할 수 있다. 데코레이터는 클래스, 메서드, 접근자, 프로퍼티, 매개변수에 적용가능하다. 각 요소의 선언부 앞에 데코레이터를 선언하면 데코레이터로 구현된 코드를 함께 실행한다.  
+
+데코레이터는 `@expression` 형식으로 사용한다. expression은 데코레이팅 된 선언에 대한 정보와 함께 런타임에 호출되는 함수이어야 한다.  
+
+데코레이터 함수에는 세가지 인자가 전달된다.  
+1. target : 현재 인스턴스 객체의 클래스
+2. propertyKey : 데코레이터를 적용할 속성 이름
+3. descriptor : 해당 속성의 설명자 객체
+
+```ts
+function deco(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  console.log('데코레이터가 평가됨');
+}
+
+class TestClass {
+  @deco
+  test() {
+    console.log('함수 호출됨');
+  }
+}
+
+const t = new TestClass();
+t.test();
+```
+
+#### 데코레이터 팩토리
+
+만약에 데코레이터에 인자를 넘겨서 동작을 변경하고 싶다면 데코레이터 팩토리를 만들면 된다. 아래의 예시는 value라는 인자를 받는다.  
+
+```ts
+
+function deco(value: string) {
+  console.log('데코레이터가 평가됨');
+  return function (target: any, propertykey: string, descriptor: PropertyDescriptor) {
+   console.log(value); 
+  }
+}
+
+class TestClass {
+  @deco('HELLO')
+  test() {
+    console.log('함수 호출됨');
+  }
+}
+
+/*
+
+데코레이터가 평가됨
+HELLO
+함수 호출됨
+
+*/
+```
+
+#### 데코레이터 합성
+
+여러개의 데코레이터를 사용한다면 다음 단계가 수행된다.  
+
+1. 각 데코레이터의 표현은 `위에서 아래로 평가`
+2. 그 다음에 결과는 `아래에서 위로 호출`
+
+```ts
+
+function first() {
+  console.log("first(): factory evaluated");
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    console.log("first(): called");
+  }
+}
+
+function second() {
+  console.log("second(): factory evaluated");
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    console.log("second(): called");
+  }
+}
+
+class ExampleClass {
+  @first()
+  @second()
+  method() {
+    console.log('method is called');
+  }
+}
+
+/*
+
+first(): factory evaluated
+second(): factory evaluated
+second(): called
+first(): called
+method is called
+
+*/
+
+```
+
+
+#### Class 데코레이터
+
+클래스 데코레이터는 클래스의 생성자에 적용되어 클래스 정의를 읽거나 수정할 수 있다. 선언 파일이나 선언 클래스내에서는 사용할 수 없다.  
+
+```ts
+
+// 클래스 데코레이터는 생성자를 반환하는 함수이어야 한다.
+functionn reportableClass<T extends { new ( ... args: any[]): {} }>(constructor: T) {
+  return class extends constructor {
+    reportingURL = 'http://www.example.com';
+  }
+}
+
+@reportableClass
+class BugReport {
+  type = 'report';
+  title: string;
+  contructor(t: string) {
+    this.title = t;
+  }
+}
+
+const bug = new BugReport('Needs dark mode');
+console.log(bug);
+
+/*
+
+BugReport {
+  type: 'report',
+  title: 'Needs dark mode',
+  reportingURL: 'http://www.example.com'
+}
+
+*/
+
+```
+
+
+#### Method 데코레이터
+
+메서드 바로 앞에 선언되어 속성 디스크립터에 적용되고 메서드의 정의를 읽거나 수정할 수 있다. 선언 파일, 오버로드 메서드, 선언 클래스에 사용할 수 없다.  
+
+```ts
+
+function HandleError() {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const method = descriptor.value;
+    descriptor.value = function() {
+      try {
+        method();
+      } catch(e) {
+        console.log(e);
+      }
+    }
+  }
+}
+
+class Greeter {
+  @HandleError()
+  hello() {
+    throw new Error('텍스트 에러');
+  }
+}
+
+const methodDeco = new Greeter();
+methodDeco.hello();
+
+/*
+
+{}
+hello
+{
+  value: function,
+  writable: true,
+  ...
+}
+Error: 테스트 에러
+
+*/
+
+```
+
+
+#### NestJS - module
+
+App module은 root module과 같다. provider와 controller를 추가하여 module를 구성하고 App module에 import하여 사용한다.  
+
+Controller나 Provider에 배열을 입력할 때 순서를 신경써야한다. 예를 들어, `/todos`와 `/todos/name` URL가 있는 경우에 `/todos/name`을 담당하는 Controller를 먼저 작성해야 한다. 클라이언트의 요청은 배열에 작성된 순서대로 컨트롤러가 처리된다.  
+
+#### NestJS - controller
+
+express의 라우터처럼 URL을 가져오고 함수를 실행한다. URL을 매핑하고, 요청을 받고, 쿼리를 넘기는 역할을 한다. 비즈니스 로직은 provider에서 구현된다.  
+
+```ts
+@Controller('movies')
+export class MoviesController {
+  @Get()
+  getAll() {
+    return 'movies';
+  }
+  @Get('/:id')
+  getOne(@Param('id') movieId: string) {
+    return `one movie id: ${movieId}`;
+  }
+  @Post()
+  create() {
+    return 'This will create a movie';
+  }
+  @Delete('/:id')
+  remove(@Param('id') movieId: string) {
+    return `this will delete a movie with the id : ${movieId}`;
+  }
+  @Patch('/:id')
+  path(@Param('id') movieId: string) {
+    return `this will patch a movie with the id : ${movieId}`;
+  }
+}
+```
+
+#### NestJS - Provider
+
+종속성으로 주입할 수 있다. controller가 HTTP 요청을 처리하고 더 복잡한 적업을 Provider를 위임해야 한다. HTTP요청을 처리하여 필요한 Service를 호출한다.
+
+모든 Provider들 위에 반드시 선언되어야하는 데코레이터이다. 이 데코레이터가 있어야 Modele을 통해 Inject된다.  
+
+
+
+
+
+
+
+
+
 ## 23.03.04
 
 ### passport-oauth2-refresh
 
-https://github.com/fiznool/passport-oauth2-refresh
+https://github.com/fiznool/passport-oauth2-refresh  
 
 ## 23.03.03
 
