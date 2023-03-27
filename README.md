@@ -12,6 +12,27 @@ permalink: /
 
 ---
 
+## 23.03.27
+
+### gateway와 service의 의존성 문제
+- gateway에서 로직을 service로 분리하려한다.
+- 채널에 메세지를 보내려면 `Server`객체가 필요하다.
+- `@WebSocketServer` 데코레이터는 `@WebSocketGateway` 로 정의된 클래스 안에서 정의된다. 
+- service에서 server를 사용하려면 gateway를 연결해야 한다.
+- 이미 gateway가 service를 의존하고 있으므로 service가 gateway를 의존하면 에러가 발생된다.
+- gateway에는 `afterInit()`이 있다.
+- `this.chatService.server = this.server;`를 추가하여 해결
+
+### Socket 객체
+- socket event 부분을 gateway와 service로 나눈다.
+- chatGateway, chatService
+- chat.controller를 만들어서 chatService를 주입한다.
+- REST API에서는 Socket 객체를 받을 수 없다.
+- chatService에서 Socket 객체를 관리한다.
+- user의 nickname으로 Socket 객체를 가져온다.
+
+
+
 ## 23.03.05
 
 ### NestJS 데코레이터
