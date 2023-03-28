@@ -12,6 +12,25 @@ permalink: /
 
 ---
 
+## 23.03.28
+
+### user 재접속시 socket 관리
+- 어떤 유저가 나가는 경우
+  - 로그아웃
+  - 채팅방 나가기
+  - 브라우저 종료
+  - 회원 탈퇴
+- 어느 채팅방에 유저가 있는지 알아야 한다.
+- 유저가 재접속하면 다른 socket으로 통신한다.
+- user객체에서 socket만 변경하여 사용한다.
+
+### user 식별 방법
+- REST API를 구현할 떄는 유저를 db 상의 id로 구별했다.
+- socket에는 id가 주어진다.
+- rest와 socket을 함께 사용하고 있으므로 한가지로 통일해야 한다.
+- db의 userId와 username을 socket에서도 사용해야 한다.
+
+
 ## 23.03.27
 
 ### gateway와 service의 의존성 문제
