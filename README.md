@@ -12,6 +12,73 @@ permalink: /
 
 ---
 
+## 23.04.10
+
+### 유저의 게임 대기열에 추가 플로우
+
+- 유저가 대기열에 들어가겠다는 요청을 보낸다.
+- 대기열을 확인하여 들어갈 수 있는 방이 있는지 확인한다.
+- 방에 들어갈 수 없는 조건은 다음과 같다.
+  - 유저가 서로 차단한 상태
+  - 방의 모드가 다른 경우
+- 만약에 방이 없다면 새로운 방을 만들고, 있다면 들어간다.
+- 초대방인 경우에는 방이 대기열에 존재하지 않는다.
+
+- 대기열에 유저가 들어간 후에는 인터벌이 시작된다.
+  - 네트워크 연결 상태 확인, 방이 생성된 시간 체크
+- 네트워크 연결 상태를 확인하는 것은 게임이 종료되기 전까지 지속된다.
+- 방이 생성된 시간을 체크하는 것은 player2가 들어오기 전까지 지속된다.
+
+- 클라이언트의 네트워크 상태 확인
+- ping 메세지를 socketio로 보낸다.
+- 클라이언트는 pong 메세지를 서버에 보내어 이상이 없음을 알린다.
+- 서버는 클라이언트들의 pong 메세지를 저장한다.
+- 다음 ping 메세지를 보내기 전에 해당 클라이언트가 pong을 보냈는지 확인한다.
+- 만약에 pong을 보내지 않았다면 네트워크에 문제가 생긴 것이다.
+
+
+### prisma migration
+- 스키마가 변경되어도 이전 데이터를 유지해야한다.
+- prisma로 postgresql DB를 조작하고 있다.
+- prisma schema에서 정의한 모델을 바탕으로 실제 DB의 테이블을 생성할 수 있다.
+
+- prisma migrate 동작 원리
+  1. schema.prisma 생성
+  2. draft migration file 생성
+  3. draft migration을 DB schema에 적용
+
+### 1. schema.prisma 생성
+
+schema.prisma에 수정사항이 발생되었다.
+
+```
+id    Int 
+age   Int 
+name  String
+```
+
+### 2. draft migration file 생성
+
+migration을 실제로 DB schema에 적용하지 않고 초안을 작성한다.  
+다음 명령어를 실행하면 생성된다.  
+
+```
+prisma migrate dev --create-only --preview-feature
+```
+
+migration 이름을 입력하면 prisma/migrate/에 sql파일이 생성된다.  
+prisma가 알아서 sql 파일을 생성해준다.
+
+### 3. draft migration file을 DB schema에 적용
+
+DB schema를 다음 명령어를 사용하여 적용할 수 있다.
+
+```
+npx prisma migrate deploy --preview-feature
+```
+
+
+
 ## 23.04.05
 
 - 데이터의 흐름
@@ -22,10 +89,6 @@ permalink: /
 - 문제는 각각의 타입에서 다른 타입의 메서드를 사용해야하는 경우가 있다.
 - 만약에 channel에서 user의 객체를 확인하려면 userId를 받아서 직접 찾고 가져와서 객체를 확인했다.
 - 이제는 Channel의 메소드에서 user 객체를 직접받아야 한다.
-
-- 
-
-
 
 
 ## 23.04.04
