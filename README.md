@@ -11,6 +11,38 @@ permalink: /
 
 ---
 
+## 23.04.23
+
+- WebRTC로 게임 화면을 스트리밍한다.
+- player1이 게임을 플레이하고, 나머지 유저들은 스트리밍 화면을 본다.
+- player2는 키를 입력하여 화면을 조작한다.
+- 만약에 viewer가 방에 들어온다면 player1의 화면을 스트림받는다.
+
+- player1, player2, viewer를 구분하기
+  - 생성 순서대로 role를 정함
+- 클라이언트는 자신의 역할대로 동작한다.
+  - player1
+    - canvas를 그리며, stream을 생성한다. 
+    - player2의 키 입력 이벤트를 받는다.
+  - player2
+    - player1의 stream을 받아서 video로 보여준다.
+    - 유저가 키를 입력하면 서버로 이벤트를 보낸다.
+  - viewer
+    - player1의 stream을 받아서 video로 보여준다.
+- 클라이언트는 들어올때 첫번째 클라이언트의 stream을 받는다.
+
+- [x] player1은 canvas, 나머지는 video
+- [x] 가장 먼저 들어온 유저가 player1이며 canvas에 그림을 그린다.
+- [x] 나머지 유저는 player1에게 화면 스트리밍을 받는다.
+- [ ] player1의 canvas에 유저의 블록 그리기 (상단과 하단)
+- [ ] player1는 하단의 블록을 조작한다.
+- [ ] player2는 상단의 블록을 조작한다.
+- [ ] player2는 스트리밍 video를 
+
+
+
+
+
 ## 23.04.21
 
 pingpong 게임
