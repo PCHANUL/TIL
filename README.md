@@ -11,8 +11,13 @@ permalink: /
 
 ---
 
-- [23.06.21](#230621)
+- [23.06.26](#230626)
+  - [Flutter, React Native](#flutter-react-native)
+- [23.06.22](#230622)
   - [Flutter](#flutter)
+    - [Scaffold](#scaffold)
+- [23.06.21](#230621)
+  - [Flutter](#flutter-1)
     - [runApp](#runapp)
     - [Widget](#widget)
 - [23.06.20](#230620)
@@ -27,6 +32,32 @@ permalink: /
     - [function](#function)
     - [typedef function](#typedef-function)
 - [23.06.06](#230606)
+
+## 23.06.26
+
+### Flutter, React Native
+
+새로운 프로젝트를 위해서 플러터와 리액트 네이티브를 비교하는 글을 찾아보았다.  
+
+[Flutter vs React Native : 어느 것이 당신의 프로젝트에 더 좋습니까](https://appmaster.io/blog/flutter-vs-react-native-which-one-is-better-for-your-project)  
+[플러터 VS 리액트 네이티브, 2023년의 승자는?](https://www.youtube.com/watch?v=Z9cCjrbTW50)  
+[Flutter Forward 2023 핵심 정리](https://www.youtube.com/watch?v=sPRCMGEaydo)  
+
+- 리액트 네이티브는 JS를 사용하고 리액트이기 때문에 바로 시작할 수 있다. 플러터는 Dart를 배워야 하지만 그리 어렵지 않다.
+- 플러터는 여러 기능을 자체적으로 탑재되어 있고, 만들어진 컴포넌트를 제공한다. 하지만 리액트 네이티브는 서드파티 패키지를 설치해야 한다.
+- 리액트 네이티브는 앱 업데이트를 코드 푸시를 통해 간편하게 할 수 있다. 하지만 플러터는 이 기능을 제공하지 않지만 파이어베이스의 remote config를 사용하면 가능하다.
+
+## 23.06.22
+
+### Flutter
+
+#### Scaffold
+
+https://api.flutter.dev/flutter/material/Scaffold-class.html
+
+- Scaffold는 앱의 화면 구조를 제공한다.
+- 예를 들어, `navigation bar` 또는 `bottom tab bar`와 같이 시각적인 레이아웃 구조를 제공한다.
+
 
 
 ## 23.06.21
